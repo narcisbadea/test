@@ -1,6 +1,6 @@
 ﻿namespace Auction_Project.Models
 {
-    public class Bids:Entity
+    public class Bid:Entity
     {
        
         public int Id_User { get; set; }
