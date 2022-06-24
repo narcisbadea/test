@@ -1,6 +1,6 @@
 ﻿namespace Auction_Project.Models
 {
-    public class Items : Entity
+    public class Item : Entity
     {
 
         public string? Desc { get; set; }
