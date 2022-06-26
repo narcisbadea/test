@@ -138,6 +138,22 @@ namespace Auction_Project.Services.UserService
             }
         }
 
-
+        public int AgeFromCnp(string cnp)
+        {
+            int y = Convert.ToInt32(cnp.Substring(1, 2));
+            if(Convert.ToInt32(cnp.Substring(0,1)) < 5){
+                y = 1900 + y;
+            }
+            else
+            {
+                y = 2000 + y;
+            }
+            int m = Convert.ToInt32(cnp.Substring(3, 2));
+            int d = Convert.ToInt32(cnp.Substring(5, 2));
+            DateTime bd = new DateTime(y, m, d);
+            TimeSpan span = DateTime.Now - bd;
+            DateTime zeroTime = new DateTime(1, 1, 1);
+            return (zeroTime + span).Year - 1;
+        }
     }
 }

@@ -30,6 +30,10 @@ namespace Auction_Project.Authenticate
             {
                 return BadRequest("CNP is not valid!");
             }
+            if(_userService.AgeFromCnp(request.Cnp) < 18)
+            {
+                return BadRequest("Underage!");
+            }
 
             _userService.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
