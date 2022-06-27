@@ -31,16 +31,20 @@ namespace Auction_Project.Migrations
                     b.Property<decimal>("CurrentPrice")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<int>("Id_Item")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Id_User")
+                    b.Property<int>("ItemId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Bids");
                 });
@@ -117,6 +121,25 @@ namespace Auction_Project.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Auction_Project.Models.Bid", b =>
+                {
+                    b.HasOne("Auction_Project.Models.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Auction_Project.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

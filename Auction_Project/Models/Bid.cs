@@ -2,10 +2,10 @@
 {
     public class Bid:Entity
     {
-       
-        public int Id_User { get; set; }
+        
+        public User User { get; set; }
 
-        public int Id_Item { get; set; }
+        public Item Item { get; set; }
 
         public decimal CurrentPrice { get; set; }
 

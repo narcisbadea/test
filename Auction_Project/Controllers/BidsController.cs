@@ -33,7 +33,7 @@ namespace Auction_Project.Models
             var bids = await _bidServices.GetBids();
             if (bids.Count == 0)
                 return NotFound("List is empty");
-            return bids;
+            return Ok(bids);
         }
          
         // GET api/<BidsController>/5
@@ -50,15 +50,16 @@ namespace Auction_Project.Models
 
         // POST api/<BidsController>
         [HttpPost]
-        public async Task<ActionResult<Bid>> Post(Bid bid)
+        public async Task<ActionResult<Bid>> Post(BidRequest bid)
         {
-            _bidServices.PostBid(bid);
-            return CreatedAtAction(nameof(Get), new { id = bid.Id }, bid);
+            if(await _bidServices.PostBid(bid)) 
+                return CreatedAtAction(nameof(Get), bid);
+            return BadRequest();
         }
 
         // PUT api/<BidsController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id)
+        public async Task<ActionResult> Update(int id)
         {
 
             return Ok();

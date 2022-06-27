@@ -22,13 +22,20 @@ public class BidServices
 
     public async Task<List<Bid>> GetBids()
     {
-        var result = await _context.Bids.ToListAsync();
+        var result = await _context.Bids
+            .Include(b => b.User)
+            .Include(b => b.Item)
+            .ToListAsync();
         return result; 
     }
 
+
     public async Task<Bid> GetBid(int id)
     {
-        var BidList = await _context.Bids.ToListAsync();
+        var BidList = await _context.Bids
+            .Include(b => b.User)
+            .Include(b => b.Item)
+            .ToListAsync();
         var result = BidList.Find(r => r.Id == id); 
         return result;
     }
@@ -47,10 +54,25 @@ public class BidServices
      
     }
 
-    public async void PostBid(Bid toPost)
+    public async Task<bool> PostBid(BidRequest toPost)
     {
-        _context.Bids.Add(toPost);
-        _context.SaveChanges();
+        var user = await _context.Users.FindAsync(toPost.ID_User);
+        var item = await _context.Items.FindAsync(toPost.ID_Item);
+        if (item != null && user != null)
+        {
+            var bid = new Bid
+            {
+                User = user,
+                Item = item,
+                Created = DateTime.UtcNow,
+                Updated = DateTime.UtcNow,
+                CurrentPrice = toPost.CurrentPrice
+            };
+            _context.Bids.Add(bid);
+            _context.SaveChanges();
+            return true; 
+        } 
+        return false;
     }
       
     public async void UpdateBid(BidDTO bid,int id)
@@ -58,7 +80,14 @@ public class BidServices
         var ToReplace = await _context.Bids.FindAsync(id);
         if (ToReplace != null)
         {
-            ToReplace.Id = bid.IdNextUser;
+            var user = await _context.Users.FindAsync(bid.IdNextUser);
+            if(user != null)
+            {
+                ToReplace.User = user;
+                ToReplace.Updated = DateTime.UtcNow;
+                ToReplace.CurrentPrice = bid.Price;
+                _context.SaveChanges();
+            }
 
         }
 
