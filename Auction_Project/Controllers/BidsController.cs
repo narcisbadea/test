@@ -58,14 +58,23 @@ namespace Auction_Project.Models
 
         // PUT api/<BidsController>/5
         [HttpPut("{id}")]
-        public void Put()
+        public async Task<ActionResult> Put(int id)
         {
+
+            return Ok();
         }
 
         // DELETE api/<BidsController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            var bid = await _bidServices.GetBid(id);
+            if (bid != null)
+            {
+                await _bidServices.DeleteBid(id);
+                return Ok("Bid removed");
+            }
+            return NotFound("Bid not found");
         }
     }
 }

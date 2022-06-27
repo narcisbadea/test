@@ -33,24 +33,36 @@ public class BidServices
         return result;
     }
 
+      public async Task<int> DeleteBid(int id)
+    {
+        var ToDelete = await _context.Bids.FirstOrDefaultAsync(bid=>bid.Id==id);
+        
+        if (ToDelete != null)
+        {
+            _context.Bids.Remove(ToDelete);
+            await _context.SaveChangesAsync();
+            return id;
+        }
+        return 0;
+     
+    }
+
     public async void PostBid(Bid toPost)
     {
-
         _context.Bids.Add(toPost);
-        try
-        {
-            _context.SaveChanges();
-        }
-        catch(Exception e)
-        {
-            Console.WriteLine("Kek "+e);
-        }
+        _context.SaveChanges();
     }
       
-   /* public Bid GetBid(int id)
+    public async void UpdateBid(BidDTO bid,int id)
     {
+        var ToReplace = await _context.Bids.FindAsync(id);
+        if (ToReplace != null)
+        {
+            ToReplace.Id = bid.IdNextUser;
 
-    }*/
+        }
+
+    }
 }
 
 
