@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 
-namespace Auction_Project.Services;
+namespace Auction_Project.Services.BidService;
 
 public class BidServices
 {
@@ -26,7 +26,7 @@ public class BidServices
             .Include(b => b.User)
             .Include(b => b.Item)
             .ToListAsync();
-        return result; 
+        return result;
     }
 
 
@@ -36,14 +36,14 @@ public class BidServices
             .Include(b => b.User)
             .Include(b => b.Item)
             .ToListAsync();
-        var result = BidList.Find(r => r.Id == id); 
+        var result = BidList.Find(r => r.Id == id);
         return result;
     }
 
-      public async Task<int> DeleteBid(int id)
+    public async Task<int> DeleteBid(int id)
     {
-        var ToDelete = await _context.Bids.FirstOrDefaultAsync(bid=>bid.Id==id);
-        
+        var ToDelete = await _context.Bids.FirstOrDefaultAsync(bid => bid.Id == id);
+
         if (ToDelete != null)
         {
             _context.Bids.Remove(ToDelete);
@@ -51,7 +51,7 @@ public class BidServices
             return id;
         }
         return 0;
-     
+
     }
 
     public async Task<bool> PostBid(BidRequest toPost)
@@ -70,18 +70,18 @@ public class BidServices
             };
             _context.Bids.Add(bid);
             _context.SaveChanges();
-            return true; 
-        } 
+            return true;
+        }
         return false;
     }
-      
-    public async void UpdateBid(BidDTO bid,int id)
+
+    public async void UpdateBid(BidDTO bid, int id)
     {
         var ToReplace = await _context.Bids.FindAsync(id);
         if (ToReplace != null)
         {
             var user = await _context.Users.FindAsync(bid.IdNextUser);
-            if(user != null)
+            if (user != null)
             {
                 ToReplace.User = user;
                 ToReplace.Updated = DateTime.UtcNow;
