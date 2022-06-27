@@ -1,36 +1,38 @@
 ﻿using Auction_Project.DataBase;
 using Auction_Project.Models;
-using Microsoft.AspNetCore.Mvc;
+using Auction_Project.Services.Repo;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 
 namespace Auction_Project.Services.BidService;
 
 public class BidServices
 {
+    private readonly IRepository<Bid> _context2;
     private readonly AppDbContext _context;
 
-    public BidServices(AppDbContext context)
+    public BidServices(IRepository<Bid> context2 ,AppDbContext context)
     {
+        _context2 = context2;
         _context = context;
     }
 
-    public async Task<List<Bid>> GetBids()
-    {
-        var result = await _context.Bids
-            .Include(b => b.User)
-            .Include(b => b.Item)
-            .ToListAsync();
-        return result;
-    }
-
-
-    public async Task<Bid> GetBid(int id)
+    public async Task<List<BidResponse>> Get()
+      {
+          var result = await _context.Bids
+              .Include(b => b.User)
+              .Include(b => b.Item)
+              .ToListAsync();
+          var response=new List<BidResponse>();
+          foreach (var item in result)
+          {
+              response.Add(new BidResponse(item));
+          }
+          return response;
+      }
+ 
+    public async Task<Bid> GetById(int id)
     {
         var BidList = await _context.Bids
             .Include(b => b.User)
@@ -40,21 +42,12 @@ public class BidServices
         return result;
     }
 
-    public async Task<int> DeleteBid(int id)
+    public async Task<Bid> Delete(int id)
     {
-        var ToDelete = await _context.Bids.FirstOrDefaultAsync(bid => bid.Id == id);
-
-        if (ToDelete != null)
-        {
-            _context.Bids.Remove(ToDelete);
-            await _context.SaveChangesAsync();
-            return id;
-        }
-        return 0;
-
+        return await _context2.Delete(id);
     }
 
-    public async Task<bool> PostBid(BidRequest toPost)
+    public async Task<bool> Post(BidRequest toPost)
     {
         var user = await _context.Users.FindAsync(toPost.ID_User);
         var item = await _context.Items.FindAsync(toPost.ID_Item);
@@ -75,9 +68,12 @@ public class BidServices
         return false;
     }
 
-    public async void UpdateBid(BidDTO bid, int id)
+    public async Task<bool> Update(BidDTO bid, int id)
     {
-        var ToReplace = await _context.Bids.FindAsync(id);
+        var ToReplace = await _context.Bids
+            .Include(b=>b.User)
+            .Include(b=>b.Item)
+            .FirstOrDefaultAsync(b=>b.Id==id);
         if (ToReplace != null)
         {
             var user = await _context.Users.FindAsync(bid.IdNextUser);
@@ -86,11 +82,11 @@ public class BidServices
                 ToReplace.User = user;
                 ToReplace.Updated = DateTime.UtcNow;
                 ToReplace.CurrentPrice = bid.Price;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
+                return true;
             }
-
         }
-
+        return false;
     }
 }
 

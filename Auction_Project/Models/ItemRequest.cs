@@ -2,5 +2,9 @@
 {
     public class ItemRequest
     {
+        public string Id { get; set; }
+
     }
+
 }
+
