@@ -31,7 +31,7 @@ namespace Auction_Project.Services.Repo
 
         public async Task<IEnumerable<T>> Get()
         {
-            return await DbSet.ToListAsync(); 
+            return await DbSet.IgnoreAutoIncludes().ToListAsync(); 
         }
 
 
