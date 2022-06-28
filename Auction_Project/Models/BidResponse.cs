@@ -1,4 +1,4 @@
-﻿namespace Auction_Project.Models.Bid
+﻿namespace Auction_Project.Models
 {
     public class BidResponse
     {
@@ -23,7 +23,7 @@
                 LastName = bid.User.LastName,
                 Email = bid.User.Email
             };
-            // BidId = bid.Id;
+           // BidId = bid.Id;
         }
     }
 }

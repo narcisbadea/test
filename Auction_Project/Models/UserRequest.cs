@@ -1,4 +1,4 @@
-﻿namespace Auction_Project.Models.User.User
+﻿namespace Auction_Project.Models
 {
     public class UserRequest
     {

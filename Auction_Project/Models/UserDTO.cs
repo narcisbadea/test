@@ -1,6 +1,6 @@
 ﻿using Auction_Project.Models;
 
-namespace Auction_Project.Models.User
+namespace Auction_Project.Authenticate
 {
     public class UserDTO
     {

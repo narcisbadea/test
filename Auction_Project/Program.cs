@@ -1,5 +1,6 @@
 using Auction_Project.DataBase;
 using Auction_Project.Services.BidService;
+using Auction_Project.Services.Repo;
 using Auction_Project.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

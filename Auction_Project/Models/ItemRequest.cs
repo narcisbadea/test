@@ -1,4 +1,4 @@
-﻿namespace Auction_Project.Models.Item.Item
+﻿namespace Auction_Project.Models
 {
     public class ItemRequest
     {

@@ -1,8 +1,9 @@
-﻿using Auction_Project.Models.Base;
+﻿using Auction_Project.DataBase;
+using Auction_Project.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Auction_Project.DataBase
+namespace Auction_Project.Services.Repo
 {
     public class Repository<T> : IRepository<T> where T : class, IEntity
     {
@@ -30,16 +31,16 @@ namespace Auction_Project.DataBase
 
         public async Task<IEnumerable<T>> Get()
         {
-            return await DbSet.ToListAsync();
+            return await DbSet.ToListAsync(); 
         }
 
 
         public async Task<T> GetById(int id)
-        {
+        {   
             return await DbSet.FirstOrDefaultAsync(e => e.Id == id);
         }
 
-
+       
         public async Task<T> Post(T entity)
         {
             var result = await DbSet.AddAsync(entity);
@@ -57,7 +58,7 @@ namespace Auction_Project.DataBase
 
             entity.Updated = DateTime.UtcNow;
             entity = DbSet.Update(entity).Entity;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); 
 
             return entity;
         }

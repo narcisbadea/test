@@ -1,5 +1,6 @@
 ﻿using Auction_Project.DataBase;
-using Auction_Project.Models.Bid;
+using Auction_Project.Models;
+using Auction_Project.Services.Repo;
 using Microsoft.EntityFrameworkCore;
 
 

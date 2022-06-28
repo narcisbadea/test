@@ -1,4 +1,4 @@
-﻿namespace Auction_Project.Models.Bid
+﻿namespace Auction_Project.Models
 {
     public class BidDTO
     {

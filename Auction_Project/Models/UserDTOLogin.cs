@@ -1,4 +1,4 @@
-﻿namespace Auction_Project.Models.User
+﻿namespace Auction_Project.Models
 {
     public class UserDTOLogin
     {
