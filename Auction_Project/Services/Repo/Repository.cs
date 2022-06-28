@@ -31,19 +31,22 @@ namespace Auction_Project.Services.Repo
 
         public async Task<IEnumerable<T>> Get()
         {
-            return await DbSet.IgnoreAutoIncludes().ToListAsync(); 
+            return await DbSet.ToListAsync(); 
         }
 
 
         public async Task<T> GetById(int id)
-        {
+        {   
             return await DbSet.FirstOrDefaultAsync(e => e.Id == id);
         }
 
        
-        public Task<T> Post(T entity)
+        public async Task<T> Post(T entity)
         {
-            throw new NotImplementedException();
+            var result = await DbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            return result.Entity;
         }
 
         public async Task<T> Update([NotNull] T entity)

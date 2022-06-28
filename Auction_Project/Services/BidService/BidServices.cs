@@ -61,9 +61,17 @@ public class BidServices
                 Updated = DateTime.UtcNow,
                 CurrentPrice = toPost.CurrentPrice
             };
-            _context.Bids.Add(bid);
-            _context.SaveChanges();
-            return true;
+            var lastPrice= await _context.Bids
+                .Include(b=>b.Item)
+                .Where(b => b.Item.Id == item.Id)
+                .ToListAsync();
+            var x = lastPrice.OrderBy(b => b.CurrentPrice).Last().CurrentPrice;
+            if (x < bid.CurrentPrice)
+            {
+                _context.Bids.Add(bid);
+                _context.SaveChanges();
+                return true;
+            }  
         }
         return false;
     }
@@ -89,5 +97,3 @@ public class BidServices
         return false;
     }
 }
-
-
