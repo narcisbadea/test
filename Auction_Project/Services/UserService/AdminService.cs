@@ -1,5 +1,5 @@
 ﻿using Auction_Project.DataBase;
-using Auction_Project.Models;
+using Auction_Project.Models.BannedUser;
 using Microsoft.EntityFrameworkCore;
 
 namespace Auction_Project.Services.UserService

@@ -1,4 +1,4 @@
-﻿using Auction_Project.Models;
+﻿using Auction_Project.Models.BannedUser;
 using Auction_Project.Services.UserService;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

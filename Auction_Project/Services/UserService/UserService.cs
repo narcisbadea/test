@@ -1,4 +1,4 @@
-﻿using Auction_Project.Models;
+﻿using Auction_Project.Models.User;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

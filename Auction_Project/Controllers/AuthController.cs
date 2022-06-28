@@ -1,5 +1,5 @@
 ﻿using Auction_Project.DataBase;
-using Auction_Project.Models;
+using Auction_Project.Models.User;
 using Auction_Project.Services.UserService;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
