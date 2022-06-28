@@ -1,4 +1,4 @@
-﻿using Auction_Project.Models;
+﻿using Auction_Project.Models.Users;
 
 namespace Auction_Project.Services.UserService
 {

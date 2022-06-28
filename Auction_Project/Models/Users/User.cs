@@ -1,10 +1,12 @@
-﻿namespace Auction_Project.Models
+﻿using Auction_Project.Models.Base;
+
+namespace Auction_Project.Models.Users
 {
-    public class User:Entity
+    public class User : Entity
     {
 
         public bool IsAdmin { get; set; } = false;
-       
+
         public string UserName { get; set; }
 
         public byte[] Password { get; set; }

@@ -1,4 +1,7 @@
-﻿using Auction_Project.Models;
+﻿using Auction_Project.Models.BannedUsers;
+using Auction_Project.Models.Bids;
+using Auction_Project.Models.Items;
+using Auction_Project.Models.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Auction_Project.DataBase

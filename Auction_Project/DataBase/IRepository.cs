@@ -1,7 +1,7 @@
-﻿using Auction_Project.Models;
+﻿using Auction_Project.Models.Base;
 using Microsoft.EntityFrameworkCore;
 
-namespace Auction_Project.Services.Repo
+namespace Auction_Project.DataBase
 {
     public interface IRepository<T> where T : class, IEntity
     {

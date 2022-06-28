@@ -1,8 +1,7 @@
-﻿namespace Auction_Project.Models
+﻿namespace Auction_Project.Models.Items
 {
-    public class Item : Entity
+    public class ItemResponse
     {
-
         public string? Desc { get; set; }
 
         public decimal? Price { get; set; }
@@ -10,5 +9,4 @@
         public string? ImagesAddress { get; set; }
 
     }
-
 }
