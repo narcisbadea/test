@@ -22,7 +22,7 @@ namespace Auction_Project.Authenticate
         [HttpPost("register")]
         public async Task<ActionResult<User>> Register(UserDTO request)
         {
-            var usernameUsed = _dbContext.Users.FirstOrDefaultAsync(user => user.UserName == request.UserName);
+            var usernameUsed = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserName == request.UserName);
             if(usernameUsed != null)
             {
                 return BadRequest("Username already used!");
