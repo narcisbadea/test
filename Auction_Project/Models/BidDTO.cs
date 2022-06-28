@@ -4,6 +4,6 @@
     {
         public int IdNextUser { get; set; }
         public decimal Price { get; set; }
-        public DateTime Updated { get; set; }
+
     }
 }
