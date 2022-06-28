@@ -16,6 +16,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<BidServices>();
+builder.Services.AddScoped<AdminService>();
 
 builder.Services.AddSwaggerGen(options => {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme

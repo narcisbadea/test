@@ -59,6 +59,7 @@ namespace Auction_Project.Models
 
         // PUT api/<BidsController>/5
         [HttpPut("{id}")]
+        
         public async Task<ActionResult> Update(int id)
         {
 

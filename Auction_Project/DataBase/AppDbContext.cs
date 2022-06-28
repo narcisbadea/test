@@ -7,6 +7,7 @@ namespace Auction_Project.DataBase
     {
         public AppDbContext(DbContextOptions options) : base(options) { }
         public DbSet<User> Users { get; set; }
+        public DbSet<BannedUser> BannedUsers { get; set; }
         public DbSet<Bid> Bids { get; set; }
         public DbSet<Item> Items { get; set; }
 
