@@ -29,17 +29,17 @@ namespace Auction_Project.Models
             return Ok(bids);
         }*/
 
-        /*
-        // GET api/<BidsController>/5
+       
+       
         [HttpGet("{id}")]
-        public async Task<ActionResult<BidResponse>> GetById(int id)
+        public async Task<ActionResult<ItemResponse>> GetById(int id)
         {
-            var bid = await _bidServices.GetById(id);
+            var item = await _itemServices.GetById(id);
 
-            if (bid != null)
-                return Ok(new BidResponse(bid));
-            return NotFound("Bid not found");
-        }*/
+            if (item != null)
+                return Ok(new ItemResponse());
+            return NotFound("Item not found");
+        }
 
         // POST api/<BidsController>
         [HttpPost]
@@ -51,8 +51,7 @@ namespace Auction_Project.Models
         }
 
        // PUT api/<BidsController>/5*/
-        //[HttpPut("{id}")]
-     /*
+        /*[HttpPut("{id}")]
         public async Task<ActionResult> Update(BidDTO bid, int id)
         {
             var status = await _itemServices.Update(bid, id);
