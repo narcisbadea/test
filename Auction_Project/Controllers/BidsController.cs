@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Auction_Project.Services.BidService;
 using Auction_Project.Models.Bids;
+using Auction_Project.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,20 +15,42 @@ namespace Auction_Project.Models
 
         private readonly BidServices _bidServices;
 
-        public BidsController(BidServices bidServices)
+        private readonly IUserService _userServices;
+
+
+        public BidsController(BidServices bidServices, IUserService userServices)
         {
             _bidServices = bidServices;
+            _userServices = userServices;
         }
 
 
         // GET: api/<BidsController>
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<BidResponse>>> Get()
         {
-            var bids = await _bidServices.Get();
-            if (bids.Count == 0)
-                return NotFound("List is empty");
-            return Ok(bids);
+            var role = _userServices.GetMyRole();
+
+            //get for user to be implemented
+            if (role != null)
+            {
+                if (role == "Admin")
+                {
+                    var bids = await _bidServices.Get();
+                    if (bids.Count == 0)
+                        return NotFound("List is empty");
+                    return Ok(bids);
+                }
+                if(role == "User")
+                {
+                    var bids = await _bidServices.GetUser();
+                    if (bids.Count == 0)
+                        return NotFound("List is empty");
+                    return Ok(bids); 
+                }
+            }
+            return BadRequest("Access denied.");
         }
          
         // GET api/<BidsController>/5

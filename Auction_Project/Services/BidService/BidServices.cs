@@ -30,6 +30,19 @@ public class BidServices
           }
           return response;
       }
+
+    public async Task<List<BidResponseUser>> GetUser()
+      {
+          var result = await _context.Bids
+              .Include(b => b.Item)
+              .ToListAsync();
+          var response=new List<BidResponseUser>();
+          foreach (var item in result)
+          {
+              response.Add(new BidResponseUser(item));
+          }
+          return response;
+      }
  
     public async Task<Bid> GetById(int id)
     {
@@ -64,13 +77,25 @@ public class BidServices
                 .Include(b=>b.Item)
                 .Where(b => b.Item.Id == item.Id)
                 .ToListAsync();
-            var x = lastPrice.OrderBy(b => b.CurrentPrice).Last().CurrentPrice;
-            if (x < bid.CurrentPrice)
+            if (lastPrice.Count != 0)
             {
-                _context.Bids.Add(bid);
-                _context.SaveChanges();
-                return true;
-            }  
+                var x = lastPrice.OrderBy(b => b.CurrentPrice).Last().CurrentPrice;
+                if (x < bid.CurrentPrice)
+                {
+                    await _context.Bids.AddAsync(bid);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+            }
+            else
+            {
+                if(item.Price <= bid.CurrentPrice)
+                {
+                    await _context.Bids.AddAsync(bid);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+            }
         }
         return false;
     }

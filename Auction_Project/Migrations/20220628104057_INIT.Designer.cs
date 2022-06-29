@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction_Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220628090658_Init")]
-    partial class Init
+    [Migration("20220628104057_INIT")]
+    partial class INIT
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -76,6 +76,36 @@ namespace Auction_Project.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Bids");
+                });
+
+            modelBuilder.Entity("Auction_Project.Models.Extras.BidLibrary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<decimal>("CurrentPrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BidLibraries");
                 });
 
             modelBuilder.Entity("Auction_Project.Models.Items.Item", b =>
@@ -175,6 +205,25 @@ namespace Auction_Project.Migrations
                 });
 
             modelBuilder.Entity("Auction_Project.Models.Bids.Bid", b =>
+                {
+                    b.HasOne("Auction_Project.Models.Items.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Auction_Project.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Auction_Project.Models.Extras.BidLibrary", b =>
                 {
                     b.HasOne("Auction_Project.Models.Items.Item", "Item")
                         .WithMany()
