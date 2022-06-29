@@ -1,5 +1,6 @@
 using Auction_Project.DataBase;
 using Auction_Project.Services.BidService;
+using Auction_Project.Services.ItemService;
 using Auction_Project.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<BidServices>();
 builder.Services.AddScoped<AdminService>();
-
+builder.Services.AddScoped<ItemsServices>();
 
 builder.Services.AddSwaggerGen(options => {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
