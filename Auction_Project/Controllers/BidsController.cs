@@ -71,7 +71,9 @@ namespace Auction_Project.Models
             if(await _bidServices.Post(bid)) 
                 return CreatedAtAction(nameof(Get), bid);
             return BadRequest();
+            // de pus bids for approval
         }
+     
 
         // PUT api/<BidsController>/5
         [HttpPut("{id}")]
