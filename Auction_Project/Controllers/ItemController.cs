@@ -50,15 +50,13 @@ namespace Auction_Project.Models
             return BadRequest();
         }
 
-       // PUT api/<BidsController>/5*/
-        /*[HttpPut("{id}")]
-        public async Task<ActionResult> Update(BidDTO bid, int id)
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(Item m_Item, int id)
         {
-            var status = await _itemServices.Update(bid, id);
-            if (status)
-                return Ok(bid);
-            return BadRequest();
-        }*/
+            var status = await _itemServices.Update(m_Item);
+           
+            return Ok();
+        }
 
         // DELETE api/<BidsController>/5
         [HttpDelete("{id}")]

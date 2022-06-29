@@ -32,6 +32,11 @@ public class ItemsServices
          return await _context2.Post(m_item);
         
     }
+    public async Task<Item> Update(Item m_item)
+    {
 
+        return await _context2.Update(m_item);
+
+    }
 }
 
