@@ -9,7 +9,7 @@ namespace Auction_Project.Controllers
     [ApiController]
     public class BanUserController : ControllerBase
     {
-        private readonly AdminService _adminService;
+        private readonly IAdminService _adminService;
 
         public BanUserController(AdminService adminService)
         {

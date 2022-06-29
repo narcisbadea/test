@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace Auction_Project.Services.UserService
 {
@@ -34,6 +35,12 @@ namespace Auction_Project.Services.UserService
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 return computedHash.SequenceEqual(passwordHash);
             }
+        }
+
+        public string GenerateRandomPasswordString()
+        {
+            var builder = "default";
+            return builder.ToString();
         }
 
         public string CreateToken(User user)
