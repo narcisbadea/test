@@ -25,6 +25,13 @@ public class ItemsServices
     {
         return await _context2.GetById(id);
     }
+     
+    public async Task<Item> Post(Item m_item)
+    {
+       
+         return await _context2.Post(m_item);
+        
+    }
 
 }
 

@@ -21,14 +21,15 @@ namespace Auction_Project.Models
 
         // GET: api/<ItemsController>
         /*[HttpGet]
-        public async Task<ActionResult<IEnumerable<BidResponse>>> Get()
+        public async Task<ActionResult<IEnumerable<ItemResponse>>> Get()
         {
-            var bids = await _bidServices.Get();
+            var items = await _bidServices.Get();
             if (bids.Count == 0)
                 return NotFound("List is empty");
             return Ok(bids);
-        }
+        }*/
 
+        /*
         // GET api/<BidsController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BidResponse>> GetById(int id)
@@ -38,22 +39,23 @@ namespace Auction_Project.Models
             if (bid != null)
                 return Ok(new BidResponse(bid));
             return NotFound("Bid not found");
-        }
+        }*/
 
         // POST api/<BidsController>
         [HttpPost]
-        public async Task<ActionResult<Bid>> Post(BidRequest bid)
+        public async Task<ActionResult<Item>> Post(Item item)
         {
-            if (await _bidServices.Post(bid))
-                return CreatedAtAction(nameof(Get), bid);
+            if (await _itemServices.Post(item)!=null)
+                return Ok(item);
             return BadRequest();
         }
 
-        // PUT api/<BidsController>/5*/
+       // PUT api/<BidsController>/5*/
         //[HttpPut("{id}")]
-        /*public async Task<ActionResult> Update(BidDTO bid, int id)
+     /*
+        public async Task<ActionResult> Update(BidDTO bid, int id)
         {
-            var status = await _bidServices.Update(bid, id);
+            var status = await _itemServices.Update(bid, id);
             if (status)
                 return Ok(bid);
             return BadRequest();
