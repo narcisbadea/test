@@ -37,6 +37,12 @@ namespace Auction_Project.Services.UserService
             }
         }
 
+        public string GenerateRandomPasswordString()
+        {
+            var builder = "default";
+            return builder.ToString();
+        }
+
         public string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>();
