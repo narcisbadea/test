@@ -1,10 +1,12 @@
 ﻿using Auction_Project.Models.BannedUsers;
 using Auction_Project.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Auction_Project.Controllers
 {
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class BanUserController : ControllerBase

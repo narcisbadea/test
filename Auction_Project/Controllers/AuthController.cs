@@ -70,7 +70,7 @@ namespace Auction_Project.Authenticate
             var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserName == request.UserName);
             if (user?.UserName != request.UserName)
             {
-                return BadRequest("User not found.");
+                return NotFound("User not found.");
             }
 
             if (!(_userService.VerifyPasswordHash(request.Password, user.Password, user.PwSalt)))
