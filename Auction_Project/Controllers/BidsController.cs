@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Auction_Project.Services.BidService;
 using Auction_Project.Models.Bids;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -21,6 +22,7 @@ namespace Auction_Project.Models
 
         // GET: api/<BidsController>
         [HttpGet]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<BidResponse>>> Get()
         {
             var bids = await _bidServices.Get();
@@ -31,6 +33,7 @@ namespace Auction_Project.Models
          
         // GET api/<BidsController>/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<BidResponse>> GetById(int id)
         {
             var bid = await _bidServices.GetById(id);
@@ -42,6 +45,7 @@ namespace Auction_Project.Models
 
         // POST api/<BidsController>
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Bid>> Post(BidRequest bid)
         {
             if(await _bidServices.Post(bid)) 
@@ -61,6 +65,7 @@ namespace Auction_Project.Models
 
         // DELETE api/<BidsController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
             var bid = await _bidServices.GetById(id);
