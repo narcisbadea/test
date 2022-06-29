@@ -68,9 +68,16 @@ namespace Auction_Project.Authenticate
         public async Task<IActionResult> Login(UserDTOLogin request)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserName == request.UserName);
+            var bannedUser = await _dbContext.BannedUsers.FirstOrDefaultAsync(bannedU => bannedU.User.Id == user.Id);
+
             if (user?.UserName != request.UserName)
             {
                 return BadRequest("User not found.");
+            }
+
+            if(bannedUser != null)
+            {
+                return BadRequest("You are banned!");
             }
 
             if (!(_userService.VerifyPasswordHash(request.Password, user.Password, user.PwSalt)))

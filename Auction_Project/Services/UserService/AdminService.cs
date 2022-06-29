@@ -64,6 +64,8 @@ namespace Auction_Project.Services.UserService
             var unbannedUser = await _context.Users.FirstOrDefaultAsync(unbannedUser => unbannedUser.Id == id);
             var foundAdmin = await _context.Users.FirstOrDefaultAsync(adminUser => adminUser.Id == adminId);
 
+            if (GetBannedUser(id) == null)
+                return 0;
             if (unbannedUser != null && foundAdmin != null)
             {
 
