@@ -17,13 +17,15 @@ namespace Auction_Project.Models
         private readonly IRepository<Item> _repository;
         private readonly ItemsServices _itemServices;
         private readonly IUserService _userServices;
+        private readonly ItemsForApprovalService _itemsForApprovalServices;
 
 
-        public ItemsController(IRepository<Item> repository, ItemsServices itemServices, IUserService userServices)
+        public ItemsController(IRepository<Item> repository, ItemsServices itemServices, IUserService userServices, ItemsForApprovalService itemsForApprovalServices)
         {
             _repository = repository;
             _itemServices = itemServices;
             _userServices = userServices;
+            _itemsForApprovalServices = itemsForApprovalServices;
         }
 
 
@@ -84,22 +86,40 @@ namespace Auction_Project.Models
 
         // POST >
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Item>> Post(Item item)
+        [Authorize]
+        public async Task<ActionResult> Post(Item item)
         {
-            if (await _itemServices.Post(item)!=null)
-                return Ok(item);
+            var role = _userServices.GetMyRole();
+
+            if (role != null)
+            {
+                if (role == "Admin")
+                {
+                    if (await _itemServices.Post(item) != null)
+                        return Ok(item);
+                    return BadRequest();
+                }
+            if(role == "User")
+                {
+                    if (await _itemsForApprovalServices.Post(_itemsForApprovalServices.ConvertToItemsForApproval(item)) != null)
+                        return Ok(item);
+                    return BadRequest();
+                }
             return BadRequest();
+            }
+         return BadRequest();
         }
 
 
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(Item item, int id)
-        {
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Update(Item item)
+        { 
             var status = await _itemServices.Update(item);
-           
-            return Ok();
+            if(status!=null)
+                return Ok(status);
+            return BadRequest();
         }
 
         // DELETE 

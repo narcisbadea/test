@@ -34,10 +34,9 @@ public class ItemsForApprovalService
         return await _repository.Delete(id);
     }
 
-    public async Task<bool> Post(ItemsForApproval toPost)
+    public async Task<ItemsForApproval> Post(ItemsForApproval toPost)
     {
-        await _repository.Post(toPost);
-        return true;
+        return await _repository.Post(toPost);
     }
 
     public async Task<ItemsForApproval> Update(ItemsForApproval item)
@@ -45,4 +44,18 @@ public class ItemsForApprovalService
        return await _repository.Update(item);
     }
 
+    public ItemsForApproval ConvertToItemsForApproval(Item item){
+         
+        ItemsForApproval result = new ItemsForApproval()
+        {
+            Id = item.Id,
+            ImagesAddress = item.ImagesAddress,
+            Desc = item.Desc,
+            Price = item.Price,
+            IsSold = item.IsSold,
+            Available = item.Available,
+        };
+
+       return result;
+    }
 }

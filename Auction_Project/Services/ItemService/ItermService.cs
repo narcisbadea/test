@@ -38,16 +38,13 @@ public class ItemsServices
         return await _repository.GetById(id);
     }
      
-    public async Task<Item> Post(Item m_item)
+    public async Task<Item> Post(Item item)
     {
-       
-         return await _repository.Post(m_item);
-        
+        return await _repository.Post(item);
     }
-    public async Task<Item> Update(Item m_item)
+    public async Task<Item> Update(Item item)
     {
-
-        return await _repository.Update(m_item);
+        return await _repository.Update(item);
 
     }
 }
