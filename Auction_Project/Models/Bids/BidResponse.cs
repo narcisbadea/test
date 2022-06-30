@@ -13,12 +13,8 @@ namespace Auction_Project.Models.Bids
 
         public BidResponse(Bid bid)
         {
-            ItemResponse = new ItemResponse
-            {
-                Desc = bid.Item.Desc,
-                Price = bid.CurrentPrice,
-                ImagesAddress = bid.Item.ImagesAddress
-            };
+            ItemResponse = new ItemResponse(bid.Item.Desc, bid.CurrentPrice, bid.Item.ImagesAddress);
+            
             UserResponse = new UserResponse
             {
                 UserName = bid.User.UserName,

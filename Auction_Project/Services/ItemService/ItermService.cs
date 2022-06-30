@@ -21,6 +21,18 @@ public class ItemsServices
         return await _repository.Delete(id);
     }
 
+    public async Task<IEnumerable<ItemResponse>> Get()
+    {
+        var result = await _context.Items.ToListAsync();
+        
+        var response = new List<ItemResponse>();
+        foreach (var item in result)
+        {
+            response.Add(new ItemResponse(item));
+        }
+        return response;
+    }
+
     public async Task<Item>GetById(int id)
     {
         return await _repository.GetById(id);

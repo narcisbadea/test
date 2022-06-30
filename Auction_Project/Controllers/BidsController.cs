@@ -30,7 +30,6 @@ namespace Auction_Project.Models
         {
             var role = _userServices.GetMyRole();
 
-            //get for user to be implemented
             if (role != null)
             {
                 if (role == "Admin")
