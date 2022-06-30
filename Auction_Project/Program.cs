@@ -20,7 +20,11 @@ builder.Services.AddScoped<IAdminService, AdminService>();
 
 
 builder.Services.AddSwaggerGen(options => {
-    //options.SwaggerDoc("v1", new() { Title = "School of .NET", Version = "v1" });
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Auction Project",
+        Version = "v1"
+    });
 
     var securitySchema = new OpenApiSecurityScheme
     {
