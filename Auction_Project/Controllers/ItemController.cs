@@ -51,9 +51,9 @@ namespace Auction_Project.Models
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(Item m_Item, int id)
+        public async Task<ActionResult> Update(Item item, int id)
         {
-            var status = await _itemServices.Update(m_Item);
+            var status = await _itemServices.Update(item);
            
             return Ok();
         }

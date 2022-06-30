@@ -19,6 +19,8 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<BidServices>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<ItemsServices>();
+builder.Services.AddScoped<ItemsForApprovalService>();
+
 
 builder.Services.AddSwaggerGen(options => {
     options.SwaggerDoc("v1", new() { Title = "School of .NET", Version = "v1" });

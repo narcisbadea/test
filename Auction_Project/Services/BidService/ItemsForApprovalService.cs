@@ -3,22 +3,22 @@ using Auction_Project.Models.Bids;
 using Microsoft.EntityFrameworkCore;
 
 
-namespace Auction_Project.Services.BidService;
+namespace Auction_Project.Services.ItemService;
 
 public class ItemsForApprovalService
 {
-    private readonly IRepository<ItemsForApproval> _context2;
+    private readonly IRepository<ItemsForApproval> _repository;
     private readonly AppDbContext _context;
 
-    public ItemsForApprovalService(IRepository<ItemsForApproval> context2, AppDbContext context)
+    public ItemsForApprovalService(IRepository<ItemsForApproval> repository, AppDbContext context)
     {
-        _context2 = context2;
+        _repository = repository;
         _context = context;
     }
 
     public async Task<IEnumerable<ItemsForApproval>> Get()
     {
-        return await _context2.Get();
+        return await _repository.Get();
     }
 
     public async Task<ItemsForApproval> GetById(int id)
@@ -31,12 +31,18 @@ public class ItemsForApprovalService
 
     public async Task<ItemsForApproval> Delete(int id)
     {
-        return await _context2.Delete(id);
+        return await _repository.Delete(id);
     }
 
     public async Task<bool> Post(ItemsForApproval toPost)
     {
-        await _context2.Post(toPost);
+        await _repository.Post(toPost);
         return true;
     }
+
+    public async Task<ItemsForApproval> Update(ItemsForApproval item)
+    {
+       return await _repository.Update(item);
+    }
+
 }
