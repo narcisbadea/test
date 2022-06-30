@@ -42,10 +42,17 @@ public class ItemsServices
     {
         return await _repository.Post(item);
     }
-    public async Task<Item> Update(Item item)
+    public async Task<bool> Update(Item item, int id)
     {
-        return await _repository.Update(item);
-
+        var ToReplace = await _context.Items.FirstOrDefaultAsync(b => b.Id == id);
+        if (ToReplace != null)
+        {
+            ToReplace = new Item(item.IsSold,item.Available,item.Desc,item.Price,item.ImagesAddress);
+            ToReplace.Updated = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        return false;
     }
 }
 

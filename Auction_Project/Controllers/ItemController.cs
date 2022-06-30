@@ -112,18 +112,19 @@ namespace Auction_Project.Models
 
 
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Update(Item item)
+        public async Task<ActionResult> Update(Item item, int id)
         { 
-            var status = await _itemServices.Update(item);
-            if(status!=null)
+            var status = await _itemServices.Update(item, id);
+            if(status)
                 return Ok(status);
             return BadRequest();
         }
 
         // DELETE 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
             var item = await _itemServices.GetById(id);

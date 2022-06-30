@@ -15,5 +15,18 @@ namespace Auction_Project.Models.Items
 
         public string? ImagesAddress { get; set; }
 
+        public Item()
+        {
+
+        }
+
+        public Item(bool isSold, bool available, string? desc, decimal? price, string? imagesAddress)
+        {
+            IsSold = isSold;
+            Available = available;
+            Desc = desc;
+            Price = price;
+            ImagesAddress = imagesAddress;
+        }
     }
 }
