@@ -19,13 +19,13 @@ namespace Auction_Project.Controllers
         private readonly IUserService _userService;
         private readonly IAdminService _adminService;
 
-        private readonly AppDbContext _context;
+        //private readonly AppDbContext _context;
 
-        public SuperUserController(IRepository<User> userRepository, IRepository<Bid> bidRepository, AppDbContext context, IUserService userService, IAdminService adminService)
+        public SuperUserController(IRepository<User> userRepository, IRepository<Bid> bidRepository,/* AppDbContext context,*/ IUserService userService, IAdminService adminService)
         {
             _userRepository = userRepository;
             _bidRepository = bidRepository;
-            _context = context;
+            //_context = context;
             _userService = userService;
             _adminService = adminService;
         }
@@ -35,6 +35,10 @@ namespace Auction_Project.Controllers
         public async Task<ActionResult> GetAdmins()
         {
             var users = await _userRepository.Get();
+
+            if (users == null)
+                return NotFound($"Users are not found");
+
             return Ok(users.Where(users => users.IsAdmin == true).ToList());
         }
         
@@ -42,6 +46,10 @@ namespace Auction_Project.Controllers
         public async Task<ActionResult> GetAdmin(int id)
         {
             var admin = await _userRepository.GetById(id);
+
+            if (admin == null)
+                return NotFound($"Admin with id {id} is not found");
+
             return Ok(admin);
         }
 
@@ -50,6 +58,10 @@ namespace Auction_Project.Controllers
         public async Task<ActionResult> GetUsers()
         {
             var users = await _userRepository.Get();
+
+            if (users == null)
+                return NotFound($"Users are not found");
+
             return Ok(users.Where(users => users.IsAdmin == false).ToList());
         }
 
@@ -57,6 +69,9 @@ namespace Auction_Project.Controllers
         public async Task<ActionResult> GetUser(int id)
         {
             var user = await _userRepository.GetById(id);
+
+            if(user == null)
+                return NotFound($"User with id {id} not found");
             return Ok(user);
         }
 
@@ -84,11 +99,10 @@ namespace Auction_Project.Controllers
                 return NotFound("Banned user is not found");
 
             return Ok(bannedUser);
-
         }
 
         [HttpPost("set-user")]
-        public async Task<ActionResult> SetUser(UserPwd userRequested, bool setAdmin)
+        public async Task<ActionResult> SetUser(UserDTOUpdate userRequested, bool setAdmin)
         {
             var generatedPassword = _userService.GenerateRandomPasswordString();
 
@@ -104,10 +118,10 @@ namespace Auction_Project.Controllers
                 FirstName = userRequested.FirstName,
                 LastName = userRequested.LastName,
                 Cnp = userRequested.Cnp,
-                Created = DateTime.UtcNow,
-                Updated = DateTime.UtcNow,
                 IsAdmin = setAdmin
             };
+
+            await _userRepository.Post(user);
             return Ok(user);
         }
 
@@ -115,46 +129,47 @@ namespace Auction_Project.Controllers
         public async Task<ActionResult> RemoveUser(int id)
         {
             await _userRepository.Delete(id);
+
+            if(id == 0)
+                return NotFound();
+
             return Ok($"User with id {id} is deleted");
         }
 
-        [HttpPut("ban-user")]
+        [HttpPost("ban-user")]
         public async Task<ActionResult> BanUser(int id)
         {
             var bannedUser = await _adminService.AddBannedUser(id, 2);
 
             if(bannedUser is null)
-            {
                 return NotFound("The user is not found!");
-            }
-            return Ok($"Banned user with {id}");
+
+            return Ok($"Banned user with id {id}");
         }
 
         [HttpPut("update-user")]
-        public async Task<ActionResult> UpdateUser(User userRequested, bool setAdmin)
+        public async Task<ActionResult> UpdateUser(int userId, UserDTOUpdate userRequested, bool setAdmin)
         {
+            var searchUser = await _userRepository.GetById(userId);
             //var generatedPassword = _userService.GenerateRandomPasswordString();
 
             //_userService.CreatePasswordHash(generatedPassword, out byte[] passwordHash, out byte[] passwordSalt);
             if (userRequested is null)
                 return NotFound("User not found!");
 
-            var user = new User
-            {
-                UserName = userRequested.UserName,
-                //Password = passwordHash,
-                //PwSalt = passwordSalt,
-                Email = userRequested.Email,
-                FirstName = userRequested.FirstName,
-                LastName = userRequested.LastName,
-                Cnp = userRequested.Cnp,
-                Created = DateTime.UtcNow,
-                Updated = DateTime.UtcNow,
-                IsAdmin = setAdmin
-            };
 
+            searchUser.UserName = userRequested.UserName;
+            //Password = passwordHash,
+            //PwSalt = passwordSalt,
+            searchUser.Email = userRequested.Email;
+            searchUser.FirstName = userRequested.FirstName;
+            searchUser.LastName = userRequested.LastName;
+            searchUser.Cnp = userRequested.Cnp;
+            searchUser.Updated = DateTime.UtcNow;
+            searchUser.IsAdmin = setAdmin;
             
-            return Ok(user);
+            await _userRepository.Update(searchUser);
+            return Ok(searchUser);
         }
 
         //Bid
@@ -192,6 +207,7 @@ namespace Auction_Project.Controllers
                 Updated = DateTime.UtcNow,
             };
 
+            await _bidRepository.Post(bid);
             return Ok(bid);
         }
 

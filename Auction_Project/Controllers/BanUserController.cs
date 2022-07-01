@@ -13,7 +13,7 @@ namespace Auction_Project.Controllers
     {
         private readonly IAdminService _adminService;
 
-        public BanUserController(AdminService adminService)
+        public BanUserController(IAdminService adminService)
         {
             _adminService = adminService;
         }
@@ -57,7 +57,20 @@ namespace Auction_Project.Controllers
             
             return NotFound();
         }
+        
+        [HttpPost("unban-user/id")]
+        public async Task<ActionResult<BannedUser>> UnbanUser(int userId, int adminId)
+        {
+            var user = await _adminService.UnbanUser(userId, adminId);
 
+            if (user == null)
+                return NotFound($"User with id {userId} isn't banned");
+
+            await _adminService.DeleteBannedUser(userId);
+
+            return Ok("User unbanned!");
+        }
+        
 
         [HttpDelete("delete-user/id")]
         public async Task<ActionResult<BannedUser>> DeleteBannedUser(int id)

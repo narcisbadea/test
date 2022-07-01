@@ -34,6 +34,19 @@ namespace Auction_Project.Services.UserService
             return result;
         }
 
+        public async Task<BannedUser> UnbanUser(int id, int adminId)
+        {
+            var bannedUser = await _context.BannedUsers.FirstOrDefaultAsync(bannedUserId => bannedUserId.User.Id == id);
+
+            if(bannedUser == null)
+            {
+                return null;
+            }
+
+            return bannedUser;
+
+        }
+
         public async Task<int> GetUnbannedUser(int id)
         {
             var unbannedUser = await _context.Users.FirstOrDefaultAsync(userId => userId.Id == id);
@@ -71,6 +84,7 @@ namespace Auction_Project.Services.UserService
                     User = unbannedUser,
                     Admin = foundAdmin,
                     Created = DateTime.UtcNow,
+                    Updated = DateTime.UtcNow,
                 };
 
                 await _context.BannedUsers.AddAsync(bannedUser);
