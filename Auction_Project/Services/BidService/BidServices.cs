@@ -8,12 +8,12 @@ namespace Auction_Project.Services.BidService;
 
 public class BidServices
 {
-    private readonly IRepository<Bid> _context2;
+    private readonly IRepository<Bid> _repository;
     private readonly AppDbContext _context;
 
-    public BidServices(IRepository<Bid> context2 ,AppDbContext context)
+    public BidServices(IRepository<Bid> repository ,AppDbContext context)
     {
-        _context2 = context2;
+        _repository = repository;
         _context = context;
     }
 
@@ -56,7 +56,7 @@ public class BidServices
 
     public async Task<Bid> Delete(int id)
     {
-        return await _context2.Delete(id);
+        return await _repository.Delete(id);
     }
 
     public async Task<bool> Post(BidRequest toPost)

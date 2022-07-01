@@ -3,6 +3,7 @@ using System;
 using Auction_Project.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction_Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220629110159_BidsForApproval")]
+    partial class BidsForApproval
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,13 +60,13 @@ namespace Auction_Project.Migrations
                     b.Property<decimal>("CurrentPrice")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<int?>("ItemId")
+                    b.Property<int>("ItemId")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -76,36 +78,34 @@ namespace Auction_Project.Migrations
                     b.ToTable("Bids");
                 });
 
-            modelBuilder.Entity("Auction_Project.Models.Bids.ItemsForApproval", b =>
+            modelBuilder.Entity("Auction_Project.Models.Bids.BidsForApproval", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<bool>("Available")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Desc")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImagesAddress")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("IsSold")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<decimal?>("Price")
+                    b.Property<decimal>("CurrentPrice")
                         .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("Updated")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("ItemsForApproval");
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("BidsForApproval");
                 });
 
             modelBuilder.Entity("Auction_Project.Models.Extras.BidLibrary", b =>
@@ -143,9 +143,6 @@ namespace Auction_Project.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<bool>("Available")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime(6)");
@@ -241,11 +238,34 @@ namespace Auction_Project.Migrations
                 {
                     b.HasOne("Auction_Project.Models.Items.Item", "Item")
                         .WithMany()
-                        .HasForeignKey("ItemId");
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Auction_Project.Models.Users.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Item");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Auction_Project.Models.Bids.BidsForApproval", b =>
+                {
+                    b.HasOne("Auction_Project.Models.Items.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Auction_Project.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Item");
 

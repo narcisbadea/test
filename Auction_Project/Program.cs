@@ -1,5 +1,6 @@
 using Auction_Project.DataBase;
 using Auction_Project.Services.BidService;
+using Auction_Project.Services.ItemService;
 using Auction_Project.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -11,12 +12,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<BidServices>();
+builder.Services.AddScoped<ItemsServices>();
+builder.Services.AddScoped<ItemsForApprovalService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
+
 
 
 builder.Services.AddSwaggerGen(options => {

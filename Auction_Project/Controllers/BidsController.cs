@@ -30,7 +30,6 @@ namespace Auction_Project.Models
         {
             var role = _userServices.GetMyRole();
 
-            //get for user to be implemented
             if (role != null)
             {
                 if (role == "Admin")
@@ -71,7 +70,9 @@ namespace Auction_Project.Models
             if(await _bidServices.Post(bid)) 
                 return CreatedAtAction(nameof(Get), bid);
             return BadRequest();
+            // de pus bids for approval
         }
+     
 
         // PUT api/<BidsController>/5
         [HttpPut("{id}")]
