@@ -66,7 +66,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var connectionString = builder.Configuration.GetSection("AppSettings:connectionString").Value;
 
-var serverVersion = new MySqlServerVersion(new Version(5, 7, 0));
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 0));
 
 builder.Services.AddDbContext<AppDbContext>( options => options.UseMySql(connectionString, serverVersion));
 
