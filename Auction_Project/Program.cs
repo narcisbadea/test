@@ -12,18 +12,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddHttpContextAccessor();
-
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<BidServices>();
-builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<ItemsServices>();
 builder.Services.AddScoped<ItemsForApprovalService>();
+builder.Services.AddScoped<IAdminService, AdminService>();
+
 
 
 builder.Services.AddSwaggerGen(options => {
-    options.SwaggerDoc("v1", new() { Title = "School of .NET", Version = "v1" });
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "Auction Project",
+        Version = "v1"
+    });
 
     var securitySchema = new OpenApiSecurityScheme
     {
@@ -65,7 +70,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var connectionString = builder.Configuration.GetSection("AppSettings:connectionString").Value;
 
-var serverVersion = new MySqlServerVersion(new Version(5, 7, 0));
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 0));
 
 builder.Services.AddDbContext<AppDbContext>( options => options.UseMySql(connectionString, serverVersion));
 

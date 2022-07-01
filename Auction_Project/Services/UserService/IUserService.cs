@@ -8,6 +8,8 @@ namespace Auction_Project.Services.UserService
 
         bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
 
+        string GenerateRandomPasswordString();
+
         string CreateToken(User user);
 
         string GetMyName();
