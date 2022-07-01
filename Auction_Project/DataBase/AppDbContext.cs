@@ -17,7 +17,7 @@ namespace Auction_Project.DataBase
 
         public DbSet<Bid> Bids { get; set; }
 
-        public DbSet<BidLibrary> BidLibraries { get; set; }
+        public DbSet<BidLog> BidLogs { get; set; }
 
         public DbSet<ItemsForApproval> ItemsForApproval { get; set; }
     }

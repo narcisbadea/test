@@ -4,7 +4,7 @@ using Auction_Project.Models.Users;
 
 namespace Auction_Project.Models.Extras
 {
-    public class BidLibrary : Entity
+    public class BidLog : Entity
     {
         public User User { get; set; }
 

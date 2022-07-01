@@ -38,13 +38,14 @@ public class ItemsServices
         return await _repository.GetById(id);
     }
      
-    public async Task<Item> Post(Item item)
+    public async Task<Item> Post(ItemRequest item)
     {
-        return await _repository.Post(item);
+        return await _repository.Post(new Item(item));
     }
-    public async Task<Item> Update(Item item, int id)
+
+    public async Task<Item> Update(ItemRequest item, int id)
     {
-        var ToReplace = await _context.Items.FindAsync(id);
+        var ToReplace = await _context.Items.FirstOrDefaultAsync(i=>i.Id==id);
         if (ToReplace != null)
         {
             //ToReplace { item.IsSold,item.Available,item.Desc,item.Price,item.ImagesAddress};

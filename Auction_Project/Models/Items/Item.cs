@@ -20,6 +20,15 @@ namespace Auction_Project.Models.Items
 
         }
 
+        public Item(ItemRequest itemRequest)
+        {
+            IsSold = itemRequest.IsSold;
+            Available = itemRequest.Available;
+            Desc = itemRequest.Desc;
+            Price = itemRequest.Price;
+            ImagesAddress = itemRequest.ImagesAddress;
+        }
+
         public Item(bool isSold, bool available, string? desc, decimal? price, string? imagesAddress)
         {
             IsSold = isSold;

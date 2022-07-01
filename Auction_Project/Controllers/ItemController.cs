@@ -87,7 +87,7 @@ namespace Auction_Project.Models
         // POST >
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> Post(Item item)
+        public async Task<ActionResult> Post(ItemRequest item)
         {
             var role = _userServices.GetMyRole();
 
@@ -101,7 +101,7 @@ namespace Auction_Project.Models
                 }
             if(role == "User")
                 {
-                    if (await _itemsForApprovalServices.Post(_itemsForApprovalServices.ConvertToItemsForApproval(item)) != null)
+                    if (await _itemsForApprovalServices.Post(new ItemsForApproval(item)) != null)
                         return Ok(item);
                     return BadRequest();
                 }
@@ -114,7 +114,7 @@ namespace Auction_Project.Models
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Update(Item item, int id)
+        public async Task<ActionResult> Update(ItemRequest item, int id)
         { 
             var updated = await _itemServices.Update(item, id);
             if(updated is not null)

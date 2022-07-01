@@ -14,6 +14,20 @@ namespace Auction_Project.Models.Items
         public decimal? Price { get; set; }
 
         public string? ImagesAddress { get; set; }
+
+        public ItemsForApproval()
+        {
+
+        }
+
+        public ItemsForApproval(ItemRequest item)
+        {
+            ImagesAddress = item.ImagesAddress;
+            Desc = item.Desc;
+            Price = item.Price;
+            IsSold = item.IsSold;
+            Available = item.Available;
+        }
     }
 
 }

@@ -44,18 +44,4 @@ public class ItemsForApprovalService
        return await _repository.Update(item);
     }
 
-    public ItemsForApproval ConvertToItemsForApproval(Item item){
-         
-        ItemsForApproval result = new ItemsForApproval()
-        {
-            Id = item.Id,
-            ImagesAddress = item.ImagesAddress,
-            Desc = item.Desc,
-            Price = item.Price,
-            IsSold = item.IsSold,
-            Available = item.Available,
-        };
-
-       return result;
-    }
 }
