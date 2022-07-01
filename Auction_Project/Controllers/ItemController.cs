@@ -122,6 +122,16 @@ namespace Auction_Project.Models
             return BadRequest();
         }
 
+        [HttpPut("{IsSold}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Update(bool item, int id)
+        {
+            var updated = await _itemServices.UpdateSold(item, id);
+            if (updated is not null)
+                return Ok(updated);
+            return BadRequest();
+        }
+
         // DELETE 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]

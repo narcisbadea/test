@@ -8,6 +8,7 @@ namespace Auction_Project.Models.Bids
     {
 
         public User? User { get; set; }
+        public User? SoldTo { get; set; }
 
         public Item? Item { get; set; }
 
