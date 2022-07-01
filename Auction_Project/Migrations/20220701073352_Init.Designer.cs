@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction_Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220629113049_AnothaOne")]
-    partial class AnothaOne
+    [Migration("20220701073352_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -78,39 +78,7 @@ namespace Auction_Project.Migrations
                     b.ToTable("Bids");
                 });
 
-            modelBuilder.Entity("Auction_Project.Models.Bids.ItemsForApproval", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Available")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Desc")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImagesAddress")
-                        .HasColumnType("longtext");
-
-                    b.Property<bool>("IsSold")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ItemsForApproval");
-                });
-
-            modelBuilder.Entity("Auction_Project.Models.Extras.BidLibrary", b =>
+            modelBuilder.Entity("Auction_Project.Models.Extras.BidLog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -137,7 +105,7 @@ namespace Auction_Project.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("BidLibraries");
+                    b.ToTable("BidLogs");
                 });
 
             modelBuilder.Entity("Auction_Project.Models.Items.Item", b =>
@@ -170,6 +138,38 @@ namespace Auction_Project.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Items");
+                });
+
+            modelBuilder.Entity("Auction_Project.Models.Items.ItemsForApproval", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Available")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Desc")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ImagesAddress")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("IsSold")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<decimal?>("Price")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<DateTime?>("Updated")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ItemsForApproval");
                 });
 
             modelBuilder.Entity("Auction_Project.Models.Users.User", b =>
@@ -254,7 +254,7 @@ namespace Auction_Project.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Auction_Project.Models.Extras.BidLibrary", b =>
+            modelBuilder.Entity("Auction_Project.Models.Extras.BidLog", b =>
                 {
                     b.HasOne("Auction_Project.Models.Items.Item", "Item")
                         .WithMany()

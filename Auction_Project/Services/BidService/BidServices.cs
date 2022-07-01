@@ -43,7 +43,7 @@ public class BidServices
           }
           return response;
       }
- 
+    
     public async Task<Bid> GetById(int id)
     {
         var BidList = await _context.Bids
