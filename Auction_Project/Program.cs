@@ -1,4 +1,5 @@
 using Auction_Project.DataBase;
+using Auction_Project.Models.Base;
 using Auction_Project.Services.BidService;
 using Auction_Project.Services.ItemService;
 using Auction_Project.Services.UserService;
@@ -19,6 +20,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<BidServices>();
 builder.Services.AddScoped<ItemsServices>();
 
+builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
 
 
