@@ -5,7 +5,8 @@ namespace Auction_Project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemsForApprovalController : ControllerBase
+    public class ClientItemController : ControllerBase
     {
+
     }
 }

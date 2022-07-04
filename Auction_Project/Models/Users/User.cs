@@ -2,17 +2,19 @@
 
 namespace Auction_Project.Models.Users
 {
-    public class User
+    public class User : IModel
     {
         public int Id { get; set; }
 
-        public bool IsAdmin { get; set; } = false;
+        public DateTime Created { get; set; } = DateTime.UtcNow;
+
+        public bool IsActive { get; set; } = true;
 
         public string UserName { get; set; }
 
         public byte[] Password { get; set; }
 
-        public byte[] PwSalt { get; set; }
+        public byte[] PasswordSalt { get; set; }
 
         public string Email { get; set; }
 

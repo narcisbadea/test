@@ -1,10 +1,15 @@
 ﻿using Auction_Project.Models.Base;
+using Auction_Project.Models.Pictures;
 using Auction_Project.Models.Users;
+
 
 namespace Auction_Project.Models.Items
 {
-    public class Item 
+    public class Item : IModel
     {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
 
         public bool IsSold { get; set; } = false;
 
@@ -13,8 +18,11 @@ namespace Auction_Project.Models.Items
         public string? Desc { get; set; }
 
         public decimal? Price { get; set; }
+
         public User winningBid { get; set; }
+
         public DateTime? endTime { get; set; }
+
         public DateTime? postedTime { get; set; }
 
         public List<Picture>? Gallery { get; set; }

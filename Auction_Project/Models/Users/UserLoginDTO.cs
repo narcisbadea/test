@@ -1,6 +1,6 @@
 ﻿namespace Auction_Project.Models.Users
 {
-    public class UserDTOLogin
+    public class UserLoginDTO
     {
         public string UserName { get; set; }
 

@@ -1,11 +1,13 @@
-﻿using Auction_Project.Models.Base;
+﻿
+using Auction_Project.Models.Base;
 using Auction_Project.Models.Items;
 using Auction_Project.Models.Users;
 
 namespace Auction_Project.Models.Bids
 {
-    public class Bid
+    public class Bid: IModel
     {
+        public int Id { get; set; }
 
         public User? User { get; set; }
 
@@ -17,4 +19,3 @@ namespace Auction_Project.Models.Bids
 
     }
 }
-//david

@@ -19,41 +19,11 @@ namespace Auction_Project.Migrations
                 .HasAnnotation("ProductVersion", "6.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("Auction_Project.Models.BannedUsers.BannedUser", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("AdminId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AdminId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BannedUsers");
-                });
-
             modelBuilder.Entity("Auction_Project.Models.Bids.Bid", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("CurrentPrice")
                         .HasColumnType("decimal(65,30)");
@@ -61,11 +31,11 @@ namespace Auction_Project.Migrations
                     b.Property<int?>("ItemId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<int?>("UserId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("bidTime")
+                        .HasColumnType("datetime(6)");
 
                     b.HasKey("Id");
 
@@ -74,36 +44,6 @@ namespace Auction_Project.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Bids");
-                });
-
-            modelBuilder.Entity("Auction_Project.Models.Extras.BidLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<decimal>("CurrentPrice")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<int>("ItemId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("BidLogs");
                 });
 
             modelBuilder.Entity("Auction_Project.Models.Items.Item", b =>
@@ -115,59 +55,57 @@ namespace Auction_Project.Migrations
                     b.Property<bool>("Available")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("Desc")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("ImagesAddress")
                         .HasColumnType("longtext");
 
                     b.Property<bool>("IsSold")
                         .HasColumnType("tinyint(1)");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<DateTime?>("Updated")
+                    b.Property<DateTime?>("endTime")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<DateTime?>("postedTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("winningBidId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("winningBidId");
 
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("Auction_Project.Models.Items.ItemsForApproval", b =>
+            modelBuilder.Entity("Auction_Project.Models.Pictures.Picture", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<bool>("Available")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Desc")
+                    b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ImagesAddress")
+                    b.Property<string>("ImageAddress")
+                        .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("IsSold")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<decimal?>("Price")
-                        .HasColumnType("decimal(65,30)");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
+                    b.Property<int?>("ItemId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ItemsForApproval");
+                    b.HasIndex("ItemId");
+
+                    b.ToTable("Pictures");
                 });
 
             modelBuilder.Entity("Auction_Project.Models.Users.User", b =>
@@ -180,7 +118,7 @@ namespace Auction_Project.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<DateTime?>("Created")
+                    b.Property<DateTime>("Created")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Email")
@@ -191,7 +129,7 @@ namespace Auction_Project.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<bool>("IsAdmin")
+                    b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("LastName")
@@ -202,12 +140,9 @@ namespace Auction_Project.Migrations
                         .IsRequired()
                         .HasColumnType("longblob");
 
-                    b.Property<byte[]>("PwSalt")
+                    b.Property<byte[]>("PasswordSalt")
                         .IsRequired()
                         .HasColumnType("longblob");
-
-                    b.Property<DateTime?>("Updated")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
@@ -216,25 +151,6 @@ namespace Auction_Project.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Auction_Project.Models.BannedUsers.BannedUser", b =>
-                {
-                    b.HasOne("Auction_Project.Models.Users.User", "Admin")
-                        .WithMany()
-                        .HasForeignKey("AdminId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Auction_Project.Models.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Admin");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Auction_Project.Models.Bids.Bid", b =>
@@ -252,23 +168,27 @@ namespace Auction_Project.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Auction_Project.Models.Extras.BidLog", b =>
+            modelBuilder.Entity("Auction_Project.Models.Items.Item", b =>
                 {
-                    b.HasOne("Auction_Project.Models.Items.Item", "Item")
+                    b.HasOne("Auction_Project.Models.Users.User", "winningBid")
                         .WithMany()
-                        .HasForeignKey("ItemId")
+                        .HasForeignKey("winningBidId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Auction_Project.Models.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("winningBid");
+                });
 
-                    b.Navigation("Item");
+            modelBuilder.Entity("Auction_Project.Models.Pictures.Picture", b =>
+                {
+                    b.HasOne("Auction_Project.Models.Items.Item", null)
+                        .WithMany("Gallery")
+                        .HasForeignKey("ItemId");
+                });
 
-                    b.Navigation("User");
+            modelBuilder.Entity("Auction_Project.Models.Items.Item", b =>
+                {
+                    b.Navigation("Gallery");
                 });
 #pragma warning restore 612, 618
         }

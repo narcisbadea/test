@@ -26,11 +26,11 @@ namespace Auction_Project.Models
         // GET: api/<BidsController>
         [HttpGet]
         [Authorize]
-        public async Task<ActionResult<IEnumerable<BidResponse>>> Get()
+        public async Task<ActionResult<IEnumerable<BidResponseDTO>>> Get()
         {
             var role = _userServices.GetMyRole();
 
-            if (role != null)
+           /* if (role != null)
             {
                 if (role == "Admin")
                 {
@@ -46,26 +46,26 @@ namespace Auction_Project.Models
                         return NotFound("List is empty");
                     return Ok(bids); 
                 }
-            }
+            }*/
             return BadRequest("Access denied.");
         }
          
         // GET api/<BidsController>/5
         [HttpGet("{id}")]
         [Authorize]
-        public async Task<ActionResult<BidResponse>> GetById(int id)
+        public async Task<ActionResult<BidResponseDTO>> GetById(int id)
         {
             var bid = await _bidServices.GetById(id);
 
-            if (bid != null)
-                return Ok(new BidResponse (bid));
+            /*if (bid != null)
+                return Ok(new BidResponseDTO (bid));*/
             return NotFound("Bid not found");
         }
 
         // POST api/<BidsController>
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<Bid>> Post(BidRequest bid)
+        public async Task<ActionResult<Bid>> Post(BidRequestDTO bid)
         {
             if(await _bidServices.Post(bid)) 
                 return CreatedAtAction(nameof(Get), bid);
@@ -76,11 +76,11 @@ namespace Auction_Project.Models
 
         // PUT api/<BidsController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(BidDTO bid, int id)
+        public async Task<ActionResult> Update(BidRequestDTO bid, int id)
         {
-            var status = await _bidServices.Update(bid, id);
+           /* var status = await _bidServices.Update(bid, id);
             if (status)
-                return Ok(bid);
+                return Ok(bid);*/
             return BadRequest();
         }
 

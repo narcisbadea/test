@@ -20,7 +20,7 @@ namespace Auction_Project.Authenticate
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDTO request)
+        public async Task<ActionResult<User>> Register(UserRegisterDTO request)
         {
             var usernameUsed = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserName == request.UserName);
             if(usernameUsed != null)
@@ -46,14 +46,12 @@ namespace Auction_Project.Authenticate
             {
                 UserName = request.UserName,
                 Password = passwordHash,
-                PwSalt = passwordSalt,
+                PasswordSalt = passwordSalt,
                 Email = request.Email,
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 Cnp = request.Cnp,
-                Created = DateTime.UtcNow,
-                Updated = DateTime.UtcNow,
-                IsAdmin = false
+                Created = DateTime.UtcNow
             };
             var result = await _dbContext.Users.AddAsync(user);
             await _dbContext.SaveChangesAsync();
@@ -65,23 +63,19 @@ namespace Auction_Project.Authenticate
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserDTOLogin request)
+        public async Task<IActionResult> Login(UserLoginDTO request)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserName == request.UserName);
-            var bannedUser = await _dbContext.BannedUsers.FirstOrDefaultAsync(bannedU => bannedU.User.Id == user.Id);
-
+           
             if (user?.UserName != request.UserName)
             {
                 return NotFound("User not found.");
             }
 
-            if (bannedUser != null)
-            {
-                return BadRequest("You are banned!");
-            }
+           
 
 
-            if (!(_userService.VerifyPasswordHash(request.Password, user.Password, user.PwSalt)))
+            if (!(_userService.VerifyPasswordHash(request.Password, user.Password, user.PasswordSalt)))
             {
                 return BadRequest("Wrong password.");
             }

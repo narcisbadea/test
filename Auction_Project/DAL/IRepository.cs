@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Auction_Project.DataBase
 {
-    public interface IRepository<T> where T : class, IEntity
+    public interface IRepository<T> where T : class
     {
         public Task<IEnumerable<T>> Get();
         public Task<T> GetById(int id);

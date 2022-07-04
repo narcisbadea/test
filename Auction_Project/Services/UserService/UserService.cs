@@ -46,14 +46,14 @@ namespace Auction_Project.Services.UserService
         public string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>();
-            if (user.IsAdmin)
+           /* if (user.IsAdmin)
             {
                 claims.Add(new Claim(ClaimTypes.Role, "Admin"));
             }
             else
             {
                 claims.Add(new Claim(ClaimTypes.Role, "User"));
-            }
+            }*/
 
 
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]));

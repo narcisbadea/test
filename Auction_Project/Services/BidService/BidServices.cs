@@ -17,32 +17,32 @@ public class BidServices
         _context = context;
     }
 
-    public async Task<List<BidResponse>> Get()
+    public async Task<List<BidResponseDTO>> Get()
       {
           var result = await _context.Bids
               .Include(b => b.User)
               .Include(b => b.Item)
               .ToListAsync();
-          var response=new List<BidResponse>();
+          var response=new List<BidResponseDTO>();
           foreach (var item in result)
           {
-              response.Add(new BidResponse(item));
+              //response.Add(new BidResponseDTO(item));
           }
           return response;
       }
 
-    public async Task<List<BidResponseUser>> GetUser()
-      {
-          var result = await _context.Bids
-              .Include(b => b.Item)
-              .ToListAsync();
-          var response=new List<BidResponseUser>();
-          foreach (var item in result)
-          {
-              response.Add(new BidResponseUser(item));
-          }
-          return response;
-      }
+  /*  public async Task<List<BidResponseUser>> GetUser()
+    {
+        var result = await _context.Bids
+            .Include(b => b.Item)
+            .ToListAsync();
+        var response = new List<BidResponseUser>();
+        foreach (var item in result)
+        {
+            response.Add(new BidResponseUser(item));
+        }
+        return response;
+    }*/
     
     public async Task<Bid> GetById(int id)
     {
@@ -59,9 +59,9 @@ public class BidServices
         return await _repository.Delete(id);
     }
 
-    public async Task<bool> Post(BidRequest toPost)
+    public async Task<bool> Post(BidRequestDTO toPost)
     {
-        var user = await _context.Users.FindAsync(toPost.ID_User);
+        /*var user = await _context.Users.FindAsync(toPost.ID_User);
         var item = await _context.Items.FindAsync(toPost.ID_Item);
         if (item != null && user != null)
         {
@@ -69,8 +69,7 @@ public class BidServices
             {
                 User = user,
                 Item = item,
-                Created = DateTime.UtcNow,
-                Updated = DateTime.UtcNow,
+                bidTime = DateTime.UtcNow,
                 CurrentPrice = toPost.CurrentPrice
             };
             var lastPrice= await _context.Bids
@@ -96,13 +95,13 @@ public class BidServices
                     return true;
                 }
             }
-        }
+        }*/
         return false;
     }
 
-    public async Task<bool> Update(BidDTO bid, int id)
+    public async Task<bool> Update(BidRequestDTO bid, int id)
     {
-        var ToReplace = await _context.Bids
+        /*ar ToReplace = await _context.Bids
             .Include(b=>b.User)
             .Include(b=>b.Item)
             .FirstOrDefaultAsync(b=>b.Id==id);
@@ -112,12 +111,12 @@ public class BidServices
             if (user != null)
             {
                 ToReplace.User = user;
-                ToReplace.Updated = DateTime.UtcNow;
+                ToReplace.bidTime = DateTime.UtcNow;
                 ToReplace.CurrentPrice = bid.Price;
                 await _context.SaveChangesAsync();
                 return true;
             }
-        }
+        }*/
         return false;
     }
 }

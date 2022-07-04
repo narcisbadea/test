@@ -18,8 +18,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<BidServices>();
 builder.Services.AddScoped<ItemsServices>();
-builder.Services.AddScoped<ItemsForApprovalService>();
-builder.Services.AddScoped<IAdminService, AdminService>();
+
 
 
 
