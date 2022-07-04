@@ -50,12 +50,14 @@ namespace Auction_Project.DataBase
 
         public async Task<T> Update([NotNull] T entity)
         {
-            if (entity?.Id is null || await GetById(entity.Id) is null)
-            {
-                return null;
-            }
+            var entitySearched = await DbSet.FirstOrDefaultAsync(e => e.Id == entity.Id);
 
-            entity = DbSet.Update(entity).Entity;
+            if (entitySearched == null)
+                return null;
+
+            entitySearched = entity;
+
+            entity = DbSet.Update(entitySearched).Entity;
             await _context.SaveChangesAsync();
 
             return entity;
