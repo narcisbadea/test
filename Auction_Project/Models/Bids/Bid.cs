@@ -6,14 +6,10 @@ namespace Auction_Project.Models.Bids
 {
     public class Bid : Entity
     {
-
-        public User? User { get; set; }
-        public User? SoldTo { get; set; }
-
-        public Item? Item { get; set; }
-
-        public decimal CurrentPrice { get; set; }
+        public User? IdUser { get; set; }
+        public Item? IdItem { get; set; }
+        public decimal? BidPrice { get; set; }
+        public DateTime DateTime { get; set; }
 
     }
 }
-//david

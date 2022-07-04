@@ -2,8 +2,9 @@
 
 namespace Auction_Project.Models.Users
 {
-    public class User : Entity
+    public class User
     {
+        public int Id { get; set; }
 
         public bool IsAdmin { get; set; } = false;
 
