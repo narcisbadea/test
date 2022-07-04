@@ -1,4 +1,7 @@
-﻿using Auction_Project.Models.Users;
+﻿using Auction_Project.DataBase;
+using Auction_Project.Models.Users;
+using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -11,70 +14,40 @@ namespace Auction_Project.Services.UserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
+        private readonly UserManager<User> _userModel;
+        private readonly IMapper _mapper;
 
-        public UserService(IHttpContextAccessor httpContextAccessor, IConfiguration configuration)
+        public UserService(IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, UserManager<User> userModel) 
         {
             _httpContextAccessor = httpContextAccessor;
+            _userModel = userModel;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
 
-        public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        public async Task<string?> VeryfyData(UserRegisterDTO user)
         {
-            using (var hmac = new HMACSHA512())
+            var usernameUsed = await _userModel.FindByNameAsync(user.UserName);
+            if (usernameUsed != null)
             {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return "Username already used!";
             }
-        }
-
-        public bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
+            if (!IsValidEmail(user.Email))
             {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passwordHash);
+                return "Email is not valid!";
             }
-        }
-
-        public string GenerateRandomPasswordString()
-        {
-            var builder = "default";
-            return builder.ToString();
-        }
-
-        public string CreateToken(User user)
-        {
-            List<Claim> claims = new List<Claim>();
-           /* if (user.IsAdmin)
+            if (!IsValidCNP(user.Cnp))
             {
-                claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                return "CNP is not valid!";
             }
-            else
+            if (AgeFromCnp(user.Cnp) < 18)
             {
-                claims.Add(new Claim(ClaimTypes.Role, "User"));
-            }*/
-
-
-            claims.Add(new Claim(JwtRegisteredClaimNames.Sub, _configuration["Jwt:Subject"]));
-            claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())); // jti = token id
-            claims.Add(new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()));// issued at DateTime
-            claims.Add(new Claim("UserName", user.UserName));
-
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var signInCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var token = new JwtSecurityToken
-                (
-                    _configuration["Jwt:Issuer"],
-                    _configuration["Jwt:Audience"],
-                    claims,
-                    expires: DateTime.UtcNow.AddMinutes(30),
-                    signingCredentials: signInCredentials
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+                return "Underage!";
+            }
+            return null;
         }
+
 
         public string GetMyName()
         {
@@ -86,6 +59,11 @@ namespace Auction_Project.Services.UserService
             return result;
         }
 
+        public async Task<string> GetMyId()
+        {
+            var user = await _userModel.FindByNameAsync(GetMyName());
+            return user.Id;
+        }
         public string GetMyRole()
         {
             var result = string.Empty;
@@ -166,6 +144,68 @@ namespace Auction_Project.Services.UserService
             TimeSpan span = DateTime.Now - bd;
             DateTime zeroTime = new DateTime(1, 1, 1);
             return (zeroTime + span).Year - 1;
+        }
+
+        public async Task<bool> CheckPassword(UserLoginDTO user)
+        {
+            var userFind = await _userModel.FindByNameAsync(user.UserName);
+
+            var wrongPassword = !await _userModel.CheckPasswordAsync(userFind, user.Password);
+            if (user == null || wrongPassword)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<JwtSecurityToken> GenerateToken(UserLoginDTO userLogin)
+        {
+            var user = await _userModel.FindByNameAsync(userLogin.UserName);
+            var userRoles = await _userModel.GetRolesAsync(user);
+
+            var authClaims = new List<Claim>
+            {
+                new("username", user.UserName),
+                new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            authClaims.AddRange(userRoles.Select(userRole => new Claim(ClaimTypes.Role, userRole)));
+
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
+
+            var token = new JwtSecurityToken(
+                _configuration["JWT:Issuer"],
+                _configuration["JWT:Audience"],
+                expires: DateTime.Now.AddMinutes(30),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
+            );
+            return token;
+        }
+
+        public async Task<UserResponseDTO?> AddUser(UserRegisterDTO model)
+        {
+            var puser = new User
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                Created = DateTime.UtcNow,
+                IsActive = true,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Cnp = model.Cnp
+            };
+
+            var result = await _userModel.CreateAsync(puser, model.Password);
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(error => error.Description);
+                return null;
+            }
+
+            var user = await _userModel.FindByNameAsync(puser.UserName);
+
+            return _mapper.Map<UserResponseDTO>(user);
         }
     }
 }

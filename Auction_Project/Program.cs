@@ -1,13 +1,15 @@
+using System.Text;
 using Auction_Project.DataBase;
 using Auction_Project.Models.Base;
+using Auction_Project.Models.Users;
 using Auction_Project.Services.BidService;
 using Auction_Project.Services.ItemService;
 using Auction_Project.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,7 @@ builder.Services.AddScoped<BidServices>();
 builder.Services.AddScoped<ItemsServices>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
 
 
 
@@ -52,6 +55,18 @@ builder.Services.AddSwaggerGen(options => {
     };
     options.AddSecurityRequirement(securityRequirement);
 });
+
+
+builder.Services.AddIdentity<User, Role>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+})
+   .AddEntityFrameworkStores<AppDbContext>()
+   .AddDefaultTokenProviders();
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
