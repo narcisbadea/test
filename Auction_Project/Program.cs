@@ -1,27 +1,35 @@
+using System.Text;
+using Auction_Project.DAL;
 using Auction_Project.DataBase;
 using Auction_Project.Models.Base;
+using Auction_Project.Models.Users;
 using Auction_Project.Services.BidService;
 using Auction_Project.Services.ItemService;
 using Auction_Project.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddScoped<IRepositoryUser, RepositoryUser>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IRepositoryBids , RepositoryBids>();
 builder.Services.AddScoped<BidServices>();
 builder.Services.AddScoped<ItemsServices>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
+var connectionString = builder.Configuration.GetSection("AppSettings:connectionString").Value;
+
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 
 builder.Services.AddSwaggerGen(options => {
@@ -53,27 +61,38 @@ builder.Services.AddSwaggerGen(options => {
     options.AddSecurityRequirement(securityRequirement);
 });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.SaveToken = true;
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
-    });
+
+builder.Services.AddIdentity<User, Role>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+})
+   .AddEntityFrameworkStores<AppDbContext>()
+   .AddDefaultTokenProviders();
 
 
-var connectionString = builder.Configuration.GetSection("AppSettings:connectionString").Value;
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+   .AddJwtBearer(options =>
+   {
+       options.SaveToken = true;
+       options.RequireHttpsMetadata = false;
+       options.TokenValidationParameters = new TokenValidationParameters
+       {
+           ValidateIssuer = true,
+           ValidateAudience = true,
+           ValidAudience = builder.Configuration["JWT:ValidAudience"],
+           ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+       };
+   });
 
-var serverVersion = new MySqlServerVersion(new Version(8, 0, 0));
-
-builder.Services.AddDbContext<AppDbContext>( options => options.UseMySql(connectionString, serverVersion));
 
 var app = builder.Build();
 

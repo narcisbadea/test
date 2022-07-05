@@ -1,17 +1,20 @@
 ﻿using Auction_Project.Models.Users;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Auction_Project.Services.UserService
 {
     public interface IUserService
     {
-        void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt);
+        Task<string?> VeryfyData(UserRegisterDTO user);
 
-        bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
+        Task<bool> CheckPassword(UserLoginDTO user);
 
-        string GenerateRandomPasswordString();
+        Task<JwtSecurityToken> GenerateToken(UserLoginDTO user);
 
-        string CreateToken(User user);
+        Task<UserResponseDTO?> AddUser(UserRegisterDTO model);
 
+        List<UserResponseDTO> GetAll();
+        Task<bool> ChangeUserRole(UserRoleDTO role);
         string GetMyName();
 
         string GetMyRole();
@@ -21,5 +24,6 @@ namespace Auction_Project.Services.UserService
         bool IsValidEmail(string email);
 
         int AgeFromCnp(string cnp);
+        Task<User> GetMe();
     }
 }
