@@ -1,12 +1,10 @@
 ﻿using Auction_Project.DAL;
-using Auction_Project.DataBase;
 using Auction_Project.Models.Users;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Auction_Project.Services.UserService
@@ -14,18 +12,20 @@ namespace Auction_Project.Services.UserService
     public class UserService : IUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IConfiguration _configuration;
-        private readonly UserManager<User> _userManager;
-        private readonly IMapper _mapper;
         private readonly IRepositoryUser _repositoryUser;
+        private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
+        private readonly RoleManager<Role> _roleManager;
+        private readonly UserManager<User> _userManager;
 
-        public UserService(IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager, IRepositoryUser repositoryUser) 
+        public UserService(RoleManager<Role> roleManager, IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager, IRepositoryUser repositoryUser) 
         {
             _httpContextAccessor = httpContextAccessor;
             _userManager = userManager;
             _configuration = configuration;
             _mapper = mapper;
             _repositoryUser = repositoryUser;
+            _roleManager = roleManager;
         }
 
         public List<UserResponseDTO> GetAll()
@@ -38,10 +38,32 @@ namespace Auction_Project.Services.UserService
             return response;
         }
 
-        public void ChangeUserRole(UserRoleDTO role)
+        public async Task<bool> ChangeUserRole(UserRoleDTO role)
         {
-            var user = _repositoryUser.GetById(role.Id);
-            _userManager.AddToRoleAsync(user, role.RoleName);
+            var rolesDoesNotExist = !await _roleManager.RoleExistsAsync(role.RoleName);
+            var roles = await _userManager.GetUsersInRoleAsync(role.RoleName);
+            
+            if (rolesDoesNotExist || roles.Count == 0)
+            {
+                await AddRoles(role.RoleName);
+            }
+            var user = _userManager.Users.FirstOrDefault(u => u.Id == role.Id);
+
+            IdentityResult? result = null;
+            result = await _userManager.AddToRoleAsync(user, role.RoleName);
+            if (result == null)
+            {
+                return false;
+            }
+
+            return true;
+
+        }
+        private async Task<IdentityResult> AddRoles(string roleName)
+        {
+            var role = new Role { Id = Guid.NewGuid().ToString(), Name = roleName };
+            var result = await _roleManager.CreateAsync(role);
+            return result;
         }
 
         public async Task<string?> VeryfyData(UserRegisterDTO user)
@@ -185,7 +207,7 @@ namespace Auction_Project.Services.UserService
 
             var authClaims = new List<Claim>
             {
-                new("username", user.UserName),
+                new(ClaimTypes.Name, user.UserName),
                 new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -194,8 +216,8 @@ namespace Auction_Project.Services.UserService
             var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Key"]));
 
             var token = new JwtSecurityToken(
-                _configuration["JWT:Issuer"],
-                _configuration["JWT:Audience"],
+                _configuration["JWT:ValidIssuer"],
+                _configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddMinutes(30),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)

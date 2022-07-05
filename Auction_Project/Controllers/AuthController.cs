@@ -1,13 +1,10 @@
 ﻿using Auction_Project.DataBase;
 using Auction_Project.Models.Users;
 using Auction_Project.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Auction_Project.Authenticate
 {
@@ -54,6 +51,6 @@ namespace Auction_Project.Authenticate
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiration = token.ValidTo
             });
-        } 
+        }
     }
 }

@@ -25,7 +25,10 @@ builder.Services.AddScoped<ItemsServices>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
+var connectionString = builder.Configuration.GetSection("AppSettings:connectionString").Value;
 
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
 
 
 builder.Services.AddSwaggerGen(options => {
@@ -69,27 +72,26 @@ builder.Services.AddIdentity<User, Role>(options =>
    .AddDefaultTokenProviders();
 
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.SaveToken = true;
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new TokenValidationParameters()
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
-    });
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+   .AddJwtBearer(options =>
+   {
+       options.SaveToken = true;
+       options.RequireHttpsMetadata = false;
+       options.TokenValidationParameters = new TokenValidationParameters
+       {
+           ValidateIssuer = true,
+           ValidateAudience = true,
+           ValidAudience = builder.Configuration["JWT:ValidAudience"],
+           ValidIssuer = builder.Configuration["JWT:ValidIssuer"],
+           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+       };
+   });
 
-
-var connectionString = builder.Configuration.GetSection("AppSettings:connectionString").Value;
-
-var serverVersion = new MySqlServerVersion(new Version(8, 0, 0));
-
-builder.Services.AddDbContext<AppDbContext>( options => options.UseMySql(connectionString, serverVersion));
 
 var app = builder.Build();
 

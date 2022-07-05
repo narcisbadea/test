@@ -14,7 +14,7 @@ namespace Auction_Project.Services.UserService
         Task<UserResponseDTO?> AddUser(UserRegisterDTO model);
 
         List<UserResponseDTO> GetAll();
-        void ChangeUserRole(UserRoleDTO role);
+        Task<bool> ChangeUserRole(UserRoleDTO role);
         string GetMyName();
 
         string GetMyRole();

@@ -28,9 +28,12 @@ namespace Auction_Project.Controllers
         }
 
         [HttpPost]
-        public ActionResult AddRole(UserRoleDTO role)
+        public async Task<ActionResult> AddRoleAsync(UserRoleDTO role)
         {
-            _userService.ChangeUserRole(role);
+            if( !await _userService.ChangeUserRole(role))
+            {
+                return BadRequest();
+            }
             return Ok();
         }
     }
