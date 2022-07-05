@@ -53,13 +53,13 @@ public class ItemsServices
     }
     public async Task<Item> UpdateSold(bool soldStatus, int id)
     {
-        var Sold = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
+        /*var Sold = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
         if (Sold!= null)
         {
             Sold.IsSold= soldStatus;
             await _context.SaveChangesAsync();
             return Sold;
-        }
+        }*/
         return null;
     }
 }
