@@ -17,21 +17,19 @@ namespace Auction_Project.Models
         private readonly IRepository<Item> _repository;
         private readonly ItemsServices _itemServices;
         private readonly IUserService _userServices;
-        private readonly ItemsForApprovalService _itemsForApprovalServices;
 
 
-        public ItemsController(IRepository<Item> repository, ItemsServices itemServices, IUserService userServices, ItemsForApprovalService itemsForApprovalServices)
+        public ItemsController(IRepository<Item> repository, ItemsServices itemServices, IUserService userServices)
         {
             _repository = repository;
             _itemServices = itemServices;
             _userServices = userServices;
-            _itemsForApprovalServices = itemsForApprovalServices;
         }
 
 
         // GET 
         [HttpGet]
-        [Authorize]
+    //    [Authorize]
         public async Task<ActionResult> Get()
         {
             var role = _userServices.GetMyRole();
@@ -58,8 +56,8 @@ namespace Auction_Project.Models
 
        
         [HttpGet("{id}")]
-        [Authorize]
-        public async Task<ActionResult<ItemResponse>> GetById(int id)
+    //    [Authorize]
+        public async Task<ActionResult<ItemResponseDTO>> GetById(int id)
         {
             var role = _userServices.GetMyRole();
 
@@ -86,10 +84,10 @@ namespace Auction_Project.Models
 
         // POST >
         [HttpPost]
-        [Authorize]
-        public async Task<ActionResult> Post(ItemRequest item)
+    //    [Authorize]
+        public async Task<ActionResult> Post(ItemRequestDTO item)
         {
-            var role = _userServices.GetMyRole();
+            /*var role = _userServices.GetMyRole();
 
             if (role != null)
             {
@@ -106,7 +104,7 @@ namespace Auction_Project.Models
                     return BadRequest();
                 }
             return BadRequest();
-            }
+            }*/
          return BadRequest();
         }
 
@@ -114,7 +112,7 @@ namespace Auction_Project.Models
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Update(ItemRequest item, int id)
+        public async Task<ActionResult> Update(ItemRequestDTO item, int id)
         { 
             var updated = await _itemServices.Update(item, id);
             if(updated is not null)
@@ -140,7 +138,7 @@ namespace Auction_Project.Models
             var item = await _itemServices.GetById(id);
             if (item != null)
             {
-                await _itemServices.Delete(id);
+                //await _itemServices.Delete(id);
                 return Ok("Item removed");
             }
             return NotFound("Item not found");

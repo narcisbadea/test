@@ -1,8 +1,10 @@
 ﻿using Auction_Project.DataBase;
 using Auction_Project.Models.Users;
 using Auction_Project.Services.UserService;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
+
 
 namespace Auction_Project.Authenticate
 {
@@ -13,83 +15,42 @@ namespace Auction_Project.Authenticate
         private readonly IUserService _userService;
         private readonly AppDbContext _dbContext;
 
-        public AuthController(IUserService userService, AppDbContext dbContext)
+        public AuthController(IUserService userService, AppDbContext dbContext, UserManager<User> userModel, IConfiguration configuration)
         {
             _userService = userService;
             _dbContext = dbContext;
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> Register(UserDTO request)
+        public async Task<ActionResult<UserResponseDTO>> Register(UserRegisterDTO request)
         {
-            var usernameUsed = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserName == request.UserName);
-            if(usernameUsed != null)
+            
+            var error = await _userService.VeryfyData(request);
+            if (error != null)
             {
-                return BadRequest("Username already used!");
+                return BadRequest(error);
             }
-            if (!_userService.IsValidEmail(request.Email))
-            {
-                return BadRequest("Email is not valid!");
-            }
-            if (!_userService.IsValidCNP(request.Cnp))
-            {
-                return BadRequest("CNP is not valid!");
-            }
-            if(_userService.AgeFromCnp(request.Cnp) < 18)
-            {
-                return BadRequest("Underage!");
-            }
-
-            _userService.CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
-
-            var user = new User
-            {
-                UserName = request.UserName,
-                Password = passwordHash,
-                PwSalt = passwordSalt,
-                Email = request.Email,
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                Cnp = request.Cnp,
-                Created = DateTime.UtcNow,
-                Updated = DateTime.UtcNow,
-                IsAdmin = false
-            };
-            var result = await _dbContext.Users.AddAsync(user);
+            var result = await _userService.AddUser(request);
             await _dbContext.SaveChangesAsync();
-            return Ok(new
-            {
-                result.Entity.UserName, result.Entity.Email, result.Entity.FirstName, 
-                result.Entity.LastName, result.Entity.Cnp, result.Entity.Created
-            });
+            return Ok(result);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserDTOLogin request)
+        public async Task<IActionResult> Login(UserLoginDTO request)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.UserName == request.UserName);
-            var bannedUser = await _dbContext.BannedUsers.FirstOrDefaultAsync(bannedU => bannedU.User.Id == user.Id);
 
-            if (user?.UserName != request.UserName)
+            if (!await _userService.CheckPassword(request))
             {
-                return NotFound("User not found.");
+                return BadRequest();
             }
 
-            if (bannedUser != null)
-            {
-                return BadRequest("You are banned!");
-            }
+            var token = await _userService.GenerateToken(request);
 
-
-            if (!(_userService.VerifyPasswordHash(request.Password, user.Password, user.PwSalt)))
-            {
-                return BadRequest("Wrong password.");
-            }
-            string token = _userService.CreateToken(user);
             return Ok(new
             {
-                token
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                Expiration = token.ValidTo
             });
-        }  
+        } 
     }
 }

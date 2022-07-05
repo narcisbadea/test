@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace Auction_Project.DataBase
 {
-    public class Repository<T> : IRepository<T> where T : class, IEntity
+    public class Repository<T> : IRepository<T> where T : class , IModel
     {
         private readonly AppDbContext _context;
         public Repository(AppDbContext context)
@@ -55,7 +55,6 @@ namespace Auction_Project.DataBase
                 return null;
             }
 
-            entity.Updated = DateTime.UtcNow;
             entity = DbSet.Update(entity).Entity;
             await _context.SaveChangesAsync();
 

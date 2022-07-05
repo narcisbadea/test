@@ -1,6 +1,6 @@
 ﻿namespace Auction_Project.Models.Users
 {
-    public class UserResponse
+    public class UserResponseDTO
     {
 
 

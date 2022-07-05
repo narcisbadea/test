@@ -1,9 +1,15 @@
 ﻿using Auction_Project.Models.Base;
+using Auction_Project.Models.Pictures;
+using Auction_Project.Models.Users;
+
 
 namespace Auction_Project.Models.Items
 {
-    public class Item : Entity
+    public class Item : IModel
     {
+        public int Id { get; set; }
+
+        public string Name { get; set; }
 
         public bool IsSold { get; set; } = false;
 
@@ -13,29 +19,12 @@ namespace Auction_Project.Models.Items
 
         public decimal? Price { get; set; }
 
-        public string? ImagesAddress { get; set; }
+        public User? winningBid { get; set; } = null;
 
-        public Item()
-        {
+        public DateTime? endTime { get; set; }
 
-        }
+        public DateTime? postedTime { get; set; }
 
-        public Item(ItemRequest itemRequest)
-        {
-            IsSold = itemRequest.IsSold;
-            Available = itemRequest.Available;
-            Desc = itemRequest.Desc;
-            Price = itemRequest.Price;
-            ImagesAddress = itemRequest.ImagesAddress;
-        }
-
-        public Item(bool isSold, bool available, string? desc, decimal? price, string? imagesAddress)
-        {
-            IsSold = isSold;
-            Available = available;
-            Desc = desc;
-            Price = price;
-            ImagesAddress = imagesAddress;
-        }
+        public List<Picture>? Gallery { get; set; }
     }
 }

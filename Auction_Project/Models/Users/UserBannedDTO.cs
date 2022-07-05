@@ -1,8 +1,6 @@
 ﻿namespace Auction_Project.Models.Users
 {
-    public class UserRequest
+    public class UserBannedDTO
     {
-
     }
-
 }

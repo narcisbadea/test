@@ -17,20 +17,14 @@ public class ItemsServices
         _repository = repository;
     }
 
-    public async Task<Item> Delete(int id)
-    {
-
-        return await _repository.Delete(id);
-    }
-
-    public async Task<IEnumerable<ItemResponse>> Get()
+    public async Task<IEnumerable<ItemResponseDTO>> Get()
     {
         var result = await _context.Items.ToListAsync();
 
-        var response = new List<ItemResponse>();
+        var response = new List<ItemResponseDTO>();
         foreach (var item in result)
         {
-            response.Add(new ItemResponse(item));
+            //response.Add(new ItemResponse(item));
         }
         return response;
     }
@@ -40,24 +34,24 @@ public class ItemsServices
         return await _repository.GetById(id);
     }
 
-    public async Task<Item> Post(ItemRequest item)
+    public async Task<Item> Post(ItemRequestDTO item)
     {
-        return await _repository.Post(new Item(item));
+        return await _repository.Post(new Item());
     }
 
-    public async Task<Item> Update(ItemRequest item, int id)
+    public async Task<Item> Update(ItemRequestDTO item, int id)
     {
         var ToReplace = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
         if (ToReplace != null)
         {
-            //ToReplace { item.IsSold,item.Available,item.Desc,item.Price,item.ImagesAddress};
+           /* //ToReplace { item.IsSold,item.Available,item.Desc,item.Price,item.ImagesAddress};
             ToReplace.Desc = item.Desc;
             ToReplace.Price = item.Price;
             ToReplace.IsSold = item.IsSold;
             ToReplace.Available = item.Available;
             ToReplace.ImagesAddress = item.ImagesAddress;
             ToReplace.Updated = DateTime.UtcNow;
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync();*/
             return ToReplace;
         }
         return null;
@@ -67,7 +61,6 @@ public class ItemsServices
         var Sold = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
         if (Sold!= null)
         {
-            Sold.Updated = DateTime.UtcNow;
             Sold.IsSold= soldStatus;
             await _context.SaveChangesAsync();
             return Sold;
