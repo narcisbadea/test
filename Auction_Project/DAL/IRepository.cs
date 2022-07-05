@@ -10,6 +10,5 @@ namespace Auction_Project.DataBase
         public Task<T> Delete(int id);
         public Task<T> Post(T entity);
         public Task<T> Update(T entity);
-        DbSet<T> DbSet { get; }
     }
 }
