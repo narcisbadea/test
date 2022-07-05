@@ -10,7 +10,11 @@ namespace Auction_Project.Services.UserService
         Task<bool> CheckPassword(UserLoginDTO user);
 
         Task<JwtSecurityToken> GenerateToken(UserLoginDTO user);
+
         Task<UserResponseDTO?> AddUser(UserRegisterDTO model);
+
+        List<UserResponseDTO> GetAll();
+        void ChangeUserRole(UserRoleDTO role);
         string GetMyName();
 
         string GetMyRole();

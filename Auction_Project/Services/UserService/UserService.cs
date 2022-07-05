@@ -1,4 +1,5 @@
-﻿using Auction_Project.DataBase;
+﻿using Auction_Project.DAL;
+using Auction_Project.DataBase;
 using Auction_Project.Models.Users;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
@@ -14,37 +15,56 @@ namespace Auction_Project.Services.UserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IConfiguration _configuration;
-        private readonly UserManager<User> _userModel;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
+        private readonly IRepositoryUser _repositoryUser;
 
-        public UserService(IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, UserManager<User> userModel) 
+        public UserService(IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, UserManager<User> userManager, IRepositoryUser repositoryUser) 
         {
             _httpContextAccessor = httpContextAccessor;
-            _userModel = userModel;
+            _userManager = userManager;
             _configuration = configuration;
             _mapper = mapper;
+            _repositoryUser = repositoryUser;
         }
 
+        public List<UserResponseDTO> GetAll()
+        {
+            List<UserResponseDTO> response = new List<UserResponseDTO>();
+            foreach (var user in _repositoryUser.GetUsers())
+            {
+                response.Add(_mapper.Map<UserResponseDTO>(user));
+            }
+            return response;
+        }
+
+        public void ChangeUserRole(UserRoleDTO role)
+        {
+            var user = _repositoryUser.GetById(role.Id);
+            _userManager.AddToRoleAsync(user, role.RoleName);
+        }
 
         public async Task<string?> VeryfyData(UserRegisterDTO user)
         {
-            var usernameUsed = await _userModel.FindByNameAsync(user.UserName);
+            var usernameUsed = await _repositoryUser.GetByName(user.UserName);
+            var error = "";
             if (usernameUsed != null)
             {
-                return "Username already used!";
+                error += "Username already used!\n";
             }
             if (!IsValidEmail(user.Email))
             {
-                return "Email is not valid!";
+                error += "Email is not valid!\n";
             }
             if (!IsValidCNP(user.Cnp))
             {
-                return "CNP is not valid!";
+                error += "CNP is not valid!\n";
             }
             if (AgeFromCnp(user.Cnp) < 18)
             {
-                return "Underage!";
+                error += "Underage!\n";
             }
+            if(error != "") return error;
             return null;
         }
 
@@ -61,7 +81,7 @@ namespace Auction_Project.Services.UserService
 
         public async Task<string> GetMyId()
         {
-            var user = await _userModel.FindByNameAsync(GetMyName());
+            var user = await _repositoryUser.GetByName(GetMyName());
             return user.Id;
         }
         public string GetMyRole()
@@ -148,9 +168,9 @@ namespace Auction_Project.Services.UserService
 
         public async Task<bool> CheckPassword(UserLoginDTO user)
         {
-            var userFind = await _userModel.FindByNameAsync(user.UserName);
+            var userFind = await _repositoryUser.GetByName(user.UserName);
 
-            var wrongPassword = !await _userModel.CheckPasswordAsync(userFind, user.Password);
+            var wrongPassword = !await _userManager.CheckPasswordAsync(userFind, user.Password);
             if (user == null || wrongPassword)
             {
                 return false;
@@ -160,8 +180,8 @@ namespace Auction_Project.Services.UserService
 
         public async Task<JwtSecurityToken> GenerateToken(UserLoginDTO userLogin)
         {
-            var user = await _userModel.FindByNameAsync(userLogin.UserName);
-            var userRoles = await _userModel.GetRolesAsync(user);
+            var user = await _repositoryUser.GetByName(userLogin.UserName);
+            var userRoles = await _repositoryUser.GetRoles(user);
 
             var authClaims = new List<Claim>
             {
@@ -196,14 +216,14 @@ namespace Auction_Project.Services.UserService
                 Cnp = model.Cnp
             };
 
-            var result = await _userModel.CreateAsync(puser, model.Password);
+            var result = await _userManager.CreateAsync(puser, model.Password);
             if (!result.Succeeded)
             {
                 var errors = result.Errors.Select(error => error.Description);
                 return null;
             }
 
-            var user = await _userModel.FindByNameAsync(puser.UserName);
+            var user = await _repositoryUser.GetByName(puser.UserName);
 
             return _mapper.Map<UserResponseDTO>(user);
         }

@@ -1,4 +1,5 @@
 using System.Text;
+using Auction_Project.DAL;
 using Auction_Project.DataBase;
 using Auction_Project.Models.Base;
 using Auction_Project.Models.Users;
@@ -15,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddScoped<IRepositoryUser, RepositoryUser>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
