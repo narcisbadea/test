@@ -5,7 +5,7 @@ namespace Auction_Project.Models.Bids
     public class BidRequestDTO
     {
 
-        public Item? Item { get; set; }
+        public int ItemId { get; set; }
 
         public decimal BidPrice { get; set; }
     }

@@ -20,6 +20,7 @@ builder.Services.AddScoped<IRepositoryUser, RepositoryUser>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+builder.Services.AddScoped<IRepositoryBids , RepositoryBids>();
 builder.Services.AddScoped<BidServices>();
 builder.Services.AddScoped<ItemsServices>();
 

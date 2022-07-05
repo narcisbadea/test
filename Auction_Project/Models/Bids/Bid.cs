@@ -13,9 +13,9 @@ namespace Auction_Project.Models.Bids
 
         public Item? Item { get; set; }
 
-        public decimal CurrentPrice { get; set; }
+        public decimal BidPrice { get; set; }
 
-        public DateTime bidTime { get; set; }
+        public DateTime bidTime { get; set; } = DateTime.UtcNow;
 
     }
 }

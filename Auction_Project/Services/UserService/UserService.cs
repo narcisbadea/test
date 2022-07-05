@@ -101,6 +101,12 @@ namespace Auction_Project.Services.UserService
             return result;
         }
 
+        public async Task<User> GetMe()
+        {
+            var id =  GetMyId().Result;
+            return _repositoryUser.GetById(id);
+        }
+
         public async Task<string> GetMyId()
         {
             var user = await _repositoryUser.GetByName(GetMyName());
