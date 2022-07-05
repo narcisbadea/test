@@ -22,49 +22,31 @@ namespace Auction_Project.Models
             _userServices = userServices;
         }
 
-
-        // GET: api/<BidsController>
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<BidResponseDTO>>> Get()
         {
-            var role = _userServices.GetMyRole();
-
-           /* if (role != null)
-            {
-                if (role == "Admin")
-                {
-                    var bids = await _bidServices.Get();
-                    if (bids.Count == 0)
-                        return NotFound("List is empty");
-                    return Ok(bids);
-                }
-                if(role == "User")
-                {
-                    var bids = await _bidServices.GetUser();
-                    if (bids.Count == 0)
-                        return NotFound("List is empty");
-                    return Ok(bids); 
-                }
-            }*/
-            return BadRequest("Access denied.");
+            var bids = await _bidServices.Get();
+            if (bids.Count == 0)
+                return NotFound("List is empty");
+            return Ok(bids);
         }
          
-        // GET api/<BidsController>/5
+
         [HttpGet("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BidResponseDTO>> GetById(int id)
         {
             var bid = await _bidServices.GetById(id);
 
-            /*if (bid != null)
-                return Ok(new BidResponseDTO (bid));*/
+            if (bid != null)
+                return Ok(bid);
             return NotFound("Bid not found");
         }
 
         // POST api/<BidsController>
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<ActionResult<Bid>> Post(BidRequestDTO bid)
         {
             if(await _bidServices.Post(bid)) 
