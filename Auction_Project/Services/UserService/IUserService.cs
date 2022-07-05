@@ -19,5 +19,8 @@ namespace Auction_Project.Services.UserService
         bool IsValidEmail(string email);
 
         int AgeFromCnp(string cnp);
+
+        bool ChangePassword(string newPasswd);
     }
+
 }

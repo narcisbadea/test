@@ -155,5 +155,15 @@ namespace Auction_Project.Services.UserService
             DateTime zeroTime = new DateTime(1, 1, 1);
             return (zeroTime + span).Year - 1;
         }
+
+        public bool ChangePassword(User user, string newPasswd)
+        {
+            byte[] passwdHas, passwdSalt;
+            CreatePasswordHash(newPasswd, out passwdHas, out passwdSalt);
+            user.Password = passwdHas;
+            return true;
+        }
+
     }
+
 }
