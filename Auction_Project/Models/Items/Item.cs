@@ -1,4 +1,5 @@
 ﻿using Auction_Project.Models.Base;
+using Auction_Project.Models.Bids;
 using Auction_Project.Models.Pictures;
 using Auction_Project.Models.Users;
 
@@ -19,7 +20,7 @@ namespace Auction_Project.Models.Items
 
         public decimal? Price { get; set; }
 
-        public User? winningBid { get; set; } = null;
+        public Bid? winningBid { get; set; } = null;
 
         public DateTime? endTime { get; set; }
 
