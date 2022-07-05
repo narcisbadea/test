@@ -2,6 +2,7 @@
 using Auction_Project.DataBase;
 using Auction_Project.Models.Bids;
 using Auction_Project.Models.Items;
+using Auction_Project.Models.Users;
 using Auction_Project.Services.UserService;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -35,9 +36,18 @@ public class BidServices
 
           var response=new List<BidResponseDTO>();
 
-          foreach (var item in result)
+          foreach (var bid in result)
           {
-              response.Add(_mapper.Map<BidResponseDTO>(item));
+            var itemResponse = _mapper.Map<ItemResponseDTO>(bid.Item);
+            var userResponse = _mapper.Map<UserResponseDTO>(bid.User);
+            var bidPrice = bid.BidPrice;
+
+            response.Add(new BidResponseDTO
+             {
+                  ItemResponse = itemResponse,
+                  UserResponse = userResponse,
+                  BidPrice = bidPrice
+             });
           }
           return response;
       }
@@ -57,12 +67,20 @@ public class BidServices
     
     public async Task<BidResponseDTO> GetById(int id)
     {
-        var BidList = await _context.Bids
-            .Include(b => b.User)
-            .Include(b => b.Item)
-            .ToListAsync();
-        var result = BidList.Find(r => r.Id == id);
-        return _mapper.Map<BidResponseDTO>(result);
+        var bid = await _repositoryBids.GetOne(id);
+
+        var itemResponse = _mapper.Map<ItemResponseDTO>(bid.Item);
+        var userResponse = _mapper.Map<UserResponseDTO>(bid.User);
+        var bidPrice = bid.BidPrice;
+
+        var result = new BidResponseDTO
+        {
+            ItemResponse = itemResponse,
+            UserResponse = userResponse,
+            BidPrice = bidPrice
+        };
+
+        return result;
     }
 
     public async Task<Bid> Delete(int id)
@@ -73,15 +91,15 @@ public class BidServices
     public async Task<bool> Post(BidRequestDTO toPost)
     {
         var item = await _repositoryItem.GetById(toPost.ItemId);
-        //var currentUser = await _userServices.GetMe();
+        var currentUser = await _userServices.GetMe();
         if (item != null)
         {
-            // if (item.endTime > DateTime.UtcNow)
-            // {
+           // if (item.endTime > DateTime.UtcNow)
+           // {
             var bid = new Bid()
             {
                 Item = item,
-                //User = currentUser,
+                User = currentUser,
                 BidPrice = toPost.BidPrice,
                 bidTime = DateTime.UtcNow
 
@@ -105,7 +123,7 @@ public class BidServices
                     return true;
                 }
             }
-            //}
+           // }
         }
         return false;
     }

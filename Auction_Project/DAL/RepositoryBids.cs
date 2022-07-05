@@ -19,4 +19,9 @@ public class RepositoryBids : IRepositoryBids
         return await _context.Bids.Include(b => b.Item).Include(u=>u.User).ToListAsync();
     }
 
+    public async Task<Bid> GetOne(int id)
+    {
+        return await _context.Bids.Include(b => b.Item).Include(u => u.User).FirstOrDefaultAsync(res=>res.Id == id);
+    }
+
 }
