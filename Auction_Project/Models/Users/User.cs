@@ -1,22 +1,12 @@
-﻿using Auction_Project.Models.Base;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Auction_Project.Models.Users
 {
-    public class User : IModel
+    public class User : IdentityUser
     {
-        public int Id { get; set; }
-
         public DateTime Created { get; set; } = DateTime.UtcNow;
 
         public bool IsActive { get; set; } = true;
-
-        public string UserName { get; set; }
-
-        public byte[] Password { get; set; }
-
-        public byte[] PasswordSalt { get; set; }
-
-        public string Email { get; set; }
 
         public string FirstName { get; set; }
 
