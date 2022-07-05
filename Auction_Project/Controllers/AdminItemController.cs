@@ -29,7 +29,7 @@ namespace Auction_Project.Models
 
         // GET 
         [HttpGet]
-        [Authorize]
+    //    [Authorize]
         public async Task<ActionResult> Get()
         {
             var role = _userServices.GetMyRole();
@@ -56,7 +56,7 @@ namespace Auction_Project.Models
 
        
         [HttpGet("{id}")]
-        [Authorize]
+    //    [Authorize]
         public async Task<ActionResult<ItemResponseDTO>> GetById(int id)
         {
             var role = _userServices.GetMyRole();
@@ -84,7 +84,7 @@ namespace Auction_Project.Models
 
         // POST >
         [HttpPost]
-        [Authorize]
+    //    [Authorize]
         public async Task<ActionResult> Post(ItemRequestDTO item)
         {
             /*var role = _userServices.GetMyRole();

@@ -23,7 +23,7 @@ namespace Auction_Project.Models
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<BidResponseDTO>>> Get()
         {
             var bids = await _bidServices.Get();
@@ -34,24 +34,24 @@ namespace Auction_Project.Models
          
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<ActionResult<BidResponseDTO>> GetById(int id)
         {
             var bid = await _bidServices.GetById(id);
 
             if (bid != null)
-                return Ok(bid);
+                return Ok(bid);  
             return NotFound("Bid not found");
         }
 
         // POST api/<BidsController>
         [HttpPost]
-        [Authorize]
-        public async Task<ActionResult<Bid>> Post(BidRequestDTO bid)
+       // [Authorize]
+        public async Task<ActionResult<BidRequestDTO>> Post(BidRequestDTO bid)
         {
             if(await _bidServices.Post(bid)) 
                 return CreatedAtAction(nameof(Get), bid);
-            return BadRequest();
+            return BadRequest("nu mere");
             // de pus bids for approval
         }
      
