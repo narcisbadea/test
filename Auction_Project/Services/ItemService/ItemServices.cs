@@ -237,7 +237,7 @@ public class ItemsServices
     public async Task<IEnumerable<ItemResponseForAdminDTO>> GetAdminByPage(int nr)
     {
         var list = await GetAdmin();
-        var maxPage = list.ToList().Count / (nr * 5);
+        var maxPage = list.ToList().Count / 5;
         if(list.ToList().Count % 5 > 0)
         {
             maxPage++;
