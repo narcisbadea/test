@@ -32,6 +32,7 @@ namespace Auction_Project.Models
     //    [Authorize]
         public async Task<ActionResult> Get()
         {
+            /*
             var role = _userServices.GetMyRole();
 
             if (role != null)
@@ -50,7 +51,7 @@ namespace Auction_Project.Models
                         return NotFound("List is empty");
                     return Ok(items);
                 }
-            }
+            }*/
             return BadRequest();
         }
 
@@ -114,17 +115,17 @@ namespace Auction_Project.Models
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Update(ItemRequestDTO item, int id)
         { 
-            var updated = await _itemServices.Update(item, id);
-            if(updated is not null)
-                return Ok(updated);
+           // var updated = await _itemServices.Update(item);
+           // if(updated is not null)
+           //     return Ok(updated);
             return BadRequest();
         }
 
         [HttpPut("{IsSold}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Update(bool item, int id)
+        public async Task<ActionResult> UpdateSold(int id)
         {
-            var updated = await _itemServices.UpdateSold(item, id);
+            var updated = await _itemServices.UpdateSold(id);
             if (updated is not null)
                 return Ok(updated);
             return BadRequest();

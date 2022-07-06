@@ -1,0 +1,11 @@
+﻿using Auction_Project.Models.Items;
+
+namespace Auction_Project.DAL
+{
+    public interface IRepositoryItem
+    {
+        Task<List<Item>> Get();
+        Task<Item> GetById(int id);
+
+    }
+}
