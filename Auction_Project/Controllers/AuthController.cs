@@ -21,6 +21,17 @@ namespace Auction_Project.Authenticate
             _dbContext = dbContext;
         }
 
+        [HttpPut("change-password")]
+        public async Task<ActionResult<bool>> ChangePassword(UserChangePasswordDTO user)
+        {
+            var updated = await _userService.ChangePassword(user);
+            if (updated)
+            {
+                return Ok(updated);
+            }
+            return BadRequest(updated);
+        }
+
         [HttpPost("register")]
         public async Task<ActionResult<UserResponseDTO>> Register(UserRegisterDTO request)
         {

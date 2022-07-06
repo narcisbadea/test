@@ -255,5 +255,16 @@ namespace Auction_Project.Services.UserService
 
             return _mapper.Map<UserResponseDTO>(user);
         }
+
+        public async Task<bool> ChangePassword(UserChangePasswordDTO dto)
+        {
+            var user = GetMe();
+            if (user != null)
+            {
+                var result = await _userManager.ChangePasswordAsync(user.Result, dto.oldPassword, dto.newPassword);
+                return result.Succeeded;
+            }
+            return false;
+        }
     }
 }

@@ -10,7 +10,9 @@ public class ItemRequestDTO
 
     public decimal? Price { get; set; }
 
-    public List<PictureRequestDTO> Gallery { get; set; }
+    public List<int>? GalleryIds { get; set; }
+
+    public DateTime? EndTime { get; set; }
 
 }
 
