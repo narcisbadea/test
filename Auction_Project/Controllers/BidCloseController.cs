@@ -21,7 +21,7 @@ namespace Auction_Project.Controllers
         public async Task<ActionResult> ApproveItem(int idItem)
         {
 
-            var approvedItem = _bidCloseServices.SetApproved(idItem);
+            var approvedItem = await _bidCloseServices.SetApproved(idItem);
 
 
             /*if(approvedItem == null)

@@ -22,6 +22,7 @@ namespace Auction_Project.DAL
 
         public async Task<Item> GetById(int id)
         {
+            //var item = await _context.Items.ToListAsync();
             return await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item=>item.Id == id);
         }
 
