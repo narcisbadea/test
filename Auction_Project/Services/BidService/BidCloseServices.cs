@@ -23,15 +23,16 @@ namespace Auction_Project.Services.BidService
             _backgroundJobClient = backgroundJobClient;
         }
 
-        public async Task<ItemRequestIsAvailableDTO> SetApproved(int idItem)
+        public async Task<ItemRequestIsAvailableDTO> SetApproved(int idItem, DateTime endTime)
         {
             var itemSearched = await _repositoryItemGeneric.GetById(idItem);
+            System.TimeSpan durationTimeToAsSold = endTime.Subtract(DateTime.UtcNow);
 
             itemSearched.IsAvailable = true;
 
             await _repositoryItemGeneric.Update(itemSearched);
 
-            _backgroundJobClient.Schedule(() => SetAsSold(itemSearched), TimeSpan.FromSeconds(5));
+            _backgroundJobClient.Schedule(() => SetAsSold(itemSearched), durationTimeToAsSold);
 
             return _mapper.Map<ItemRequestIsAvailableDTO>(itemSearched);
         }
