@@ -4,6 +4,6 @@ namespace Auction_Project.Services.BidService
 {
     public interface IBidCloseServices
     {
-        Task<ItemRequestIsAvailableDTO> SetApproved(int idItem, DateTime endTime);
+        Task<ItemRequestIsAvailableDTO> SetApproved(int idItem);
     }
 }
