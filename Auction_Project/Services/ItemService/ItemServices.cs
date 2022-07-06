@@ -218,7 +218,7 @@ public class ItemsServices
     public async Task<IEnumerable<ItemResponseForClientDTO>> GetUserByPage(int nr)
     {
         var list = await GetUser();
-        var maxPage = list.ToList().Count / (nr * 5);
+        var maxPage = list.ToList().Count /  5;
         if (list.ToList().Count % 5 > 0)
         {
             maxPage++;
