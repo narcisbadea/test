@@ -13,6 +13,8 @@ namespace Auction_Project.Services.UserService
 
         Task<UserResponseDTO?> AddUser(UserRegisterDTO model);
 
+        Task<bool> ChangePassword(UserChangePasswordDTO dto);
+
         List<UserResponseDTO> GetAll();
         Task<bool> ChangeUserRole(UserRoleDTO role);
         string GetMyName();

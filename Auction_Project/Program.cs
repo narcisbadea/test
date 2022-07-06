@@ -5,6 +5,7 @@ using Auction_Project.Models.Base;
 using Auction_Project.Models.Users;
 using Auction_Project.Services.BidService;
 using Auction_Project.Services.ItemService;
+using Auction_Project.Services.PictureService;
 using Auction_Project.Services.UserService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -16,11 +17,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddScoped<IRepositoryUser, RepositoryUser>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IRepositoryBids , RepositoryBids>();
+builder.Services.AddScoped<IRepositoryUser, RepositoryUser>();
+builder.Services.AddScoped<IRepositoryPictures , RepositoryPictures>();
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPictureService, PictureService>();
 builder.Services.AddScoped<BidServices>();
 builder.Services.AddScoped<ItemsServices>();
 
