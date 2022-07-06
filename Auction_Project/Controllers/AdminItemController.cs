@@ -2,8 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Auction_Project.Services.ItemService;
 using Auction_Project.Models.Items;
 using Microsoft.AspNetCore.Authorization;
-using Auction_Project.Services.UserService;
-using Auction_Project.DataBase;
+using Auction_Project.Services.BidService;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,136 +10,76 @@ namespace Auction_Project.Models
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ItemsController : ControllerBase
+    public class AdminItemsController : ControllerBase
     {
 
-        private readonly IRepository<Item> _repository;
-        private readonly ItemsServices _itemServices;
-        private readonly IUserService _userServices;
+        private readonly ItemsServices _itemService;
+        private readonly IBidCloseServices _bidCloseServices;
 
 
-        public ItemsController(IRepository<Item> repository, ItemsServices itemServices, IUserService userServices)
+        public AdminItemsController(ItemsServices itemServices, IBidCloseServices bidCloseServices)
         {
-            _repository = repository;
-            _itemServices = itemServices;
-            _userServices = userServices;
+
+            _itemService = itemServices;
+            _bidCloseServices = bidCloseServices;
         }
 
 
-        // GET 
-        [HttpGet]
-    //    [Authorize]
-        public async Task<ActionResult> Get()
+        [HttpGet("/pageadmin/{nr}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<ItemResponseForAdminDTO>>> Get(int nr)
         {
-            /*
-            var role = _userServices.GetMyRole();
-
-            if (role != null)
-            {
-                if (role == "Admin")
-                {
-                    var items = await _repository.Get();
-                    if (items == null)
-                        return NotFound("List is empty");
-                    return Ok(items);
-                }
-                if (role == "User")
-                {
-                    var items = await _itemServices.Get();
-                    if (items == null)
-                        return NotFound("List is empty");
-                    return Ok(items);
-                }
-            }*/
-            return BadRequest();
+            var got = await _itemService.GetAdminByPage(nr);
+            if (got != null)
+                return Ok(got);
+            return NotFound("No items in list.");
+            //trebuie sa vada pretul curent daca s-a biduit pe item
         }
 
-       
+
         [HttpGet("{id}")]
-    //    [Authorize]
-        public async Task<ActionResult<ItemResponseDTO>> GetById(int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ItemResponseForAdminDTO>> GetById(int id)
         {
-            var role = _userServices.GetMyRole();
-
-            if (role != null)
-            {
-                if (role == "Admin")
-                {
-                    var item = await _repository.GetById(id);
-                    if (item == null)
-                        return NotFound("List is empty");
-                    return Ok(item);
-                }
-                if (role == "User")
-                {
-                    var item = await _itemServices.GetById(id);
-                    if (item == null)
-                        return NotFound("List is empty");
-                    return Ok(item);
-                }
-            }
-            return BadRequest();
+            var got = await _itemService.GetByIdForUser(id);
+            if (got != null)
+                return Ok(got);
+            return NotFound("Item not found.");
         }
-
 
         // POST >
         [HttpPost]
-    //    [Authorize]
-        public async Task<ActionResult> Post(ItemRequestDTO item)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
         {
-            /*var role = _userServices.GetMyRole();
-
-            if (role != null)
-            {
-                if (role == "Admin")
-                {
-                    if (await _itemServices.Post(item) != null)
-                        return Ok(item);
-                    return BadRequest();
-                }
-            if(role == "User")
-                {
-                    if (await _itemsForApprovalServices.Post(new ItemsForApproval(item)) != null)
-                        return Ok(item);
-                    return BadRequest();
-                }
+            var item = await _itemService.PostAdmin(toPost);
+            if (item)
+                return Ok(item);
             return BadRequest();
-            }*/
-         return BadRequest();
         }
 
 
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Update(ItemRequestDTO item, int id)
+        public async Task<ActionResult> Update(int id)
         { 
-           // var updated = await _itemServices.Update(item);
-           // if(updated is not null)
-           //     return Ok(updated);
-            return BadRequest();
-        }
-
-        [HttpPut("{IsSold}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> UpdateSold(int id)
-        {
-            var updated = await _itemServices.UpdateSold(id);
-            if (updated is not null)
-                return Ok(updated);
-            return BadRequest();
+           var updated = await _bidCloseServices.SetApproved(id);
+           if(updated != null)
+               return Ok("Item was put up for Auction");
+            return BadRequest("Not Successful");
         }
 
         // DELETE 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Disable(int id)
         {
-            var item = await _itemServices.GetById(id);
+            var item = await _itemService.GetById(id);
             if (item != null)
             {
-                //await _itemServices.Delete(id);
-                return Ok("Item removed");
+                await _itemService.Disable(id);
+                return Ok("Item disabled");
             }
             return NotFound("Item not found");
         }
