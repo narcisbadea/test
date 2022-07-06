@@ -10,31 +10,40 @@ namespace Auction_Project.Services.BidService
     public class BidCloseServices : IBidCloseServices
     {
         private readonly IRepositoryItem _repositoryItem;
+        private readonly IRepositoryUser _repositoryUser;
         private readonly IRepository<Item> _repositoryItemGeneric;
         private readonly IRepositoryBids _repositoryBid;
         private readonly IMapper _mapper;
         private readonly IBackgroundJobClient _backgroundJobClient;
 
-        public BidCloseServices(IRepositoryBids repositoryBid, IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient)
+        public BidCloseServices(IRepositoryBids repositoryBid, IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IRepositoryUser repositoryUser)
         {
             _repositoryBid = repositoryBid;
             _repositoryItem = repositoryItem;
             _mapper = mapper;
             _backgroundJobClient = backgroundJobClient;
+            _repositoryUser = repositoryUser;
         }
 
         public async Task<ItemRequestIsAvailableDTO> SetApproved(int idItem)
         {
-            var itemSearched = await _repositoryItemGeneric.GetById(idItem);
-            var getEndTime = (DateTime)itemSearched.endTime;
+            //var userSearched = await _repositoryBid.GetUserIdFromBid(idItem);
 
-            System.TimeSpan durationTimeToAsSold = getEndTime.Subtract(DateTime.UtcNow);
+            var itemSearched = await _repositoryItem.GetById(idItem);
+
+            if (itemSearched == null)
+                return null;
+            
+
+            //var getEndTime = (DateTime)itemSearched.endTime;
+
+           // System.TimeSpan durationTimeToAsSold = getEndTime.Subtract(DateTime.UtcNow);
 
             itemSearched.IsAvailable = true;
 
             await _repositoryItemGeneric.Update(itemSearched);
 
-            _backgroundJobClient.Schedule(() => SetAsSold(itemSearched), durationTimeToAsSold);
+            _backgroundJobClient.Schedule(() => SetAsSold(itemSearched), TimeSpan.FromSeconds(5));//durationTimeToAsSold);
 
             return _mapper.Map<ItemRequestIsAvailableDTO>(itemSearched);
         }
@@ -43,12 +52,14 @@ namespace Auction_Project.Services.BidService
         {
             itemSearched.IsAvailable = false;
             itemSearched.IsSold = true;
-            itemSearched.endTime = DateTime.UtcNow;
+
             var userWinned = _repositoryBid.GetUserIdFromBid(itemSearched.Id);
+
             itemSearched.winningBidId = userWinned.Id;
 
             await _repositoryItemGeneric.Update(itemSearched);
 
         }
+        
     }
 }
