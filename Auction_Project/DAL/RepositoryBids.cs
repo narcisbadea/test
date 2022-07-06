@@ -20,13 +20,13 @@ public class RepositoryBids : IRepositoryBids
         return await _context.Bids.Include(b => b.Item).Include(u=>u.User).ToListAsync();
     }
     
-    public async Task<User> GetUserIdFromBid(int id)
+    public async Task<User> GetUserIdFromBid(int idItem)
     {
 
         var bid = await _context.Bids
             .Include(i => i.Item)
             .Include(u => u.User)
-            .Where(u => u.Item.Id == id)
+            .Where(u => u.Item.Id == idItem)
             .OrderBy(b => b.bidTime)
             .LastOrDefaultAsync();
         return bid.User;
