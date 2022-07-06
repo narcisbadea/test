@@ -1,7 +1,8 @@
 ﻿using Auction_Project.Models.Base;
+using Auction_Project.Models.Bids;
 using Auction_Project.Models.Pictures;
 using Auction_Project.Models.Users;
-
+using System.ComponentModel.DataAnnotations;
 
 namespace Auction_Project.Models.Items
 {
@@ -13,7 +14,7 @@ namespace Auction_Project.Models.Items
 
         public bool IsSold { get; set; } = false;
 
-        public bool Available { get; set; } = false;
+        public bool IsAvailable { get; set; } = true;
 
         public string? Desc { get; set; }
 

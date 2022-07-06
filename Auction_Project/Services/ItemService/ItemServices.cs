@@ -17,17 +17,7 @@ public class ItemsServices
         _repository = repository;
     }
 
-    public async Task<IEnumerable<ItemResponseDTO>> Get()
-    {
-        var result = await _context.Items.ToListAsync();
-
-        var response = new List<ItemResponseDTO>();
-        foreach (var item in result)
-        {
-            //response.Add(new ItemResponse(item));
-        }
-        return response;
-    }
+  
 
     public async Task<Item> GetById(int id)
     {
