@@ -7,5 +7,6 @@ namespace Auction_Project.DAL
     {
         Task<List<Bid>> Get();
         Task<User> GetUserIdFromBid(int id);
+        Task<Bid> GetOne(int id);   
     }
 }

@@ -115,9 +115,9 @@ namespace Auction_Project.Models
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Update(ItemRequestDTO item, int id)
         { 
-            var updated = await _itemServices.Update(item, id);
-            if(updated is not null)
-                return Ok(updated);
+           // var updated = await _itemServices.Update(item);
+           // if(updated is not null)
+           //     return Ok(updated);
             return BadRequest();
         }
 
