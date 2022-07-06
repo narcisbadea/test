@@ -22,7 +22,7 @@ namespace Auction_Project.Controllers
         public async Task<ActionResult> SetTimerToCloseBid(int id)
         { 
 
-            _backgroundJobClient.Schedule(() => _bidCloseServices.SetItemAsSold(id), TimeSpan.FromSeconds(5));
+            //_backgroundJobClient.Schedule(() => _bidCloseServices.SetItemAsSold(id), TimeSpan.FromSeconds(5));
             //_backgroundJobClient.Enqueue(() => _bidCloseServices.SetItemAsSold(id));
 
 

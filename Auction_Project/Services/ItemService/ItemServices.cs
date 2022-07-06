@@ -244,7 +244,7 @@ public class ItemsServices
 
             IsSold = false,
 
-            Available = false,
+            IsAvailable = false,
 
             Desc = item.Desc,
 

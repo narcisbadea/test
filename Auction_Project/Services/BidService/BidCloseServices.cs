@@ -18,7 +18,7 @@ namespace Auction_Project.Services.BidService
             _repositoryItem = repositoryItem;
             _mapper = mapper;
         }
-        public async Task SetItemAvabilityToTrue(int id)
+        /*public async Task SetItemAvabilityToTrue(int id)
         {
             var itemSearched = await _repositoryItem.GetById(id);
 
@@ -27,9 +27,9 @@ namespace Auction_Project.Services.BidService
             await _repositoryItem.UpdateItem(itemSearched);
 
            
-        }
+        }*/
 
-        public async Task SetItemAsSold(int id)
+       /* public async Task SetItemAsSold(int id)
         {
             var itemSearched = await _repositoryItem.GetById(id);
             
@@ -38,7 +38,7 @@ namespace Auction_Project.Services.BidService
             //itemSearched.winningBid = null;//await _repositoryBid.GetUserIdFromBid(id);
 
             await _repositoryItem.UpdateItem(itemSearched);
-        }
+        }*/
 
     }
 }
