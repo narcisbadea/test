@@ -1,7 +1,6 @@
 ﻿using Auction_Project.Models.Items;
 using Auction_Project.Services.ItemService;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -19,7 +18,7 @@ public class ClientItemController : ControllerBase
     }
 
     [HttpGet]
-    //[Authorize]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<ItemResponseForClientDTO>>> Get()
     {
         var got = await _itemService.GetUser();
@@ -29,18 +28,29 @@ public class ClientItemController : ControllerBase
         //trebuie sa vada pretul curent daca s-a biduit pe item
     }
 
+    [HttpGet("/page/{nr}")]
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<ItemResponseForClientDTO>>> Get(int nr)
+    {
+        var got = await _itemService.GetUserByPage(nr);
+        if (got != null)
+            return Ok(got);
+        return NotFound("No items in list.");
+        //trebuie sa vada pretul curent daca s-a biduit pe item
+    }
+
     [HttpGet("{id}")]
-    //[Authorize]
+    [Authorize]
     public async Task<ActionResult<ItemResponseForClientDTO>> GetById(int id)
     {
-        var got = await _itemService.GetUser(id);
+        var got = await _itemService.GetByIdForUser(id);
         if (got != null)
             return Ok(got);
         return NotFound("Item not found.");
     }
 
     [HttpPost]
-    //[Authorize]
+    [Authorize]
     public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
     {
         var item = await _itemService.PostClient(toPost);
@@ -50,7 +60,7 @@ public class ClientItemController : ControllerBase
     }
 
     [HttpPut]
-    //[Authorize]
+    [Authorize]
     public async Task<ActionResult<ItemRequestDTO>> Update(ItemRequestForUpdateDTO toUpdate)
     {
         var item = await _itemService.Update(toUpdate);

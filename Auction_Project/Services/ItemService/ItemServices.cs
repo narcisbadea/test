@@ -129,9 +129,17 @@ public class ItemsServices
             }
         }
         return response;
-    } 
-    
-    public async Task<ItemResponseForClientDTO> GetUser(int id)
+    }
+
+    public async Task<IEnumerable<ItemResponseForClientDTO>> GetUserByPage(int nr)
+    {
+        var list = await GetUser();
+        var result = list.ToList().GetRange(5 * nr - 5, 5 - ((nr * 5) - list.ToList().Count));
+        return result;
+    }
+
+
+    public async Task<ItemResponseForClientDTO> GetByIdForUser(int id)
     {
         var item = await _repositoryItemCustom.GetById(id);
         var bids = await _repositoryBids.Get();
