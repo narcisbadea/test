@@ -215,9 +215,7 @@ public class ItemsServices
             }
         }
         return null;
-}
-
-
+    }
     public async Task<ItemResponseDTO> GetById(int id)
     {
         return _mapper.Map<ItemResponseDTO>(await _repositoryItems.GetById(id));

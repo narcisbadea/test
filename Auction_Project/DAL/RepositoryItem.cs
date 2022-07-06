@@ -22,6 +22,5 @@ namespace Auction_Project.DAL
         {
             return await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item=>item.Id == id);
         }
- 
     }
 }

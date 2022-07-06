@@ -1,10 +1,12 @@
 ﻿using Auction_Project.Models.Bids;
+using Auction_Project.Models.Users;
 
 namespace Auction_Project.DAL
 {
     public interface IRepositoryBids
     {
-        public Task<List<Bid>> Get();
-        public Task<Bid> GetOne(int id);   
+        Task<List<Bid>> Get();
+        Task<User> GetUserIdFromBid(int id);
+        Task<Bid> GetOne(int id);   
     }
 }
