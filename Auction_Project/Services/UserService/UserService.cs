@@ -176,5 +176,9 @@ namespace Auction_Project.Services.UserService
             return true;
         }
 
+        public bool ChangePassword(string newPasswd)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
