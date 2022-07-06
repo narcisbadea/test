@@ -68,7 +68,7 @@ namespace Auction_Project.Models
 
         // DELETE api/<BidsController>/5
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Delete(int id)
         {
             var bid = await _bidServices.GetById(id);

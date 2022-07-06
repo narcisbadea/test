@@ -20,12 +20,12 @@ namespace Auction_Project.Models.Items
 
         public decimal? Price { get; set; }
 
-        public Bid? winningBid { get; set; } = null;
+        public int? winningBidId { get; set; } = null;
 
         public DateTime? endTime { get; set; }
 
         public DateTime? postedTime { get; set; }
 
-        public List<Picture>? Gallery { get; set; }
+        public List<Picture>? Gallery { get; set; } = null;
     }
 }
