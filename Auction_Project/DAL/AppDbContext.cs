@@ -12,14 +12,12 @@ namespace Auction_Project.DataBase
 {
     public class AppDbContext : IdentityDbContext<User, Role, string>
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-            
-        }
-        protected override void OnModelCreating(ModelBuilder builder)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        protected async override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             this.SeedUsers(builder);
+            this.SeedRoles(builder);
             this.SeedUserRoles(builder);
         }
 
@@ -32,32 +30,32 @@ namespace Auction_Project.DataBase
 
         private void SeedUsers(ModelBuilder builder)
         {
-            User user = new User()
+            User user = new User
             {
-                Id = "b74ddd14-6340-4840-95c2-db12554843e5",
-                UserName = "Admin",
-                Email = "admin@gmail.com",
-                LockoutEnabled = false,
-                PhoneNumber = "1234567890"
+                Id = "b5d9114f-c911-49b4-af7c-137ce9488dd7",
+                UserName = "root",
+                Email = "root@gmail.com",
+                Cnp = "2881211259754",
+                FirstName = "root",
+                LastName = "root",
+                NormalizedUserName = "ROOT",
+                NormalizedEmail = "ROOT@GMAIL.COM"
             };
 
             PasswordHasher<User> passwordHasher = new PasswordHasher<User>();
-            passwordHasher.HashPassword(user, "Admin*123");
-
+            user.PasswordHash = passwordHasher.HashPassword(user, "Root*1234");
             builder.Entity<User>().HasData(user);
         }
-
         private void SeedRoles(ModelBuilder builder)
         {
-            builder.Entity<IdentityRole>().HasData(
-                new IdentityRole() { Id = "fab4fac1-c546-41de-aebc-a14da6895711", Name = "root", ConcurrencyStamp = "1", NormalizedName = "ROOT" }
-                );
+            builder.Entity<Role>().HasData(
+                new Role() { Id = "feadea3e-34b7-44a1-bafd-134749c706dc", Name = "root", NormalizedName = "ROOT" });
         }
 
         private void SeedUserRoles(ModelBuilder builder)
         {
             builder.Entity<IdentityUserRole<string>>().HasData(
-                new IdentityUserRole<string>() { RoleId = "fab4fac1-c546-41de-aebc-a14da6895711", UserId = "b74ddd14-6340-4840-95c2-db12554843e5" }
+                new IdentityUserRole<string>() { RoleId = "feadea3e-34b7-44a1-bafd-134749c706dc", UserId = "b5d9114f-c911-49b4-af7c-137ce9488dd7" }
                 );
         }
     }
