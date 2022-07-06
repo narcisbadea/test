@@ -34,7 +34,7 @@ namespace Auction_Project.Services.BidService
 
             await _repositoryItemGeneric.Update(itemSearched);
 
-            _backgroundJobClient.Schedule(() => SetAsSold(itemSearched), durationTimeToAsSold);
+            _backgroundJobClient.Schedule(() => SetAsSold(itemSearched), TimeSpan.FromSeconds(10)); ///durationTimeToAsSold);
 
             return _mapper.Map<ItemRequestIsAvailableDTO>(itemSearched);
         }

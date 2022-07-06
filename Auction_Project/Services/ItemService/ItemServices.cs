@@ -130,14 +130,129 @@ public class ItemsServices
         }
         return response;
     }
+   
+    public async Task<IEnumerable<ItemResponseForAdminDTO>> GetAdmin()
+    {
+        var items = await _repositoryItemCustom.Get();
+        var bids = await _repositoryBids.Get();
+
+        var response = new List<ItemResponseForAdminDTO>();
+
+        foreach (var item in items)
+        {
+            var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();
+            if (lastBid != null)
+            {
+                var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
+                var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
+                var res = new BidResponseDTO
+                {
+                    ItemResponse = itemResponse,
+                    UserResponse = userResponse,
+                    BidPrice = lastBid.BidPrice
+                };
+
+                var listGalleryIds = new List<int>();
+                if (item.Gallery.Count > 0)
+                {
+                    foreach (var pic in item.Gallery)
+                    {
+                        listGalleryIds.Add(pic.Id);
+                    }
+                }
+                else
+                {
+                    listGalleryIds.Add(-1);
+                }
+
+                response.Add(new ItemResponseForAdminDTO
+                {
+
+                        Name = item.Name,
+
+                        Desc = item.Desc,
+
+                        InitialPrice = item.Price,
+
+                        endTime = item.endTime,
+
+                        Gallery = listGalleryIds,
+                    
+                        BidsOnItem = bids.FindAll(bid=>bid.Item.Id==item.Id)
+                });
+            }
+            else
+            {
+                var listGalleryIds = new List<int>();
+                if (item.Gallery.Count > 0)
+                {
+                    foreach (var pic in item.Gallery)
+                    {
+                        listGalleryIds.Add(pic.Id);
+                    }
+                }
+                else
+                {
+                    listGalleryIds.Add(-1);
+                }
+                response.Add(new ItemResponseForAdminDTO
+                {
+
+                    Name = item.Name,
+
+                    Desc = item.Desc,
+
+                    InitialPrice = item.Price,
+
+                    endTime = item.endTime,
+
+                    Gallery = listGalleryIds,
+
+                    BidsOnItem = null
+                });
+            }
+        }
+        return response;
+    }
 
     public async Task<IEnumerable<ItemResponseForClientDTO>> GetUserByPage(int nr)
     {
         var list = await GetUser();
-        var result = list.ToList().GetRange(5 * nr - 5, 5 - ((nr * 5) - list.ToList().Count));
-        return result;
+        var maxPage = list.ToList().Count / (nr * 5);
+        if (list.ToList().Count % 5 > 0)
+        {
+            maxPage++;
+        }
+        if (nr <= maxPage)
+        {
+            var result = list.ToList().GetRange(5 * nr - 5, 5 - ((nr * 5) - list.ToList().Count));
+            return result;
+        }
+        else
+        {
+            return null;
+        }
     }
 
+    public async Task<IEnumerable<ItemResponseForAdminDTO>> GetAdminByPage(int nr)
+    {
+        var list = await GetAdmin();
+        var maxPage = list.ToList().Count / (nr * 5);
+        if(list.ToList().Count % 5 > 0)
+        {
+            maxPage++;
+        }
+        if (nr <= maxPage)
+        {
+            var result = list.ToList().GetRange(5 * nr - 5, 5 - ((nr * 5) - list.ToList().Count));
+            return result;
+        }
+        else
+        {
+            return null;
+        }
+        
+    }
 
     public async Task<ItemResponseForClientDTO> GetByIdForUser(int id)
     {
@@ -224,23 +339,17 @@ public class ItemsServices
         }
         return null;
     }
+    
     public async Task<ItemResponseDTO> GetById(int id)
     {
         return _mapper.Map<ItemResponseDTO>(await _repositoryItems.GetById(id));
     }
 
-    public async Task<ItemResponseDTO> PostAdmin(ItemRequestDTO item)
-    {
-        var itemMapped = _mapper.Map<Item>(item);
-
-        return _mapper.Map<ItemResponseDTO>(await _repositoryItems.Post(itemMapped));
-    }
-    
     public async Task<bool> PostClient(ItemRequestDTO item)
     {
-        var picList= new List<Picture>();
+        var picList = new List<Picture>();
 
-        foreach(var gallryId in item.GalleryIds)
+        foreach (var gallryId in item.GalleryIds)
         {
             picList.Add(await _repositoryPictures.GetById(gallryId));
         }
@@ -272,6 +381,42 @@ public class ItemsServices
         return false;
     }
 
+    public async Task<bool> PostAdmin(ItemRequestDTO item)
+    {
+        var picList= new List<Picture>();
+
+        foreach(var gallryId in item.GalleryIds)
+        {
+            picList.Add(await _repositoryPictures.GetById(gallryId));
+        }
+
+        var toPost = new Item
+        {
+
+            Name = item.Name,
+
+            IsSold = false,
+
+            IsAvailable = true,
+
+            Desc = item.Desc,
+
+            Price = item.Price,
+
+            winningBidId = null,
+
+            endTime = item.EndTime,
+
+            postedTime = DateTime.UtcNow,
+
+            Gallery = picList
+        };
+
+        if (await _repositoryItems.Post(toPost) != null)
+            return true;
+        return false;
+    }
+
     public async Task<bool> Update(ItemRequestForUpdateDTO item)
     {
         var itemMapped = _mapper.Map<Item>(item);
@@ -280,6 +425,7 @@ public class ItemsServices
             return true;
         return false;
     }
+    
     public async Task<Item> UpdateSold(int id)
     {
         var Sold = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
@@ -291,5 +437,11 @@ public class ItemsServices
         }
         return null;
     }
+
+    public async Task<Item> Disable(int id)
+    {
+        return await _repositoryItemCustom.Disable(id);
+    }
+
 }
 
