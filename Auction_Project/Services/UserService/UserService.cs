@@ -172,7 +172,7 @@ namespace Auction_Project.Services.UserService
         {
             byte[] passwdHas, passwdSalt;
             CreatePasswordHash(newPasswd, out passwdHas, out passwdSalt);
-            user.Password = passwdHas.Length.ToString();
+            user.Password = passwdHas.ToString();
             return true;
         }
 
