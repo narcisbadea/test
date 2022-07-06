@@ -21,18 +21,6 @@ public class ItemsServices
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<ItemResponseDTO>> Get()
-    {
-        var result = await _context.Items.ToListAsync();
-
-        var response = new List<ItemResponseDTO>();
-        foreach (var item in result)
-        {
-            response.Add(_mapper.Map<ItemResponseDTO>(item));
-        }
-        return response;
-    }
-
     public async Task<ItemResponseDTO> GetById(int id)
     {
         return _mapper.Map<ItemResponseDTO>(await _repository.GetById(id));

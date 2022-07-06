@@ -32,6 +32,7 @@ namespace Auction_Project.Models
     //    [Authorize]
         public async Task<ActionResult> Get()
         {
+            /*
             var role = _userServices.GetMyRole();
 
             if (role != null)
@@ -50,7 +51,7 @@ namespace Auction_Project.Models
                         return NotFound("List is empty");
                     return Ok(items);
                 }
-            }
+            }*/
             return BadRequest();
         }
 

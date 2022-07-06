@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Hangfire;
+using Hangfire.SqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,8 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IRepositoryBids , RepositoryBids>();
 builder.Services.AddScoped<BidServices>();
 builder.Services.AddScoped<ItemsServices>();
+builder.Services.AddScoped<IBidCloseServices, BidCloseServices>();
+builder.Services.AddScoped<IRepositoryItem, RepositoryItem>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
 
@@ -30,6 +34,21 @@ var connectionString = builder.Configuration.GetSection("AppSettings:connectionS
 
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+                            .UseSimpleAssemblyNameTypeSerializer()
+                            .UseRecommendedSerializerSettings()
+                            .UseSqlServerStorage(connectionString, new SqlServerStorageOptions
+                            {
+                                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                                QueuePollInterval = TimeSpan.Zero,
+                                UseRecommendedIsolationLevel = true,
+                                DisableGlobalLocks = true, // Migration to Schema 7 is required
+
+                            }));
+
+builder.Services.AddHangfireServer();
 
 
 builder.Services.AddSwaggerGen(options => {
@@ -109,6 +128,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseHangfireDashboard();
 
 app.MapControllers();
 

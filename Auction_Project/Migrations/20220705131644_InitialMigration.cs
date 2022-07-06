@@ -167,7 +167,7 @@ namespace Auction_Project.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsSold = table.Column<bool>(type: "bit", nullable: false),
-                    Available = table.Column<bool>(type: "bit", nullable: false),
+                    IsAvailable = table.Column<bool>(type: "bit", nullable: false),
                     Desc = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     winningBidId = table.Column<string>(type: "nvarchar(450)", nullable: true),
