@@ -25,7 +25,7 @@ namespace Auction_Project.Services.PictureService
 
         public async Task<PictureResponseDTO> PostPicture(PictureRequestDTO pic)
         {
-            string uploads = Path.Combine(Directory.GetCurrentDirectory(), "pictures",pic.ItemId.ToString());
+            string uploads = Path.Combine(Directory.GetCurrentDirectory(), "pictures");
             System.IO.Directory.CreateDirectory(uploads);
             string filePath = Path.Combine(uploads, pic.Image.FileName);
             using (Stream fileStream = new FileStream(filePath, FileMode.Create))
