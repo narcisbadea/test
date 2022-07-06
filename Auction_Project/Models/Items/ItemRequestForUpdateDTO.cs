@@ -11,6 +11,6 @@ namespace Auction_Project.Models.Items
 
         public decimal? Price { get; set; }
 
-        public List<PictureRequestDTO>? Gallery { get; set; }
+        //public List<PictureRequestDTO>? Gallery { get; set; }
     }
 }

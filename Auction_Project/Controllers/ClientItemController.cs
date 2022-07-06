@@ -22,18 +22,20 @@ public class ClientItemController : ControllerBase
     //[Authorize]
     public async Task<ActionResult<IEnumerable<ItemResponseForClientDTO>>> Get()
     {
-        if(await _itemService.GetUser()!= null)
-            return Ok(await _itemService.GetUser());
+        var got = await _itemService.GetUser();
+        if (got!=null)
+            return Ok(got);
         return NotFound("No items in list.");
         //trebuie sa vada pretul curent daca s-a biduit pe item
     }
 
     [HttpGet("{id}")]
     //[Authorize]
-    public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetById(int id)
+    public async Task<ActionResult<ItemResponseForClientDTO>> GetById(int id)
     {
-        if (await _itemService.GetById(id) != null)
-            return Ok(await _itemService.GetById(id));
+        var got = await _itemService.GetUser(id);
+        if (got != null)
+            return Ok(got);
         return NotFound("Item not found.");
     }
 
@@ -41,8 +43,8 @@ public class ClientItemController : ControllerBase
     //[Authorize]
     public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
     {
-        var item = _itemService.PostClient(toPost);
-        if(item != null)
+        var item = await _itemService.PostClient(toPost);
+        if(item)
             return Ok(item);
         return BadRequest();
     }

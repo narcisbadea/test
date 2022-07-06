@@ -23,6 +23,7 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IRepositoryBids , RepositoryBids>();
 builder.Services.AddScoped<IRepositoryUser, RepositoryUser>();
 builder.Services.AddScoped<IRepositoryPictures , RepositoryPictures>();
+builder.Services.AddScoped<IRepositoryItem, RepositoryItem>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPictureService, PictureService>();

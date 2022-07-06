@@ -12,6 +12,8 @@ public class ItemRequestDTO
 
     public List<int>? GalleryIds { get; set; }
 
+    public DateTime? EndTime { get; set; }
+
 }
 
 
