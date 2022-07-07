@@ -22,6 +22,7 @@ namespace Auction_Project.Authenticate
         }
 
         [HttpPut("change-password")]
+        [Authorize]
         public async Task<ActionResult<bool>> ChangePassword(UserChangePasswordDTO user)
         {
             var updated = await _userService.ChangePassword(user);
