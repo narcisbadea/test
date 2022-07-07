@@ -28,36 +28,39 @@ namespace Auction_Project.Services.BidService
         public async Task<ItemRequestIsAvailableDTO> SetApproved(int idItem)
         {
             //var userSearched = await _repositoryBid.GetUserIdFromBid(idItem);
-
+            int durationToBeSold = 0;
             var itemSearched = await _repositoryItem.GetById(idItem);
 
             if (itemSearched == null)
                 return null;
-            
 
-            //var getEndTime = (DateTime)itemSearched.endTime;
+            if(itemSearched.endTime > DateTime.UtcNow)
+                durationToBeSold = (int)(itemSearched.endTime - DateTime.UtcNow).GetValueOrDefault().Minutes;
 
-           // System.TimeSpan durationTimeToAsSold = getEndTime.Subtract(DateTime.UtcNow);
+            if (itemSearched.endTime <= DateTime.UtcNow)
+                return null;
+            /*
+            if(itemSearched.endTime <= DateTime.UtcNow)
+            {
+                await _repositoryItem.Disable(itemSearched.Id);
+                return _mapper.Map<ItemRequestIsAvailableDTO>(updatedItem);
+            }
+            */
+            Console.WriteLine($"End Time is: {durationToBeSold}");
+           
 
-            itemSearched.IsAvailable = true;
+            var updatedItem = await _repositoryItem.Enable(itemSearched.Id);
 
-            await _repositoryItemGeneric.Update(itemSearched);
+            _backgroundJobClient.Schedule(() => SetAsSold(updatedItem), TimeSpan.FromMinutes(durationToBeSold)); //durationTimeToAsSold);//durationTimeToAsSold);
 
-            _backgroundJobClient.Schedule(() => SetAsSold(itemSearched), TimeSpan.FromSeconds(5));//durationTimeToAsSold);
-
-            return _mapper.Map<ItemRequestIsAvailableDTO>(itemSearched);
+            return _mapper.Map<ItemRequestIsAvailableDTO>(updatedItem);
         }
 
         public async Task SetAsSold(Item itemSearched)
-        {
-            itemSearched.IsAvailable = false;
-            itemSearched.IsSold = true;
+        { 
+            
 
-            var userWinned = _repositoryBid.GetUserIdFromBid(itemSearched.Id);
-
-            itemSearched.winningBidId = userWinned.Id;
-
-            await _repositoryItemGeneric.Update(itemSearched);
+            await _repositoryItem.UpdateToSold(itemSearched.Id);
 
         }
         
