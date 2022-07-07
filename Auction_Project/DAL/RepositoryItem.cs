@@ -8,10 +8,12 @@ namespace Auction_Project.DAL
     public class RepositoryItem :IRepositoryItem
     {
         private readonly AppDbContext _context;
+        private readonly IRepositoryBids _repositoryBids;
 
-        public RepositoryItem(AppDbContext context)
+        public RepositoryItem(AppDbContext context, IRepositoryBids repositoryBids)
         {
             _context = context;
+            _repositoryBids = repositoryBids;
         }
 
 
@@ -46,8 +48,8 @@ namespace Auction_Project.DAL
             {
                 item.IsAvailable = false;
                 item.IsSold = true;
-
-
+                var user = await _repositoryBids.GetUserIdFromBid(id);
+                item.winningBidId = user.Id;
                 _context.Items.Update(item);
                 await _context.SaveChangesAsync();
                 return item;

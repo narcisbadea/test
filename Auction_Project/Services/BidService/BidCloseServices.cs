@@ -16,8 +16,9 @@ namespace Auction_Project.Services.BidService
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IUserService _userService;
         private readonly IEmailService _emailService;
+        private readonly IRepositoryBids _repositoryBids;
 
-        public BidCloseServices(IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IUserService userService, IEmailService emailService)
+        public BidCloseServices(IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IUserService userService, IEmailService emailService, IRepositoryBids repositoryBids)
         {
 
             _repositoryItem = repositoryItem;
@@ -25,6 +26,7 @@ namespace Auction_Project.Services.BidService
             _backgroundJobClient = backgroundJobClient;
             _userService = userService;
             _emailService = emailService;
+            _repositoryBids = repositoryBids;
         }
 
         public async Task<ItemRequestIsAvailableDTO> SetApproved(int idItem)
@@ -64,7 +66,8 @@ namespace Auction_Project.Services.BidService
             
 
             await _repositoryItem.UpdateToSold(itemSearched.Id);
-            var email = _userService.GetMyEmail();
+            var user = await _repositoryBids.GetUserIdFromBid(itemSearched.Id);
+            var email = user.Email;
             _emailService.Send(email, "WINNER", $"Ai castigat {itemSearched.Name}. \nFelicitari!!! ");
 
         }

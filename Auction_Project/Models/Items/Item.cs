@@ -20,7 +20,7 @@ namespace Auction_Project.Models.Items
 
         public decimal? Price { get; set; }
 
-        public int? winningBidId { get; set; } = null;
+        public string? winningBidId { get; set; } = null;
 
         public DateTime? endTime { get; set; }
 
