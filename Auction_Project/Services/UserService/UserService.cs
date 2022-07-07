@@ -101,6 +101,7 @@ namespace Auction_Project.Services.UserService
             return result;
         }
 
+
         public async Task<User> GetMe()
         {
             var id =  GetMyId().Result;
