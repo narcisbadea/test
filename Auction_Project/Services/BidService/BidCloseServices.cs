@@ -43,20 +43,13 @@ namespace Auction_Project.Services.BidService
 
             //if (itemSearched.endTime <= DateTime.UtcNow)
             //    return null;
-            /*
-            if(itemSearched.endTime <= DateTime.UtcNow)
-            {
-                await _repositoryItem.Disable(itemSearched.Id);
-                return _mapper.Map<ItemRequestIsAvailableDTO>(updatedItem);
-            }
-            */
-            Console.WriteLine($"End Time is: {durationToBeSold}");
-           
+            
+
 
             var updatedItem = await _repositoryItem.Enable(itemSearched.Id);
 
 
-            _backgroundJobClient.Schedule(() => SetAsSold(updatedItem), TimeSpan.FromMinutes(durationToBeSold)); //durationTimeToAsSold);//durationTimeToAsSold);
+            _backgroundJobClient.Schedule(() => SetAsSold(updatedItem), TimeSpan.FromSeconds(10)); //durationTimeToAsSold);//durationTimeToAsSold);
 
             return _mapper.Map<ItemRequestIsAvailableDTO>(updatedItem);
         }
@@ -66,9 +59,8 @@ namespace Auction_Project.Services.BidService
             
 
             await _repositoryItem.UpdateToSold(itemSearched.Id);
-            //var user = await _repositoryBids.GetUserIdFromBid(itemSearched.Id);
-            var email = "andrewscc842@gmail.com";
-            //var email = user.Email;
+            var user = await _repositoryBids.GetUserIdFromBid(itemSearched.Id);
+            var email = user.Email;
             _emailService.Send(email, "WINNER", $"Ai castigat {itemSearched.Name}. \nFelicitari!!! ");
 
         }

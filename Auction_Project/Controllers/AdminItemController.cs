@@ -36,7 +36,6 @@ namespace Auction_Project.Models
             //trebuie sa vada pretul curent daca s-a biduit pe item
         }
 
-
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ItemResponseForAdminDTO>> GetById(int id)
@@ -57,8 +56,6 @@ namespace Auction_Project.Models
                 return Ok(item);
             return BadRequest();
         }
-
-
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
