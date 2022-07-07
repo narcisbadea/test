@@ -33,6 +33,5 @@ namespace Auction_Project.DAL
         {
             return _userManager.Users.ToList();
         }
-
     }
 }

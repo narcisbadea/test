@@ -100,6 +100,13 @@ namespace Auction_Project.Services.UserService
             }
             return result;
         }
+        public string GetMyEmail()
+        {
+            var email = string.Empty;
+            var user = _repositoryUser.GetById(GetMyId().Result);
+            email = user.Email;
+            return email;
+        }
 
         public async Task<User> GetMe()
         {

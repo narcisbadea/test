@@ -19,6 +19,8 @@ namespace Auction_Project.Services.UserService
         Task<bool> ChangeUserRole(UserRoleDTO role);
         string GetMyName();
 
+        string GetMyEmail();
+
         string GetMyRole();
 
         bool IsValidCNP(string cnp);

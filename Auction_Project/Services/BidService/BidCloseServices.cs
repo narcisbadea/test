@@ -2,6 +2,8 @@
 using Auction_Project.DataBase;
 using Auction_Project.Models.Bids;
 using Auction_Project.Models.Items;
+using Auction_Project.Services.EmailService;
+using Auction_Project.Services.UserService;
 using AutoMapper;
 using Hangfire;
 
@@ -10,19 +12,19 @@ namespace Auction_Project.Services.BidService
     public class BidCloseServices : IBidCloseServices
     {
         private readonly IRepositoryItem _repositoryItem;
-        private readonly IRepositoryUser _repositoryUser;
-        private readonly IRepository<Item> _repositoryItemGeneric;
-        private readonly IRepositoryBids _repositoryBid;
         private readonly IMapper _mapper;
         private readonly IBackgroundJobClient _backgroundJobClient;
+        private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
 
-        public BidCloseServices(IRepositoryBids repositoryBid, IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IRepositoryUser repositoryUser)
+        public BidCloseServices(IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IUserService userService, IEmailService emailService)
         {
-            _repositoryBid = repositoryBid;
+
             _repositoryItem = repositoryItem;
             _mapper = mapper;
             _backgroundJobClient = backgroundJobClient;
-            _repositoryUser = repositoryUser;
+            _userService = userService;
+            _emailService = emailService;
         }
 
         public async Task<ItemRequestIsAvailableDTO> SetApproved(int idItem)
@@ -62,6 +64,8 @@ namespace Auction_Project.Services.BidService
             
 
             await _repositoryItem.UpdateToSold(itemSearched.Id);
+            var email = _userService.GetMyEmail();
+            _emailService.Send(email, "WINNER", $"Ai castigat {itemSearched.Name}. \nFelicitari!!! ");
 
         }
         
