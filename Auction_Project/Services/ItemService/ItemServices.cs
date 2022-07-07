@@ -154,6 +154,7 @@ public class ItemsServices
 
                 response.Add(new ItemResponseForAdminDTO
                 {
+                        Id= item.Id,    
 
                         Name = item.Name,
 
@@ -184,6 +185,7 @@ public class ItemsServices
                 }
                 response.Add(new ItemResponseForAdminDTO
                 {
+                    Id = item.Id,
 
                     Name = item.Name,
 
