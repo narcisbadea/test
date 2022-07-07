@@ -1,5 +1,4 @@
 ﻿using Auction_Project.Services.EmailService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Auction_Project.Controllers

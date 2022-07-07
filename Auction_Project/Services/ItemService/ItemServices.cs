@@ -4,8 +4,6 @@ using Auction_Project.Models.Bids;
 using Auction_Project.Models.Items;
 using Auction_Project.Models.Pictures;
 using Auction_Project.Models.Users;
-using Auction_Project.Services.BidService;
-using Auction_Project.Services.PictureService;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 

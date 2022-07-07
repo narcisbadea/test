@@ -5,7 +5,6 @@ using Auction_Project.Models.Items;
 using Auction_Project.Models.Users;
 using Auction_Project.Services.UserService;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 
 
 

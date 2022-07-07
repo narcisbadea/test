@@ -1,6 +1,5 @@
 ﻿using Auction_Project.DAL;
 using Auction_Project.Models.Pictures;
-using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 
 namespace Auction_Project.Services.PictureService
