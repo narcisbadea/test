@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Hangfire;
 using Hangfire.SqlServer;
+using Auction_Project.Services.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,8 @@ builder.Services.AddScoped<IBidCloseServices, BidCloseServices>();
 builder.Services.AddScoped<IRepositoryItem, RepositoryItem>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfiles));
+
+builder.Services.AddTransient<IEmailService, EmailService>();
 
 var connectionString = builder.Configuration.GetSection("AppSettings:connectionString").Value;
 
@@ -118,6 +121,12 @@ builder.Services.AddAuthentication(options =>
        };
    });
 
+builder.Services.AddCors(options => options.AddPolicy("EnableAll", policy =>
+{
+    policy.AllowAnyOrigin();
+    policy.AllowAnyMethod();
+    policy.AllowAnyHeader();
+}));
 
 var app = builder.Build();
 

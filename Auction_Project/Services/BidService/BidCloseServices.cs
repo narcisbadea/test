@@ -51,6 +51,7 @@ namespace Auction_Project.Services.BidService
 
             var updatedItem = await _repositoryItem.Enable(itemSearched.Id);
 
+
             _backgroundJobClient.Schedule(() => SetAsSold(updatedItem), TimeSpan.FromMinutes(durationToBeSold)); //durationTimeToAsSold);//durationTimeToAsSold);
 
             return _mapper.Map<ItemRequestIsAvailableDTO>(updatedItem);
