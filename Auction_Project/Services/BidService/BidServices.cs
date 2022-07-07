@@ -105,10 +105,10 @@ public class BidServices
 
             }; //BidRequestDTO
 
-            var lastPrice = await _repositoryBids.Get();
-            if (lastPrice.Count != 0)
+            var BidsOnItem = await _repositoryBids.GetForOneItem(toPost.ItemId);
+            if (BidsOnItem.Count != 0)
             {
-                var x = lastPrice.OrderBy(b => b.BidPrice).Last().BidPrice;
+                var x = BidsOnItem.OrderBy(b => b.BidPrice).Last().BidPrice;
                 if (x < bid.BidPrice)
                 {
                     await _repository.Post(bid);
