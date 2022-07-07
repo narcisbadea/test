@@ -22,10 +22,38 @@ namespace Auction_Project.DAL
 
         public async Task<Item> GetById(int id)
         {
-            //var item = await _context.Items.ToListAsync();
             return await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item=>item.Id == id);
         }
 
+        public async Task<Item> Enable(int id)
+        {
+            var toEnable = await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item => item.Id == id);
+            if (toEnable != null)
+            {
+                toEnable.IsAvailable = true;
+
+                _context.Items.Update(toEnable);
+                await _context.SaveChangesAsync();
+                return toEnable;
+            }
+            return null;
+        }
+
+        public async Task<Item> UpdateToSold(int id)
+        {
+            var item = await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item => item.Id == id);
+            if (item != null)
+            {
+                item.IsAvailable = false;
+                item.IsSold = true;
+
+
+                _context.Items.Update(item);
+                await _context.SaveChangesAsync();
+                return item;
+            }
+            return null;
+        }
 
         public async Task<Item> Disable(int id)
         {
