@@ -8,11 +8,11 @@ namespace Auction_Project.Models.Users
 
         public bool IsActive { get; set; } = true;
 
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = string.Empty;
 
-        public string LastName { get; set; }
+        public string LastName { get; set; } = string.Empty;
 
-        public string Cnp { get; set; }
+        public string Cnp { get; set; } = string.Empty;
 
     }
 

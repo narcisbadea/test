@@ -4,8 +4,6 @@ using Auction_Project.Models.Bids;
 using Auction_Project.Models.Items;
 using Auction_Project.Models.Pictures;
 using Auction_Project.Models.Users;
-using Auction_Project.Services.BidService;
-using Auction_Project.Services.PictureService;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,17 +29,6 @@ public class ItemsServices
         _repositoryItemCustom = repositoryItemCustom;
     }
 
-    public async Task<IEnumerable<ItemResponseDTO>> Get()
-    {
-        var result = await _repositoryItems.Get();
-
-        var response = new List<ItemResponseDTO>();
-        foreach (var item in result)
-        {
-            response.Add(_mapper.Map<ItemResponseDTO>(item));
-        }
-        return response;
-    }
 
     public async Task<IEnumerable<ItemResponseForClientDTO>> GetUser()
     {
@@ -49,36 +36,36 @@ public class ItemsServices
         var bids = await _repositoryBids.Get();
 
         var response = new List<ItemResponseForClientDTO>();
-
-        foreach (var item in items)
-        {
-            var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();
-            if (lastBid != null)
+       
+            foreach (var item in items)
             {
-                var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
-                var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
-                var res = new BidResponseDTO
+                var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();
+                if (lastBid != null)
                 {
-                    ItemResponse = itemResponse,
-                    UserResponse = userResponse,
-                    BidPrice = lastBid.BidPrice
-                };
-
-                var listGalleryIds = new List<int>();
-                if (item.Gallery.Count > 0)
-                {
-                    foreach (var pic in item.Gallery)
+                    var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
+                    var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
+                    var res = new BidResponseDTO
                     {
-                        listGalleryIds.Add(pic.Id);
-                    }
-                }
-                else
-                {
-                    listGalleryIds.Add(-1);
-                }
+                        ItemResponse = itemResponse,
+                        UserResponse = userResponse,
+                        BidPrice = lastBid.BidPrice
+                    };
 
-                response.Add(new ItemResponseForClientDTO
-                {
+                    var listGalleryIds = new List<int>();
+                    if (item.Gallery.Count > 0)
+                    {
+                        foreach (var pic in item.Gallery)
+                        {
+                            listGalleryIds.Add(pic.Id);
+                        }
+                    }
+                    else
+                    {
+                        listGalleryIds.Add(-1);
+                    }
+
+                    response.Add(new ItemResponseForClientDTO
+                    {
 
                         Name = item.Name,
 
@@ -89,45 +76,45 @@ public class ItemsServices
                         endTime = item.endTime,
 
                         Gallery = listGalleryIds,
-                    
+
                         LastBidUserFirstName = res.UserResponse.FirstName,
 
                         LastBidPrice = res.BidPrice
-                });
-            }
-            else
-            {
-                var listGalleryIds = new List<int>();
-                if (item.Gallery.Count > 0)
-                {
-                    foreach (var pic in item.Gallery)
-                    {
-                        listGalleryIds.Add(pic.Id);
-                    }
+                    });
                 }
                 else
                 {
-                    listGalleryIds.Add(-1);
+                    var listGalleryIds = new List<int>();
+                    if (item.Gallery.Count > 0)
+                    {
+                        foreach (var pic in item.Gallery)
+                        {
+                            listGalleryIds.Add(pic.Id);
+                        }
+                    }
+                    else
+                    {
+                        listGalleryIds.Add(-1);
+                    }
+                    response.Add(new ItemResponseForClientDTO
+                    {
+
+                        Name = item.Name,
+
+                        Desc = item.Desc,
+
+                        InitialPrice = item.Price,
+
+                        endTime = item.endTime,
+
+                        Gallery = listGalleryIds,
+
+                        LastBidUserFirstName = "No bidder yet",
+
+                        LastBidPrice = 0
+                    });
                 }
-                response.Add(new ItemResponseForClientDTO
-                {
-
-                    Name = item.Name,
-
-                    Desc = item.Desc,
-
-                    InitialPrice = item.Price,
-
-                    endTime = item.endTime,
-
-                    Gallery = listGalleryIds,
-
-                    LastBidUserFirstName = "No bidder yet",
-
-                    LastBidPrice = 0
-                });
             }
-        }
         return response;
     }
    
@@ -137,7 +124,7 @@ public class ItemsServices
         var bids = await _repositoryBids.Get();
 
         var response = new List<ItemResponseForAdminDTO>();
-
+  
         foreach (var item in items)
         {
             var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();

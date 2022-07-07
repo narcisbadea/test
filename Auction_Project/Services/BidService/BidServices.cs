@@ -5,7 +5,6 @@ using Auction_Project.Models.Items;
 using Auction_Project.Models.Users;
 using Auction_Project.Services.UserService;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
 
 
 
@@ -51,19 +50,6 @@ public class BidServices
           }
           return response;
       }
-
-  /*  public async Task<List<BidResponseUser>> GetUser()
-    {
-        var result = await _context.Bids
-            .Include(b => b.Item)
-            .ToListAsync();
-        var response = new List<BidResponseUser>();
-        foreach (var item in result)
-        {
-            response.Add(new BidResponseUser(item));
-        }
-        return response;
-    }*/
     
     public async Task<BidResponseDTO> GetById(int id)
     {
@@ -94,8 +80,8 @@ public class BidServices
         var currentUser = await _userServices.GetMe();
         if (item != null)
         {
-           // if (item.endTime > DateTime.UtcNow)
-           // {
+            if (item.endTime > DateTime.UtcNow)
+            {
             var bid = new Bid()
             {
                 Item = item,
@@ -103,7 +89,7 @@ public class BidServices
                 BidPrice = toPost.BidPrice,
                 bidTime = DateTime.UtcNow
 
-            }; //BidRequestDTO
+            }; 
 
             var BidsOnItem = await _repositoryBids.GetForOneItem(toPost.ItemId);
             if (BidsOnItem.Count != 0)
@@ -123,29 +109,9 @@ public class BidServices
                     return true;
                 }
             }
-           // }
+            }
         }
         return false;
     }
 
-    public async Task<bool> Update(BidRequestDTO bid, int id)
-    {
-        /*ar ToReplace = await _context.Bids
-            .Include(b=>b.User)
-            .Include(b=>b.Item)
-            .FirstOrDefaultAsync(b=>b.Id==id);
-        if (ToReplace != null)
-        {
-            var user = await _context.Users.FindAsync(bid.IdNextUser);
-            if (user != null)
-            {
-                ToReplace.User = user;
-                ToReplace.bidTime = DateTime.UtcNow;
-                ToReplace.CurrentPrice = bid.Price;
-                await _context.SaveChangesAsync();
-                return true;
-            }
-        }*/
-        return false;
-    }
 }

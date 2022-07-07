@@ -14,17 +14,15 @@ namespace Auction_Project.Services.BidService
         private readonly IRepositoryItem _repositoryItem;
         private readonly IMapper _mapper;
         private readonly IBackgroundJobClient _backgroundJobClient;
-        private readonly IUserService _userService;
         private readonly IEmailService _emailService;
         private readonly IRepositoryBids _repositoryBids;
 
-        public BidCloseServices(IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IUserService userService, IEmailService emailService, IRepositoryBids repositoryBids)
+        public BidCloseServices(IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IEmailService emailService, IRepositoryBids repositoryBids)
         {
 
             _repositoryItem = repositoryItem;
             _mapper = mapper;
             _backgroundJobClient = backgroundJobClient;
-            _userService = userService;
             _emailService = emailService;
             _repositoryBids = repositoryBids;
         }

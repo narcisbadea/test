@@ -1,5 +1,4 @@
 ﻿
-using Auction_Project.DAL;
 using Auction_Project.Models.Bids;
 using Auction_Project.Models.Items;
 using Auction_Project.Models.Pictures;
@@ -13,7 +12,7 @@ namespace Auction_Project.DataBase
     public class AppDbContext : IdentityDbContext<User, Role, string>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-        protected async override void OnModelCreating(ModelBuilder builder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             this.SeedUsers(builder);
@@ -49,13 +48,15 @@ namespace Auction_Project.DataBase
         private void SeedRoles(ModelBuilder builder)
         {
             builder.Entity<Role>().HasData(
-                new Role() { Id = "feadea3e-34b7-44a1-bafd-134749c706dc", Name = "root", NormalizedName = "ROOT" });
+                new Role() { Id = "feadea3e-34b7-44a1-bafd-134749c706dc", Name = "root", NormalizedName = "ROOT" },
+                new Role() { Id = "b1a678cf-d7a2-415a-9a8f-52d51e067e88", Name = "Admin", NormalizedName = "ADMIN" });
         }
 
         private void SeedUserRoles(ModelBuilder builder)
         {
             builder.Entity<IdentityUserRole<string>>().HasData(
-                new IdentityUserRole<string>() { RoleId = "feadea3e-34b7-44a1-bafd-134749c706dc", UserId = "b5d9114f-c911-49b4-af7c-137ce9488dd7" }
+                new IdentityUserRole<string>() { RoleId = "feadea3e-34b7-44a1-bafd-134749c706dc", UserId = "b5d9114f-c911-49b4-af7c-137ce9488dd7" },
+                new IdentityUserRole<string>() { RoleId = "b1a678cf-d7a2-415a-9a8f-52d51e067e88", UserId = "b5d9114f-c911-49b4-af7c-137ce9488dd7" }
                 );
         }
     }
