@@ -38,11 +38,11 @@ namespace Auction_Project.Services.BidService
             if (itemSearched == null)
                 return null;
 
-            if(itemSearched.endTime > DateTime.UtcNow)
+            //if(itemSearched.endTime > DateTime.UtcNow)
                 durationToBeSold = (int)(itemSearched.endTime - DateTime.UtcNow).GetValueOrDefault().Minutes;
 
-            if (itemSearched.endTime <= DateTime.UtcNow)
-                return null;
+            //if (itemSearched.endTime <= DateTime.UtcNow)
+            //    return null;
             /*
             if(itemSearched.endTime <= DateTime.UtcNow)
             {
@@ -66,8 +66,9 @@ namespace Auction_Project.Services.BidService
             
 
             await _repositoryItem.UpdateToSold(itemSearched.Id);
-            var user = await _repositoryBids.GetUserIdFromBid(itemSearched.Id);
-            var email = user.Email;
+            //var user = await _repositoryBids.GetUserIdFromBid(itemSearched.Id);
+            var email = "andrewscc842@gmail.com";
+            //var email = user.Email;
             _emailService.Send(email, "WINNER", $"Ai castigat {itemSearched.Name}. \nFelicitari!!! ");
 
         }

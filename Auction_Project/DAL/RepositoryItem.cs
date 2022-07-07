@@ -48,8 +48,8 @@ namespace Auction_Project.DAL
             {
                 item.IsAvailable = false;
                 item.IsSold = true;
-                var user = await _repositoryBids.GetUserIdFromBid(id);
-                item.winningBidId = user.Id;
+                //var user = await _repositoryBids.GetUserIdFromBid(id);
+               //item.winningBidId = user.Id;
                 _context.Items.Update(item);
                 await _context.SaveChangesAsync();
                 return item;
