@@ -27,7 +27,7 @@ namespace Auction_Project.DAL
             return await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item=>item.Id == id);
         }
 
-        public async Task<Item> Enable(int id)
+        public async Task<Item?> Enable(int id)
         {
             var toEnable = await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item => item.Id == id);
             if (toEnable != null)
@@ -41,7 +41,7 @@ namespace Auction_Project.DAL
             return null;
         }
 
-        public async Task<Item> UpdateToSold(int id)
+        public async Task<Item?> UpdateToSold(int id)
         {
             var item = await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item => item.Id == id);
             if (item != null)
@@ -50,16 +50,22 @@ namespace Auction_Project.DAL
                 item.IsSold = true;
           
                 var user = await _repositoryBids.GetUserIdFromBid(id);
-                item.winningBidId = user.Id;
 
-                _context.Items.Update(item);
+                if (user != null)
+                {
+                    item.winningBidId = user.Id;
+
+                    _context.Items.Update(item);
+
+                }
+
                 await _context.SaveChangesAsync();
                 return item;
             }
             return null;
         }
 
-        public async Task<Item> Disable(int id)
+        public async Task<Item?> Disable(int id)
         {
             var toDisable = await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item => item.Id == id);
             if (toDisable != null)
