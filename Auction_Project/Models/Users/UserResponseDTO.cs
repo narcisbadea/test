@@ -12,5 +12,7 @@
 
         public string LastName { get; set; }
 
+        public IList<string> userRoles { get; set; }
+
     }
 }
