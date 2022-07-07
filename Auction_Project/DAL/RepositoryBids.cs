@@ -39,4 +39,11 @@ public class RepositoryBids : IRepositoryBids
         return await _context.Bids.Include(b => b.Item).Include(u => u.User).FirstOrDefaultAsync(res=>res.Id == id);
     }
 
+    public async Task<List<Bid>> GetForOneItem(int id)
+    {
+        var BidList = await _context.Bids.Include(b => b.Item).Include(u => u.User).ToListAsync();
+        var result = BidList.FindAll(b => b.Item.Id == id);
+
+        return result;
+    }
 }
