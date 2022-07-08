@@ -9,6 +9,8 @@ namespace Auction_Project.Models.Items
     public class Item : IModel
     {
         public int Id { get; set; }
+        public string UserEmail { get; set; }
+        public string UserId { get; set; }
 
         public string Name { get; set; }
 

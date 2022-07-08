@@ -26,9 +26,6 @@ namespace Auction_Project.Services.BidService
 
         public async Task<ItemRequestAvailableDTO?> SetApproved(int idItem)
         {
-
-
-
             var itemSearched = await _repositoryItem.GetById(idItem);
 
             if (itemSearched == null)
@@ -52,6 +49,9 @@ namespace Auction_Project.Services.BidService
         public async Task SetAsSold(Item itemSearched)
         { 
             var userUpdated = await _repositoryItem.UpdateToSold(itemSearched.Id);
+
+            if(userUpdated == null)
+                _emailService.Send(itemSearched.UserEmail, "A EXPIRAT PERIOADA DE LICITATIE", $"Salut! A expirat perioada de licitatie pentru itemul {itemSearched.Name}, \n Nimeni nu a licitat pentru itemul tau. ");
 
             if (userUpdated != null)
             {

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction_Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220708074140_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20220708120520_adduseremail")]
+    partial class adduseremail
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,14 +61,14 @@ namespace Auction_Project.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<bool>("Available")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Desc")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<double?>("EndTime")
                         .HasColumnType("float");
-
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsSold")
                         .HasColumnType("bit");
@@ -79,6 +79,10 @@ namespace Auction_Project.Migrations
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("UserEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("postedTime")
                         .HasColumnType("datetime2");
@@ -147,14 +151,14 @@ namespace Auction_Project.Migrations
                         new
                         {
                             Id = "feadea3e-34b7-44a1-bafd-134749c706dc",
-                            ConcurrencyStamp = "5e5aedb6-09c0-4517-a032-c276a11e85c5",
+                            ConcurrencyStamp = "6ed33473-b365-4a0e-bbe8-9b0ac3d44beb",
                             Name = "root",
                             NormalizedName = "ROOT"
                         },
                         new
                         {
                             Id = "b1a678cf-d7a2-415a-9a8f-52d51e067e88",
-                            ConcurrencyStamp = "f2ceac18-e608-4798-b832-0f9b37d8d193",
+                            ConcurrencyStamp = "4582bff2-fed8-42fc-97f2-9e342412428c",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -248,8 +252,8 @@ namespace Auction_Project.Migrations
                             Id = "b5d9114f-c911-49b4-af7c-137ce9488dd7",
                             AccessFailedCount = 0,
                             Cnp = "2881211259754",
-                            ConcurrencyStamp = "b04cd1a6-786e-45f5-9c2e-d18cb8c8e80c",
-                            Created = new DateTime(2022, 7, 8, 7, 41, 39, 899, DateTimeKind.Utc).AddTicks(9438),
+                            ConcurrencyStamp = "57dd2276-b325-41c5-a723-2bb2892148ee",
+                            Created = new DateTime(2022, 7, 8, 12, 5, 20, 733, DateTimeKind.Utc).AddTicks(6476),
                             Email = "root@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "root",
@@ -258,9 +262,9 @@ namespace Auction_Project.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ROOT@GMAIL.COM",
                             NormalizedUserName = "ROOT",
-                            PasswordHash = "AQAAAAEAACcQAAAAEEnX5JoNe8nHQjASu3+y1rjUTWSa+ic3KDsy8GpQhwIpl1G+FWjY0pVOylmLVTWaYQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHX8AbrmpdtfoQtVrh8L1mCuC4qD6OR6BO3OAY+OiGzWn2BRlQ8OASrwQpdsPuJX8A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a4d82151-9ab8-4288-9952-ad9fe7c6f7ad",
+                            SecurityStamp = "8d71602b-378d-4d59-aad2-a5ebe96f59ee",
                             TwoFactorEnabled = false,
                             UserName = "root"
                         });

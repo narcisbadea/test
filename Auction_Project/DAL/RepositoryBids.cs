@@ -29,6 +29,9 @@ public class RepositoryBids : IRepositoryBids
             .Where(u => u.Item.Id == idItem)
             .OrderBy(b => b.bidTime)
             .LastOrDefaultAsync();
+
+        if (bid == null)
+            return null;
         return bid.User;
 
 

@@ -18,6 +18,7 @@ namespace Auction_Project.DataBase
             this.SeedUsers(builder);
             this.SeedRoles(builder);
             this.SeedUserRoles(builder);
+
         }
 
         public DbSet<User> Users { get; set; }
