@@ -62,18 +62,15 @@ public class ClientItemController : ControllerBase
         return BadRequest();
     }
 
-    [HttpDelete("{id}")]
+   /* [HttpDelete("{id}")]
     [Authorize] // mai trebuie vazut cine a postat itemul sa nu poata vinde itemul oricui
     public async Task<ActionResult> Sell(int id)
     {
         var item = await _bidCloseServices.SetAsSoldByUser(id);
-        if (item != null)
-        {
-            await _itemService.Disable(id);
+
             return Ok("Item Sold");
-        }
         return NotFound("Item not found");
-    }
+    }*/
 
     /* [HttpPut]
      [Authorize]
