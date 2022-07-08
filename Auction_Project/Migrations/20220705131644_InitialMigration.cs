@@ -171,7 +171,7 @@ namespace Auction_Project.Migrations
                     Desc = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     winningBidId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    endTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     postedTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
