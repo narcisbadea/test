@@ -22,7 +22,7 @@ namespace Auction_Project.Models.Items
 
         public string? winningBidId { get; set; } = null;
 
-        public DateTime? endTime { get; set; }
+        public double? EndTime { get; set; } = 24;
 
         public DateTime? postedTime { get; set; }
 

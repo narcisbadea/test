@@ -87,7 +87,7 @@ public class ItemsServices
 
                         InitialPrice = item.Price,
 
-                        endTime = item.endTime,
+                        EndTime = item.EndTime,
 
                         Gallery = listGalleryIds,
 
@@ -119,7 +119,8 @@ public class ItemsServices
 
                         InitialPrice = item.Price,
 
-                        endTime = item.endTime,
+                    EndTime = item.EndTime,
+
 
                         Gallery = listGalleryIds,
 
@@ -188,7 +189,7 @@ public class ItemsServices
 
                         InitialPrice = item.Price,
 
-                        endTime = item.endTime,
+                        EndTime = item.EndTime,
 
                         Gallery = listGalleryIds,
                     
@@ -219,7 +220,7 @@ public class ItemsServices
 
                     InitialPrice = item.Price,
 
-                    endTime = item.endTime,
+                    EndTime = item.EndTime,
 
                     Gallery = listGalleryIds,
 
@@ -308,7 +309,7 @@ public class ItemsServices
 
                     InitialPrice = item.Price,
 
-                    endTime = item.endTime,
+                    EndTime = item.EndTime,
 
                     Gallery = listGalleryIds,
 
@@ -341,7 +342,7 @@ public class ItemsServices
 
                     InitialPrice = item.Price,
 
-                    endTime = item.endTime,
+                    EndTime = item.EndTime,
 
                     Gallery = listGalleryIds,
 
@@ -384,7 +385,7 @@ public class ItemsServices
 
             winningBidId = null,
 
-            endTime = item.EndTime,
+            EndTime = item.EndTime,
 
             postedTime = DateTime.UtcNow,
 
@@ -420,7 +421,7 @@ public class ItemsServices
 
             winningBidId = null,
 
-            endTime = item.EndTime,
+            EndTime = item.EndTime,
 
             postedTime = DateTime.UtcNow,
 

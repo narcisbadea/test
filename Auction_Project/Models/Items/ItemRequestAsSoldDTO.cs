@@ -8,6 +8,6 @@
 
         public int? winningBidId { get; set; } = null;
 
-        public DateTime? endTime { get; set; }
+        public double? EndTime { get; set; }
     }
 }

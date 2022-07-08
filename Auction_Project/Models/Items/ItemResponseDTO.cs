@@ -10,7 +10,7 @@ public class ItemResponseDTO
 
     public decimal? Price { get; set; }
 
-    public DateTime? endTime { get; set; }
+    public double? EndTime { get; set; }
 
     public DateTime? postedTime { get; set; }
 
