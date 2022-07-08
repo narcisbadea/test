@@ -4,6 +4,7 @@ using Auction_Project.Models.Bids;
 using Auction_Project.Models.Items;
 using Auction_Project.Models.Pictures;
 using Auction_Project.Models.Users;
+using Auction_Project.Services.UserService;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,8 +19,9 @@ public class ItemsServices
     private readonly IRepositoryBids _repositoryBids;
     private readonly IRepositoryPictures _repositoryPictures;
     private readonly IMapper _mapper;
+    private readonly IUserService _userService;
 
-    public ItemsServices(AppDbContext context, IRepository<Item> repository, IMapper mapper, IRepositoryBids repositoryBids, IRepositoryPictures repositoryPictures, IRepositoryItem repositoryItemCustom)
+    public ItemsServices(AppDbContext context, IRepository<Item> repository, IMapper mapper, IRepositoryBids repositoryBids, IRepositoryPictures repositoryPictures, IRepositoryItem repositoryItemCustom, IUserService userService)
     {
         _context = context;
         _repositoryItems = repository;
@@ -27,6 +29,7 @@ public class ItemsServices
         _repositoryBids = repositoryBids;
         _repositoryPictures = repositoryPictures;
         _repositoryItemCustom = repositoryItemCustom;
+        _userService = userService;
     }
 
 
@@ -364,6 +367,7 @@ public class ItemsServices
     public async Task<bool> PostClient(ItemRequestDTO item)
     {
         var picList = new List<Picture>();
+        var getLoggedUser = _userService.GetMe();
 
         foreach (var gallryId in item.GalleryIds)
         {
@@ -376,6 +380,8 @@ public class ItemsServices
             Name = item.Name,
 
             IsSold = false,
+
+            UserEmail = getLoggedUser.Result.Email,
 
             Available = false,
 
@@ -400,8 +406,9 @@ public class ItemsServices
     public async Task<bool> PostAdmin(ItemRequestDTO item)
     {
         var picList= new List<Picture>();
+        var getLoggedUser = _userService.GetMe();
 
-        foreach(var gallryId in item.GalleryIds)
+        foreach (var gallryId in item.GalleryIds)
         {
             picList.Add(await _repositoryPictures.GetById(gallryId));
         }
@@ -412,6 +419,8 @@ public class ItemsServices
             Name = item.Name,
 
             IsSold = false,
+
+            UserEmail= getLoggedUser.Result.Email,
 
             Available = true,
 
