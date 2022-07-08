@@ -4,6 +4,7 @@ namespace Auction_Project.Models.Items;
 
 public class ItemResponseDTO
 {
+    public int Id { get; set; }
     public string Name { get; set; }
     public string? Desc { get; set; }
 

@@ -42,8 +42,22 @@ public class ItemsServices
                 var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();
                 if (lastBid != null)
                 {
-                    var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
-                    var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
+                //var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
+                var itemResponse = new ItemResponseDTO
+                {
+                    Id = lastBid.Item.Id,
+                    Name = lastBid.Item.Name,
+                    Desc = lastBid.Item.Desc,
+
+                    Price = lastBid.Item.Price,
+
+                    endTime = lastBid.Item.endTime,
+
+                    postedTime = lastBid.Item.postedTime,
+
+                    Gallery = lastBid.Item.Gallery.Select(i => i.Id).ToList()
+                };
+                var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
                     var res = new BidResponseDTO
                     {
                         ItemResponse = itemResponse,
@@ -130,7 +144,20 @@ public class ItemsServices
             var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();
             if (lastBid != null)
             {
-                var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
+                var itemResponse = new ItemResponseDTO
+                {
+                    Id = lastBid.Item.Id,
+                    Name = lastBid.Item.Name,
+                    Desc = lastBid.Item.Desc,
+
+                    Price = lastBid.Item.Price,
+
+                    endTime = lastBid.Item.endTime,
+
+                    postedTime = lastBid.Item.postedTime,
+
+                    Gallery = lastBid.Item.Gallery.Select(i => i.Id).ToList()
+                };
                 var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
                 var res = new BidResponseDTO
                 {
@@ -184,6 +211,7 @@ public class ItemsServices
                 }
                 response.Add(new ItemResponseForAdminDTO
                 {
+                    Id = item.Id,
 
                     Name = item.Name,
 
