@@ -63,6 +63,13 @@ namespace Auction_Project.Services.BidService
 
 
         }
+
+        public async Task<Item> SetAsSoldByUser(int id) 
+        {
+            var item = await _repositoryItem.GetById(id);
+            await SetAsSold(item);
+            return item;
+        }
         
     }
 }

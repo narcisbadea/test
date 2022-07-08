@@ -6,5 +6,7 @@ namespace Auction_Project.Services.BidService
     {
         // Task<ItemRequestAvailableDTO> SetApproved(int idItem);
         Task<ItemRequestAvailableDTO> SetApproved(int idItem);
+        Task SetAsSold(Item itemSearched);
+        Task<Item> SetAsSoldByUser(int id);
     }
 }

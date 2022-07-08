@@ -1,4 +1,5 @@
 ﻿using Auction_Project.Models.Items;
+using Auction_Project.Services.BidService;
 using Auction_Project.Services.ItemService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Auction_Project.Controllers;
 public class ClientItemController : ControllerBase
 {
     private readonly ItemsServices _itemService;
+    private readonly IBidCloseServices _bidCloseServices;
 
-    public ClientItemController(ItemsServices itemService)
+    public ClientItemController(ItemsServices itemService, IBidCloseServices bidCloseServices)
     {
         _itemService = itemService;
+        _bidCloseServices = bidCloseServices;
     }
 
     [HttpGet]
@@ -59,15 +62,28 @@ public class ClientItemController : ControllerBase
         return BadRequest();
     }
 
-    [HttpPut]
+    [HttpDelete("{id}")]
     [Authorize]
-    public async Task<ActionResult<ItemRequestDTO>> Update(ItemRequestForUpdateDTO toUpdate)
+    public async Task<ActionResult> Sell(int id)
     {
-        var item = await _itemService.Update(toUpdate);
+        var item = await _bidCloseServices.SetAsSoldByUser(id);
         if (item != null)
-            return Ok(item);
-        return BadRequest();
+        {
+            await _itemService.Disable(id);
+            return Ok("Item disabled");
+        }
+        return NotFound("Item not found");
     }
 
+    /* [HttpPut]
+     [Authorize]
+     public async Task<ActionResult<ItemRequestDTO>> Update(ItemRequestForUpdateDTO toUpdate)
+     {
+         var item = await _itemService.Update(toUpdate);
+         if (item != null)
+             return Ok(item);
+         return BadRequest();
+     }
+ */
 
 }
