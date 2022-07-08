@@ -90,5 +90,15 @@ namespace Auction_Project.Models
             }
             return NotFound("Item not found");
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Sell(int id)
+        {
+            var item = await _bidCloseServices.SetAsSoldByUser(id);
+            if (item != null)
+                return Ok("Item sold");
+            return NotFound("Item not found");
+        }
     }
 }
