@@ -24,10 +24,20 @@ namespace Auction_Project.Models
             _bidCloseServices = bidCloseServices;
         }
 
+        [HttpGet("/unlisteditems/{nr}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> Get(int nr)
+        {
+            var unlisted = await _itemService.GetAdminByPageUnapproved(nr);
+            if (unlisted != null)
+                return Ok(unlisted);
+            return NotFound("No items in list.");
+        }
+
 
         [HttpGet("/pageadmin/{nr}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<ItemResponseForAdminDTO>>> Get(int nr)
+        public async Task<ActionResult<IEnumerable<ItemResponseForAdminDTO>>> GetUnlisted(int nr)
         {
             var got = await _itemService.GetAdminByPage(nr);
             if (got != null)
@@ -78,6 +88,16 @@ namespace Auction_Project.Models
                 await _itemService.Disable(id);
                 return Ok("Item disabled");
             }
+            return NotFound("Item not found");
+        }
+
+        [HttpDelete("/soldforadmin/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Sell(int id)
+        {
+            var item = await _bidCloseServices.SetAsSoldByAdmin(id);
+            if (item != null)
+                return Ok("Item sold");
             return NotFound("Item not found");
         }
     }

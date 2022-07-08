@@ -29,7 +29,6 @@ public class ItemsServices
         _repositoryItemCustom = repositoryItemCustom;
     }
 
-
     public async Task<IEnumerable<ItemResponseForClientDTO>> GetUser()
     {
         var items = await _repositoryItemCustom.Get();
@@ -132,11 +131,51 @@ public class ItemsServices
             }
         return response;
     }
-   
+
+    public async Task<IEnumerable<ItemResponseDTO>> GetUnapprovedForAdmin()
+    {
+        var items = await _repositoryItemCustom.Get();
+        var result = new List<ItemResponseDTO>();
+        foreach(var item in items)
+        {
+            if(item.Available == false && item.IsSold == false)
+            {
+                var temp = new ItemResponseDTO
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Desc=item.Desc,
+                    Price = item.Price,
+                    EndTime=item.EndTime,
+                    postedTime = item.postedTime,
+                    Gallery = item.Gallery.Select(i => i.Id).ToList()
+                };
+                result.Add(temp);
+            }
+        }
+        return result;
+    }
+
     public async Task<IEnumerable<ItemResponseForAdminDTO>> GetAdmin()
     {
         var items = await _repositoryItemCustom.Get();
         var bids = await _repositoryBids.Get();
+        var bidDTO = new List<BidResponseForAdminDTO>();
+
+        foreach (var bid in bids)
+        {
+            var bidtemp = new BidResponseForAdminDTO
+            {
+                UserNameForBid = bid.User.UserName,
+                UserEmailForBid = bid.User.Email,
+
+                ItemIdForBid = bid.Item.Id,
+                ItemIsSold = bid.Item.IsSold,
+
+                Price = bid.BidPrice
+            };
+            bidDTO.Add(bidtemp);
+        }
 
         var response = new List<ItemResponseForAdminDTO>();
   
@@ -148,6 +187,7 @@ public class ItemsServices
                 var itemResponse = new ItemResponseDTO
                 {
                     Id = lastBid.Item.Id,
+
                     Name = lastBid.Item.Name,
                     Desc = lastBid.Item.Desc,
 
@@ -182,7 +222,9 @@ public class ItemsServices
 
                 response.Add(new ItemResponseForAdminDTO
                 {
-
+                        
+                        Id = item.Id,
+                        
                         Name = item.Name,
 
                         Desc = item.Desc,
@@ -193,7 +235,7 @@ public class ItemsServices
 
                         Gallery = listGalleryIds,
                     
-                        BidsOnItem = bids.FindAll(bid=>bid.Item.Id==item.Id)
+                        BidsOnItem = bidDTO.FindAll(bid=>bid.ItemIdForBid==item.Id)
                 });
             }
             else
@@ -268,6 +310,26 @@ public class ItemsServices
             return null;
         }
         
+    }
+
+    public async Task<IEnumerable<ItemResponseDTO>> GetAdminByPageUnapproved(int nr)
+    {
+        var list = await GetUnapprovedForAdmin();
+        var maxPage = list.ToList().Count / 5;
+        if (list.ToList().Count % 5 > 0)
+        {
+            maxPage++;
+        }
+        if (nr <= maxPage)
+        {
+            var result = list.ToList().GetRange(5 * nr - 5, 5 - ((nr * 5) - list.ToList().Count));
+            return result;
+        }
+        else
+        {
+            return null;
+        }
+
     }
 
     public async Task<ItemResponseForClientDTO> GetByIdForUser(int id)
@@ -460,4 +522,3 @@ public class ItemsServices
     }
 
 }
-

@@ -80,7 +80,7 @@ public class BidServices
         var currentUser = await _userServices.GetMe();
         if (item != null)
         {
-            if (item.IsSold == true)
+            if (item.Available == true)
             {
             var bid = new Bid()
             {
