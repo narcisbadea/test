@@ -14,7 +14,7 @@ namespace Auction_Project.Models.Items
 
         public bool IsSold { get; set; } = false;
 
-        public bool IsAvailable { get; set; } = true;
+        public bool Available { get; set; } = true;
 
         public string? Desc { get; set; }
 

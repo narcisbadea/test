@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction_Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220707080219_winning")]
-    partial class winning
+    [Migration("20220708074140_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -64,6 +64,9 @@ namespace Auction_Project.Migrations
                     b.Property<string>("Desc")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<double?>("EndTime")
+                        .HasColumnType("float");
+
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
 
@@ -76,9 +79,6 @@ namespace Auction_Project.Migrations
 
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime?>("endTime")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("postedTime")
                         .HasColumnType("datetime2");
@@ -147,9 +147,16 @@ namespace Auction_Project.Migrations
                         new
                         {
                             Id = "feadea3e-34b7-44a1-bafd-134749c706dc",
-                            ConcurrencyStamp = "18667095-a5c2-43ef-b46c-c8e1660a53fc",
+                            ConcurrencyStamp = "5e5aedb6-09c0-4517-a032-c276a11e85c5",
                             Name = "root",
                             NormalizedName = "ROOT"
+                        },
+                        new
+                        {
+                            Id = "b1a678cf-d7a2-415a-9a8f-52d51e067e88",
+                            ConcurrencyStamp = "f2ceac18-e608-4798-b832-0f9b37d8d193",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         });
                 });
 
@@ -241,8 +248,8 @@ namespace Auction_Project.Migrations
                             Id = "b5d9114f-c911-49b4-af7c-137ce9488dd7",
                             AccessFailedCount = 0,
                             Cnp = "2881211259754",
-                            ConcurrencyStamp = "b9665025-ed70-456a-a506-d4e8a3dddbf8",
-                            Created = new DateTime(2022, 7, 7, 8, 2, 19, 597, DateTimeKind.Utc).AddTicks(1341),
+                            ConcurrencyStamp = "b04cd1a6-786e-45f5-9c2e-d18cb8c8e80c",
+                            Created = new DateTime(2022, 7, 8, 7, 41, 39, 899, DateTimeKind.Utc).AddTicks(9438),
                             Email = "root@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "root",
@@ -251,9 +258,9 @@ namespace Auction_Project.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ROOT@GMAIL.COM",
                             NormalizedUserName = "ROOT",
-                            PasswordHash = "AQAAAAEAACcQAAAAEL7aAJ3R0MYJYPxL8Ssd1O0GPcu1TQYoI8J6tvpT+scwcP9v0SDp5GMcmxkNFcHOmA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEnX5JoNe8nHQjASu3+y1rjUTWSa+ic3KDsy8GpQhwIpl1G+FWjY0pVOylmLVTWaYQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ac24e3de-da0f-4de9-970a-53472a6f8487",
+                            SecurityStamp = "a4d82151-9ab8-4288-9952-ad9fe7c6f7ad",
                             TwoFactorEnabled = false,
                             UserName = "root"
                         });
@@ -350,6 +357,11 @@ namespace Auction_Project.Migrations
                         {
                             UserId = "b5d9114f-c911-49b4-af7c-137ce9488dd7",
                             RoleId = "feadea3e-34b7-44a1-bafd-134749c706dc"
+                        },
+                        new
+                        {
+                            UserId = "b5d9114f-c911-49b4-af7c-137ce9488dd7",
+                            RoleId = "b1a678cf-d7a2-415a-9a8f-52d51e067e88"
                         });
                 });
 

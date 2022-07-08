@@ -32,7 +32,7 @@ namespace Auction_Project.DAL
             var toEnable = await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item => item.Id == id);
             if (toEnable != null)
             {
-                toEnable.IsAvailable = true;
+                toEnable.Available = true;
 
                 _context.Items.Update(toEnable);
                 await _context.SaveChangesAsync();
@@ -46,7 +46,7 @@ namespace Auction_Project.DAL
             var item = await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item => item.Id == id);
             if (item != null)
             {
-                item.IsAvailable = false;
+                item.Available = false;
                 item.IsSold = true;
           
                 var user = await _repositoryBids.GetUserIdFromBid(id);
@@ -70,7 +70,7 @@ namespace Auction_Project.DAL
             var toDisable = await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item => item.Id == id);
             if (toDisable != null)
             {
-                toDisable.IsAvailable = false;
+                toDisable.Available = false;
 
                 _context.Items.Update(toDisable);
                 await _context.SaveChangesAsync();

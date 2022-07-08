@@ -4,7 +4,7 @@
     {
         public bool IsSold { get; set; } = false;
 
-        public bool IsAvailable { get; set; } = false;
+        public bool Available { get; set; } = false;
 
         public int? winningBidId { get; set; } = null;
 

@@ -24,7 +24,7 @@ namespace Auction_Project.Services.BidService
             _repositoryBids = repositoryBids;
         }
 
-        public async Task<ItemRequestIsAvailableDTO?> SetApproved(int idItem)
+        public async Task<ItemRequestAvailableDTO?> SetApproved(int idItem)
         {
 
 
@@ -46,7 +46,7 @@ namespace Auction_Project.Services.BidService
                 _backgroundJobClient.Schedule(() => SetAsSold(updatedItem), TimeSpan.FromSeconds((double)itemSearched.EndTime));
 
 
-            return _mapper.Map<ItemRequestIsAvailableDTO>(updatedItem);
+            return _mapper.Map<ItemRequestAvailableDTO>(updatedItem);
         }
 
         public async Task SetAsSold(Item itemSearched)

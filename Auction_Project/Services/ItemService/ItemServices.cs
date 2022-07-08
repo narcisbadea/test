@@ -51,7 +51,7 @@ public class ItemsServices
 
                     Price = lastBid.Item.Price,
 
-                    endTime = lastBid.Item.endTime,
+                    EndTime = lastBid.Item.EndTime,
 
                     postedTime = lastBid.Item.postedTime,
 
@@ -153,7 +153,7 @@ public class ItemsServices
 
                     Price = lastBid.Item.Price,
 
-                    endTime = lastBid.Item.endTime,
+                    EndTime = lastBid.Item.EndTime,
 
                     postedTime = lastBid.Item.postedTime,
 
@@ -377,7 +377,7 @@ public class ItemsServices
 
             IsSold = false,
 
-            IsAvailable = false,
+            Available = false,
 
             Desc = item.Desc,
 
@@ -413,7 +413,7 @@ public class ItemsServices
 
             IsSold = false,
 
-            IsAvailable = true,
+            Available = true,
 
             Desc = item.Desc,
 
