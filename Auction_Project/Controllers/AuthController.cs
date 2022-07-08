@@ -22,6 +22,7 @@ namespace Auction_Project.Authenticate
         }
 
         [HttpPut("change-password")]
+        [Authorize]
         public async Task<ActionResult<bool>> ChangePassword(UserChangePasswordDTO user)
         {
             var updated = await _userService.ChangePassword(user);
@@ -42,6 +43,7 @@ namespace Auction_Project.Authenticate
                 return BadRequest(error);
             }
             var result = await _userService.AddUser(request);
+            await _userService.ChangeUserRole(new UserRoleDTO { Id = result.Id, RoleName = "User" });
             await _dbContext.SaveChangesAsync();
             return Ok(result);
         }

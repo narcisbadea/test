@@ -1,5 +1,6 @@
 ﻿using Auction_Project.Models.Users;
 using Auction_Project.Services.UserService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace Auction_Project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "root")]
     public class UserManagementController : ControllerBase
     {
         private readonly IUserService _userService;

@@ -33,7 +33,10 @@ namespace Auction_Project.Services.UserService
             List<UserResponseDTO> response = new List<UserResponseDTO>();
             foreach (var user in _repositoryUser.GetUsers())
             {
-                response.Add(_mapper.Map<UserResponseDTO>(user));
+                var usr = _mapper.Map<UserResponseDTO>(user);
+                var userN = _repositoryUser.GetById(user.Id);
+                usr.userRoles = _repositoryUser.GetRoles(userN).Result;
+                response.Add(usr);
             }
             return response;
         }

@@ -23,7 +23,7 @@ namespace Auction_Project.Models
         }
 
         [HttpGet]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<BidResponseDTO>>> Get()
         {
             var bids = await _bidServices.Get();
@@ -34,7 +34,7 @@ namespace Auction_Project.Models
          
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BidResponseDTO>> GetById(int id)
         {
             var bid = await _bidServices.GetById(id);
@@ -44,40 +44,14 @@ namespace Auction_Project.Models
             return NotFound("Bid not found");
         }
 
-        // POST api/<BidsController>
+        
         [HttpPost]
-       // [Authorize]
+        [Authorize]
         public async Task<ActionResult<BidRequestDTO>> Post(BidRequestDTO bid)
         {
             if(await _bidServices.Post(bid)) 
                 return CreatedAtAction(nameof(Get), bid);
             return BadRequest("nu mere");
-            // de pus bids for approval
-        }
-     
-
-        // PUT api/<BidsController>/5
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Update(BidRequestDTO bid, int id)
-        {
-           /* var status = await _bidServices.Update(bid, id);
-            if (status)
-                return Ok(bid);*/
-            return BadRequest();
-        }
-
-        // DELETE api/<BidsController>/5
-        [HttpDelete("{id}")]
-        // [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var bid = await _bidServices.GetById(id);
-            if (bid != null)
-            {
-                await _bidServices.Delete(id);
-                return Ok("Bid removed");
-            }
-            return NotFound("Bid not found");
         }
     }
 }

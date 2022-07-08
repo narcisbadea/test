@@ -1,6 +1,5 @@
 ﻿using Auction_Project.DAL;
 using Auction_Project.Models.Pictures;
-using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 
 namespace Auction_Project.Services.PictureService
@@ -27,14 +26,18 @@ namespace Auction_Project.Services.PictureService
         {
             string uploads = Path.Combine(Directory.GetCurrentDirectory(), "pictures");
             System.IO.Directory.CreateDirectory(uploads);
-            string filePath = Path.Combine(uploads, pic.Image.FileName);
-            using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+            if (pic.Image != null && pic.Description != null)
             {
-                await pic.Image.CopyToAsync(fileStream);
+                string filePath = Path.Combine(uploads, pic.Image.FileName);
+                using (Stream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await pic.Image.CopyToAsync(fileStream);
+                }
+                var result = await _repositoryPictures.Post(new Picture { Description = pic.Description, ImageAddress = filePath });
+                var response = _mapper.Map<PictureResponseDTO>(result);
+                return response;
             }
-            var result = await _repositoryPictures.Post(new Picture { Description = pic.Description, ImageAddress = filePath });
-            var response = _mapper.Map<PictureResponseDTO>(result);
-            return response;
+            return null;
         }
 
         public async Task<List<PictureResponseDTO>> PostPictures(List<PictureRequestDTO> pics)
