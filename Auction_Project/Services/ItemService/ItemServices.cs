@@ -510,7 +510,6 @@ public class ItemsServices
 
         if (temp != null)
         {
-
             await _bidCloseServices.SetApproved(temp.Id);
             return true;
         }
