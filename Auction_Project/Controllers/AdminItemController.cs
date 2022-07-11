@@ -63,7 +63,7 @@ namespace Auction_Project.Models
             var item = await _itemService.PostAdmin(toPost);
   
             if (item)
-                return Ok(item);
+                return Ok("Item sent to auction!");
             return BadRequest("Error input data!");
         }
 
