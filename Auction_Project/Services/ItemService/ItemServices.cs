@@ -16,6 +16,7 @@ public class ItemsServices
     private readonly AppDbContext _context;
     private readonly IRepository<Item> _repositoryItems;
     private readonly IRepositoryItem _repositoryItemCustom;
+    private readonly IRepositoryUser _repositoryUser;
     private readonly IRepositoryBids _repositoryBids;
     private readonly IRepositoryPictures _repositoryPictures;
     private readonly IMapper _mapper;
@@ -446,7 +447,7 @@ public class ItemsServices
 
             IsSold = false,
 
-            UserId = getLoggedUser.Result.Id,
+            OwnerUserId = getLoggedUser.Result.Id,
 
             Available = false,
 
@@ -485,8 +486,8 @@ public class ItemsServices
 
             IsSold = false,
 
-            UserId= getLoggedUser.Result.Id,
-
+            OwnerUserId = getLoggedUser.Result.Id,
+            
             Available = true,
 
             Desc = item.Desc,

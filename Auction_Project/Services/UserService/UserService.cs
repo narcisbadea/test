@@ -116,6 +116,7 @@ namespace Auction_Project.Services.UserService
             var user = await _repositoryUser.GetByName(GetMyName());
             return user.Id;
         }
+
         public string GetMyRole()
         {
             var result = string.Empty;
