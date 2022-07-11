@@ -506,8 +506,11 @@ public class ItemsServices
             Gallery = picList
         };
 
-        if (await _repositoryItems.Post(toPost) != null)
+        var temp = await _repositoryItems.Post(toPost);
+
+        if (temp != null)
         {
+            await _bidCloseServices.SetApproved(temp.Id);
             return true;
         }
         return false;
