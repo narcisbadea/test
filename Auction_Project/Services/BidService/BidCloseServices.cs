@@ -50,8 +50,8 @@ namespace Auction_Project.Services.BidService
         { 
             var userUpdated = await _repositoryItem.UpdateToSold(itemSearched.Id);
 
-            if(userUpdated == null)
-                _emailService.Send(itemSearched.UserEmail, "A EXPIRAT PERIOADA DE LICITATIE", $"Salut! A expirat perioada de licitatie pentru itemul {itemSearched.Name}, \n Nimeni nu a licitat pentru itemul tau. ");
+          /*  if(userUpdated == null)
+                _emailService.Send(itemSearched.UserEmail, "A EXPIRAT PERIOADA DE LICITATIE", $"Salut! A expirat perioada de licitatie pentru itemul {itemSearched.Name}, \n Nimeni nu a licitat pentru itemul tau. ");*/
 
             if (userUpdated != null)
             {
