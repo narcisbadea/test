@@ -42,25 +42,27 @@ public class ItemsServices
        
             foreach (var item in items)
             {
+            if (item.Available)
+            {
                 var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();
                 if (lastBid != null)
                 {
-                //var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
-                var itemResponse = new ItemResponseDTO
-                {
-                    Id = lastBid.Item.Id,
-                    Name = lastBid.Item.Name,
-                    Desc = lastBid.Item.Desc,
+                    //var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
+                    var itemResponse = new ItemResponseDTO
+                    {
+                        Id = lastBid.Item.Id,
+                        Name = lastBid.Item.Name,
+                        Desc = lastBid.Item.Desc,
 
-                    Price = lastBid.Item.Price,
+                        Price = lastBid.Item.Price,
 
-                    EndTime = lastBid.Item.EndTime,
+                        EndTime = lastBid.Item.EndTime,
 
-                    postedTime = lastBid.Item.postedTime,
+                        postedTime = lastBid.Item.postedTime,
 
-                    Gallery = lastBid.Item.Gallery.Select(i => i.Id).ToList()
-                };
-                var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
+                        Gallery = lastBid.Item.Gallery.Select(i => i.Id).ToList()
+                    };
+                    var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
                     var res = new BidResponseDTO
                     {
                         ItemResponse = itemResponse,
@@ -122,7 +124,7 @@ public class ItemsServices
 
                         InitialPrice = item.Price,
 
-                    EndTime = item.EndTime,
+                        EndTime = item.EndTime,
 
 
                         Gallery = listGalleryIds,
@@ -132,6 +134,7 @@ public class ItemsServices
                         LastBidPrice = 0
                     });
                 }
+            }
             }
         return response;
     }
@@ -484,7 +487,7 @@ public class ItemsServices
             IsSold = false,
 
             OwnerUserId = getLoggedUser.Result.Id,
-
+            
             Available = true,
 
             Desc = item.Desc,

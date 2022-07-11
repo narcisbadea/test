@@ -28,7 +28,6 @@ public class ClientItemController : ControllerBase
         if (got!=null)
             return Ok(got);
         return NotFound("No items in list.");
-        //trebuie sa vada pretul curent daca s-a biduit pe item
     }
 
     [HttpGet("/page/{nr}")]
