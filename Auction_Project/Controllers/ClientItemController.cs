@@ -56,9 +56,9 @@ public class ClientItemController : ControllerBase
     public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
     {
         var item = await _itemService.PostClient(toPost);
-        if(item)
+        if(item != null)
             return Ok(item);
-        return BadRequest();
+        return BadRequest("Can't add item!");
     }
 
    /* [HttpDelete("{id}")]

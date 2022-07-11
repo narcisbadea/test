@@ -28,9 +28,9 @@ namespace Auction_Project.Authenticate
             var updated = await _userService.ChangePassword(user);
             if (updated)
             {
-                return Ok(updated);
+                return Ok("Password changed!");
             }
-            return BadRequest(updated);
+            return BadRequest("Bad request");
         }
 
         [HttpPost("register")]
