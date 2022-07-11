@@ -59,11 +59,7 @@ namespace Auction_Project.Authenticate
 
             var token = await _userService.GenerateToken(request);
 
-            return Ok(new
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                Expiration = token.ValidTo
-            });
+            return Ok(new JwtSecurityTokenHandler().WriteToken(token));
         }
     }
 }

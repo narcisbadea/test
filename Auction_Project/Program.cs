@@ -138,6 +138,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "School of .NET v1"));
 }
 
+app.UseCors("EnableAll");
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

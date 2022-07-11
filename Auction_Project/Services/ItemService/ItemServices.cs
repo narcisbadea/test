@@ -33,6 +33,7 @@ public class ItemsServices
     public async Task<IEnumerable<ItemResponseForClientDTO>> GetUser()
     {
         var items = await _repositoryItemCustom.Get();
+        items = items.Where(i => i.Available == true).ToList();
         var bids = await _repositoryBids.Get();
 
         var response = new List<ItemResponseForClientDTO>();
@@ -80,6 +81,7 @@ public class ItemsServices
 
                     response.Add(new ItemResponseForClientDTO
                     {
+                        Id=item.Id,
 
                         Name = item.Name,
 
@@ -112,6 +114,7 @@ public class ItemsServices
                     }
                     response.Add(new ItemResponseForClientDTO
                     {
+                        Id = item.Id,
 
                         Name = item.Name,
 
@@ -132,10 +135,11 @@ public class ItemsServices
             }
         return response;
     }
-   
+
     public async Task<IEnumerable<ItemResponseForAdminDTO>> GetAdmin()
     {
         var items = await _repositoryItemCustom.Get();
+        
         var bids = await _repositoryBids.Get();
 
         var response = new List<ItemResponseForAdminDTO>();
@@ -361,7 +365,7 @@ public class ItemsServices
         return _mapper.Map<ItemResponseDTO>(await _repositoryItems.GetById(id));
     }
 
-    public async Task<bool> PostClient(ItemRequestDTO item)
+    public async Task<ItemResponseForClientDTO> PostClient(ItemRequestDTO item)
     {
         var picList = new List<Picture>();
 
@@ -391,10 +395,8 @@ public class ItemsServices
 
             Gallery = picList
         };
-
-        if (await _repositoryItems.Post(toPost) != null)
-            return true;
-        return false;
+        var response = await _repositoryItems.Post(toPost);
+        return await GetByIdForUser(response.Id);
     }
 
     public async Task<bool> PostAdmin(ItemRequestDTO item)

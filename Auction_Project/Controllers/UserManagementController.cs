@@ -8,7 +8,7 @@ namespace Auction_Project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "root")]
+    //[Authorize(Roles = "root")]
     public class UserManagementController : ControllerBase
     {
         private readonly IUserService _userService;
