@@ -181,6 +181,16 @@ namespace Auction_Project.Services.UserService
             }
         }
 
+        public async Task<bool> isUserBanned(string username)
+        {
+            var searchforUser = await _repositoryUser.GetByName(username);
+
+            if (searchforUser.IsActive == true)
+                return false;
+
+            return true;
+        }
+
         public int AgeFromCnp(string cnp)
         {
             int y = Convert.ToInt32(cnp.Substring(1, 2));
