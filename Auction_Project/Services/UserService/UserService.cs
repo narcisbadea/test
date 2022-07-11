@@ -39,6 +39,52 @@ namespace Auction_Project.Services.UserService
             }
             return response;
         }
+        
+        public List<UserResponseDTO> GetAllClients()
+        {
+            List<UserResponseDTO> response = new List<UserResponseDTO>();
+            foreach (var user in _repositoryUser.GetUsers())
+            {
+                var usr = _mapper.Map<UserResponseDTO>(user);
+                var userN = _repositoryUser.GetById(user.Id);
+                var roles = _userManager.GetRolesAsync(user);
+                if (user.IsActive && !roles.Result.Contains("Admin")) 
+                response.Add(usr);
+            }
+            return response;
+        }
+        
+        public List<UserResponseDTO> GetAllClientsByPage(int nr)
+        {
+            var list = GetAllClients();
+            var maxPage = list.ToList().Count / 5;
+            if (list.ToList().Count % 5 > 0)
+            {
+                maxPage++;
+            }
+            if (nr <= maxPage)
+            {
+                var result = list.ToList().GetRange(5 * nr - 5, 5 - ((nr * 5) - list.ToList().Count));
+                return result;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public async Task<UserResponseDTO> BanUser(string id)
+        {
+            var user = _repositoryUser.GetById(id);
+            var roles = _userManager.GetRolesAsync(user);
+            if (user.IsActive && !roles.Result.Contains("Admin"))
+            {
+                user.IsActive = false;
+                await _repositoryUser.BanUser(user);
+                return _mapper.Map<UserResponseDTO>(user);
+            }
+            return null;
+        }
 
         public async Task<bool> ChangeUserRole(UserRoleDTO role)
         {
@@ -125,6 +171,17 @@ namespace Auction_Project.Services.UserService
             }
             return result;
         }
+/*
+        public async string GetRoleById(string id)
+        {
+            var result = string.Empty;
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                result = await _repositoryUser.GetById(id).
+            }
+            _userManager.role
+            return result;
+        }*/
 
         public bool IsValidCNP(string cnp)
         {

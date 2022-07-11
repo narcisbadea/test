@@ -56,7 +56,6 @@ namespace Auction_Project.Models
             return NotFound("Item not found.");
         }
 
-        // POST >
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
