@@ -4,6 +4,7 @@ using Auction_Project.Models.Bids;
 using Auction_Project.Models.Items;
 using Auction_Project.Models.Pictures;
 using Auction_Project.Models.Users;
+using Auction_Project.Services.BidService;
 using Auction_Project.Services.UserService;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -21,8 +22,9 @@ public class ItemsServices
     private readonly IRepositoryPictures _repositoryPictures;
     private readonly IMapper _mapper;
     private readonly IUserService _userService;
+    private readonly IBidCloseServices _bidCloseServices;
 
-    public ItemsServices(AppDbContext context, IRepository<Item> repository, IMapper mapper, IRepositoryBids repositoryBids, IRepositoryPictures repositoryPictures, IRepositoryItem repositoryItemCustom, IUserService userService)
+    public ItemsServices(AppDbContext context, IRepository<Item> repository, IMapper mapper, IRepositoryBids repositoryBids, IRepositoryPictures repositoryPictures, IRepositoryItem repositoryItemCustom, IUserService userService, IBidCloseServices bidCloseServices)
     {
         _context = context;
         _repositoryItems = repository;
@@ -31,6 +33,7 @@ public class ItemsServices
         _repositoryPictures = repositoryPictures;
         _repositoryItemCustom = repositoryItemCustom;
         _userService = userService;
+        _bidCloseServices = bidCloseServices;
     }
 
     public async Task<IEnumerable<ItemResponseForClientDTO>> GetUser()
@@ -504,7 +507,9 @@ public class ItemsServices
         };
 
         if (await _repositoryItems.Post(toPost) != null)
+        {
             return true;
+        }
         return false;
     }
 
@@ -512,7 +517,9 @@ public class ItemsServices
     {
         var itemMapped = _mapper.Map<Item>(item);
 
-        if(await _repositoryItems.Update(itemMapped)!=null)
+        var itemSearched = await _repositoryItems.GetById(item.Id);
+
+        if (await _repositoryItems.Update(itemMapped) != null)
             return true;
         return false;
     }

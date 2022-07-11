@@ -39,48 +39,56 @@ namespace Auction_Project.Services.BidService
             if (updatedItem == null)
                 return null;
 
-            if(itemSearched.EndTime > 1)
+            if (itemSearched.EndTime > 1)
                 _backgroundJobClient.Schedule(() => SetAsSold(updatedItem), TimeSpan.FromSeconds((double)itemSearched.EndTime));
 
             return _mapper.Map<ItemRequestAvailableDTO>(updatedItem);
         }
 
         public async Task SetAsSold(Item itemSearched)
-        { 
-            var itemUpdated = await _repositoryItem.UpdateToSold(itemSearched.Id);
+        {     
+            var lastUserBidded = await _repositoryBids.GetUserIdFromBid(itemSearched.Id);
 
-            if (itemUpdated != null)
+            if(lastUserBidded == null)
             {
-                var user = await _repositoryBids.GetUserIdFromBid(itemSearched.Id);
-
                 var ownerEmailUser = _repositoryUser.GetById(itemSearched.OwnerUserId);
 
-                if (user == null)
-                    _emailService.Send(ownerEmailUser.Email, "A EXPIRAT PERIOADA DE LICITATIE", $"Salut! A expirat perioada de licitatie pentru itemul {itemSearched.Name}, \n Nimeni nu a licitat pentru itemul tau. ");
+                _emailService.Send(ownerEmailUser.Email, "A EXPIRAT PERIOADA DE LICITATIE", $"Salut! A expirat perioada de licitatie pentru itemul {itemSearched.Name}, \n Nimeni nu a licitat pentru itemul tau. ");
 
-                if (user != null)
-                    _emailService.Send(user.Email, "WINNER", $"Ai castigat {itemSearched.Name}. \nFelicitari!!! ");
+            } else if(lastUserBidded != null)
+            {
+                 var itemSold = await _repositoryItem.UpdateToSold(itemSearched.Id);
 
-                
+                _emailService.Send(lastUserBidded.Email, "WINNER", $"Ai castigat {itemSold.Name}. \nFelicitari!!! ");
             }
 
-
         }
 
-        public async Task<Item> SetAsSoldByAdmin(int id) 
+        public async Task<Item> SetAsSoldByAdmin(int id)
         {
             var item = await _repositoryItem.GetById(id);
-            await SetAsSold(item);
-            return item;
+
+            if (item != null)
+            {
+                await SetAsSold(item);
+                return item;
+
+            }
+            return null;
         }
-        public async Task<Item> SetAsSoldByUser(int id) 
+        public async Task<Item> SetAsSoldByUser(int id)
         {
             var item = await _repositoryItem.GetById(id);
-            //necesita verificare
-            await SetAsSold(item);
-            return item;
+
+            if (item != null)
+            {
+                await SetAsSold(item);
+                return item;
+
+            }
+            return null;
         }
-        
+
 
     }
 }

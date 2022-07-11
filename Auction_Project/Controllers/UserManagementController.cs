@@ -24,7 +24,7 @@ namespace Auction_Project.Controllers
             var users = _userService.GetAll();
             if (users == null)
             {
-                NotFound();
+                NotFound("Users not found");
             }
             return Ok(users);
         }
@@ -34,9 +34,9 @@ namespace Auction_Project.Controllers
         {
             if( !await _userService.ChangeUserRole(role))
             {
-                return BadRequest();
+                return BadRequest("Can't set this role!");
             }
-            return Ok();
+            return Ok("New role added!");
         }
     }
 }

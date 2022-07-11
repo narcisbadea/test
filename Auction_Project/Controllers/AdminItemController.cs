@@ -19,7 +19,6 @@ namespace Auction_Project.Models
 
         public AdminItemsController(ItemsServices itemServices, IBidCloseServices bidCloseServices)
         {
-
             _itemService = itemServices;
             _bidCloseServices = bidCloseServices;
         }
@@ -59,12 +58,13 @@ namespace Auction_Project.Models
         // POST >
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
+        public async Task<ActionResult<ItemResponseDTO>> Post(ItemRequestDTO toPost)
         {
             var item = await _itemService.PostAdmin(toPost);
+  
             if (item)
                 return Ok(item);
-            return BadRequest();
+            return BadRequest("Error input data!");
         }
 
         [HttpPut("{id}")]
@@ -73,8 +73,8 @@ namespace Auction_Project.Models
         { 
            var updated = await _bidCloseServices.SetApproved(id);
            if(updated != null)
-               return Ok("Item was put up for Auction");
-            return BadRequest("Not Successful");
+               return Ok(updated);
+            return BadRequest("Not successful approved!");
         }
 
         // DELETE 
@@ -86,7 +86,7 @@ namespace Auction_Project.Models
             if (item != null)
             {
                 await _itemService.Disable(id);
-                return Ok("Item disabled");
+                return Ok("Item set as unavailable");
             }
             return NotFound("Item not found");
         }

@@ -51,7 +51,7 @@ namespace Auction_Project.Models
         {
             if(await _bidServices.Post(bid)) 
                 return CreatedAtAction(nameof(Get), bid);
-            return BadRequest("nu mere");
+            return BadRequest("It doesn't work!");
         }
     }
 }
