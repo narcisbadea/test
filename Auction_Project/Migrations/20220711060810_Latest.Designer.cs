@@ -4,6 +4,7 @@ using Auction_Project.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction_Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220711060810_Latest")]
+    partial class Latest
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -79,9 +81,11 @@ namespace Auction_Project.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("UserEmail")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("postedTime")
@@ -151,14 +155,14 @@ namespace Auction_Project.Migrations
                         new
                         {
                             Id = "feadea3e-34b7-44a1-bafd-134749c706dc",
-                            ConcurrencyStamp = "0eafcbc8-dc26-4a7e-86ba-dd2af8cabcf3",
+                            ConcurrencyStamp = "60092cb9-7e07-4ba3-8415-b8cd2a5dca78",
                             Name = "root",
                             NormalizedName = "ROOT"
                         },
                         new
                         {
                             Id = "b1a678cf-d7a2-415a-9a8f-52d51e067e88",
-                            ConcurrencyStamp = "8e327fb5-240a-4836-86db-06057410f1d4",
+                            ConcurrencyStamp = "c2b2ab98-7b03-4752-a296-767a7454c8c4",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -252,8 +256,8 @@ namespace Auction_Project.Migrations
                             Id = "b5d9114f-c911-49b4-af7c-137ce9488dd7",
                             AccessFailedCount = 0,
                             Cnp = "2881211259754",
-                            ConcurrencyStamp = "17e7dbaf-f7fb-4094-9aa2-e410e6c02961",
-                            Created = new DateTime(2022, 7, 11, 6, 42, 54, 270, DateTimeKind.Utc).AddTicks(5181),
+                            ConcurrencyStamp = "13b0e106-9687-4c07-88a5-828f11a8ef62",
+                            Created = new DateTime(2022, 7, 11, 6, 8, 10, 757, DateTimeKind.Utc).AddTicks(640),
                             Email = "root@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "root",
@@ -262,9 +266,9 @@ namespace Auction_Project.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ROOT@GMAIL.COM",
                             NormalizedUserName = "ROOT",
-                            PasswordHash = "AQAAAAEAACcQAAAAEKrqUVgMlO1H+/Pzk+mWiYj0ry/wSc6+IIQXCft5RyYaPx1x6vmzd7sMowKcI/h1mA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENF6vEsYXr459/kG1P14DESmLLAtBxYNJW+xdtN2MOK54odnoC3TyJvzLQmEW7I1Iw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2d1c143b-dc54-4b8f-9737-db53afa86e4a",
+                            SecurityStamp = "f0df440b-49b1-49f9-b331-1f80664be229",
                             TwoFactorEnabled = false,
                             UserName = "root"
                         });
