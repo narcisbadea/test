@@ -54,7 +54,12 @@ namespace Auction_Project.Authenticate
 
             if (!await _userService.CheckPassword(request))
             {
-                return BadRequest();
+                return BadRequest("Invalid Password!");
+            }
+
+            if(await _userService.isUserBanned(request.UserName))
+            {
+                return BadRequest("User banned!");
             }
 
             var token = await _userService.GenerateToken(request);

@@ -14,6 +14,7 @@ namespace Auction_Project.Services.UserService
         Task<UserResponseDTO?> AddUser(UserRegisterDTO model);
 
         Task<bool> ChangePassword(UserChangePasswordDTO dto);
+        Task<bool> isUserBanned(string username);
 
         List<UserResponseDTO> GetAll();
         Task<bool> ChangeUserRole(UserRoleDTO role);
@@ -27,5 +28,6 @@ namespace Auction_Project.Services.UserService
 
         int AgeFromCnp(string cnp);
         Task<User> GetMe();
+
     }
 }
