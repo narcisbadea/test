@@ -1,6 +1,7 @@
 ﻿using Auction_Project.DAL;
 using Auction_Project.Models.Items;
 using Auction_Project.Services.EmailService;
+using Auction_Project.Services.UserService;
 using AutoMapper;
 using Hangfire;
 
@@ -13,8 +14,9 @@ namespace Auction_Project.Services.BidService
         private readonly IBackgroundJobClient _backgroundJobClient;
         private readonly IEmailService _emailService;
         private readonly IRepositoryBids _repositoryBids;
+        private readonly IRepositoryUser _repositoryUser;
 
-        public BidCloseServices(IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IEmailService emailService, IRepositoryBids repositoryBids)
+        public BidCloseServices(IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IEmailService emailService, IRepositoryBids repositoryBids, IRepositoryUser repositoryUser)
         {
 
             _repositoryItem = repositoryItem;
@@ -22,6 +24,7 @@ namespace Auction_Project.Services.BidService
             _backgroundJobClient = backgroundJobClient;
             _emailService = emailService;
             _repositoryBids = repositoryBids;
+            _repositoryUser = repositoryUser;
         }
 
         public async Task<ItemRequestAvailableDTO?> SetApproved(int idItem)
@@ -31,34 +34,34 @@ namespace Auction_Project.Services.BidService
             if (itemSearched == null)
                 return null;
 
-
-
             var updatedItem = await _repositoryItem.Enable(itemSearched.Id);
 
             if (updatedItem == null)
                 return null;
 
-
             if(itemSearched.EndTime > 1)
                 _backgroundJobClient.Schedule(() => SetAsSold(updatedItem), TimeSpan.FromSeconds((double)itemSearched.EndTime));
-
 
             return _mapper.Map<ItemRequestAvailableDTO>(updatedItem);
         }
 
         public async Task SetAsSold(Item itemSearched)
         { 
-            var userUpdated = await _repositoryItem.UpdateToSold(itemSearched.Id);
+            var itemUpdated = await _repositoryItem.UpdateToSold(itemSearched.Id);
 
-            if(userUpdated == null)
-                _emailService.Send(itemSearched.UserEmail, "A EXPIRAT PERIOADA DE LICITATIE", $"Salut! A expirat perioada de licitatie pentru itemul {itemSearched.Name}, \n Nimeni nu a licitat pentru itemul tau. ");
-
-            if (userUpdated != null)
+            if (itemUpdated != null)
             {
                 var user = await _repositoryBids.GetUserIdFromBid(itemSearched.Id);
 
+                var ownerEmailUser = _repositoryUser.GetById(itemSearched.OwnerUserId);
+
+                if (user == null)
+                    _emailService.Send(ownerEmailUser.Email, "A EXPIRAT PERIOADA DE LICITATIE", $"Salut! A expirat perioada de licitatie pentru itemul {itemSearched.Name}, \n Nimeni nu a licitat pentru itemul tau. ");
+
                 if (user != null)
                     _emailService.Send(user.Email, "WINNER", $"Ai castigat {itemSearched.Name}. \nFelicitari!!! ");
+
+                
             }
 
 
