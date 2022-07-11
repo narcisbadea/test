@@ -35,7 +35,6 @@ namespace Auction_Project.Services.UserService
             {
                 var usr = _mapper.Map<UserResponseDTO>(user);
                 var userN = _repositoryUser.GetById(user.Id);
-                usr.userRoles = _repositoryUser.GetRoles(userN).Result;
                 response.Add(usr);
             }
             return response;
