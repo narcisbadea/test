@@ -20,7 +20,7 @@ public class ClientItemController : ControllerBase
         _bidCloseServices = bidCloseServices;
     }
 
-    [HttpGet]
+    [HttpGet("get-all")]
     [Authorize]
     public async Task<ActionResult<IEnumerable<ItemResponseForClientDTO>>> Get()
     {
@@ -30,18 +30,18 @@ public class ClientItemController : ControllerBase
         return NotFound("No items in list.");
     }
 
-    [HttpGet("/page/{nr}")]
+    [HttpGet("get-item-by-page/{nr}")]
     [Authorize]
     public async Task<ActionResult<IEnumerable<ItemResponseForClientDTO>>> Get(int nr)
     {
         var got = await _itemService.GetUserByPage(nr);
         if (got != null)
             return Ok(got);
-        return NotFound("No items in list.");
+        return NotFound("There is no items.");
         //trebuie sa vada pretul curent daca s-a biduit pe item
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("get-item-by-id/{id}")]
     [Authorize]
     public async Task<ActionResult<ItemResponseForClientDTO>> GetById(int id)
     {
@@ -51,7 +51,7 @@ public class ClientItemController : ControllerBase
         return NotFound("Item not found.");
     }
 
-    [HttpPost]
+    [HttpPost("post-item")]
     [Authorize]
     public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
     {

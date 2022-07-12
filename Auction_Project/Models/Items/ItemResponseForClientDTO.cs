@@ -17,6 +17,8 @@ namespace Auction_Project.Models.Items
 
         public decimal? LastBidPrice { get; set; }
 
+        public DateTime postedTime { get; set;  }
+
     }
 
 }

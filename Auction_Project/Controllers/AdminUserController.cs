@@ -17,7 +17,7 @@ namespace Auction_Project.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
+        [HttpGet("get-list/{nr}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<UserResponseDTO>>> Get(int nr)
         {
@@ -27,7 +27,7 @@ namespace Auction_Project.Controllers
             return BadRequest("No users found");
         }
 
-        [HttpDelete]
+        [HttpDelete("ban-user/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserResponseDTO>> Ban(string id)
         {
