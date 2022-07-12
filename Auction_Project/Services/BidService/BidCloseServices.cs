@@ -35,6 +35,7 @@ namespace Auction_Project.Services.BidService
                 return null;
 
             var updatedItem = await _repositoryItem.Enable(itemSearched.Id);
+            
 
             if (updatedItem == null)
                 return null;
