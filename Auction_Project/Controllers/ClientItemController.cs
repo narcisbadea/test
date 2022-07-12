@@ -20,6 +20,7 @@ public class ClientItemController : ControllerBase
         _bidCloseServices = bidCloseServices;
     }
 
+
     [HttpGet("my-items")]
     [Authorize]
     public async Task<ActionResult<IEnumerable<ItemOwnItemDTO>>> GetOwnItems()
@@ -31,7 +32,7 @@ public class ClientItemController : ControllerBase
         return NotFound("No items in list.");
     }
 
-    [HttpGet("get-all-Items")]
+    [HttpGet("get-all")]
     [Authorize]
     public async Task<ActionResult<IEnumerable<ItemResponseForClientDTO>>> Get()
     {
@@ -41,18 +42,18 @@ public class ClientItemController : ControllerBase
         return NotFound("No items in list.");
     }
 
-    [HttpGet("page/{nr}")]
+    [HttpGet("get-item-by-page/{nr}")]
     [Authorize]
     public async Task<ActionResult<IEnumerable<ItemResponseForClientDTO>>> Get(int nr)
     {
         var got = await _itemService.GetUserByPage(nr);
         if (got != null)
             return Ok(got);
-        return NotFound("No items in list.");
+        return NotFound("There is no items.");
         //trebuie sa vada pretul curent daca s-a biduit pe item
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("get-item-by-id/{id}")]
     [Authorize]
     public async Task<ActionResult<ItemResponseForClientDTO>> GetById(int id)
     {
@@ -72,15 +73,15 @@ public class ClientItemController : ControllerBase
         return BadRequest("Can't add item!");
     }
 
-   /* [HttpDelete("{id}")]
-    [Authorize] // mai trebuie vazut cine a postat itemul sa nu poata vinde itemul oricui
+    [HttpDelete("{id}")]
+    [Authorize] 
     public async Task<ActionResult> Sell(int id)
     {
         var item = await _bidCloseServices.SetAsSoldByUser(id);
-
+        if(item != null)
             return Ok("Item Sold");
         return NotFound("Item not found");
-    }*/
+    }
 
     /* [HttpPut]
      [Authorize]

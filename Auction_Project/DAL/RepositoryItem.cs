@@ -33,6 +33,7 @@ namespace Auction_Project.DAL
             if (toEnable != null)
             {
                 toEnable.Available = true;
+                toEnable.postedTime = DateTime.UtcNow;
 
                 _context.Items.Update(toEnable);
                 await _context.SaveChangesAsync();
