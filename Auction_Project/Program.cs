@@ -30,8 +30,8 @@ builder.Services.AddScoped<IRepositoryItem, RepositoryItem>();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPictureService, PictureService>();
-builder.Services.AddScoped<BidServices>();
-builder.Services.AddScoped<ItemsServices>();
+builder.Services.AddScoped<IBidServices, BidServices>();
+builder.Services.AddScoped<IItemServices, ItemsServices>();
 builder.Services.AddScoped<IBidCloseServices, BidCloseServices>();
 builder.Services.AddScoped<IRepositoryItem, RepositoryItem>();
 

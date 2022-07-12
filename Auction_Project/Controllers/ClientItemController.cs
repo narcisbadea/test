@@ -11,10 +11,10 @@ namespace Auction_Project.Controllers;
 [ApiController]
 public class ClientItemController : ControllerBase
 {
-    private readonly ItemsServices _itemService;
+    private readonly IItemServices _itemService;
     private readonly IBidCloseServices _bidCloseServices;
 
-    public ClientItemController(ItemsServices itemService, IBidCloseServices bidCloseServices)
+    public ClientItemController(IItemServices itemService, IBidCloseServices bidCloseServices)
     {
         _itemService = itemService;
         _bidCloseServices = bidCloseServices;

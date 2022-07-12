@@ -11,12 +11,12 @@ namespace Auction_Project.Models
     public class BidsController : ControllerBase
     {
 
-        private readonly BidServices _bidServices;
+        private readonly IBidServices _bidServices;
 
         private readonly IUserService _userServices;
 
 
-        public BidsController(BidServices bidServices, IUserService userServices)
+        public BidsController(IBidServices bidServices, IUserService userServices)
         {
             _bidServices = bidServices;
             _userServices = userServices;

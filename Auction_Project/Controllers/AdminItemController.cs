@@ -13,11 +13,11 @@ namespace Auction_Project.Models
     public class AdminItemsController : ControllerBase
     {
 
-        private readonly ItemsServices _itemService;
+        private readonly IItemServices _itemService;
         private readonly IBidCloseServices _bidCloseServices;
 
 
-        public AdminItemsController(ItemsServices itemServices, IBidCloseServices bidCloseServices)
+        public AdminItemsController(IItemServices itemServices, IBidCloseServices bidCloseServices)
         {
             _itemService = itemServices;
             _bidCloseServices = bidCloseServices;

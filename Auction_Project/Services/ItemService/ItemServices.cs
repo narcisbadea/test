@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Auction_Project.Services.ItemService;
 
-public class ItemsServices
+public class ItemsServices : IItemServices
 {
     private readonly AppDbContext _context;
     private readonly IRepository<Item> _repositoryItems;
@@ -42,9 +42,9 @@ public class ItemsServices
         var bids = await _repositoryBids.Get();
 
         var response = new List<ItemResponseForClientDTO>();
-       
-            foreach (var item in items)
-            {
+
+        foreach (var item in items)
+        {
             if (item.Available)
             {
                 var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();
@@ -138,7 +138,7 @@ public class ItemsServices
                     });
                 }
             }
-            }
+        }
         return response;
     }
 
@@ -146,17 +146,17 @@ public class ItemsServices
     {
         var items = await _repositoryItemCustom.Get();
         var result = new List<ItemResponseDTO>();
-        foreach(var item in items)
+        foreach (var item in items)
         {
-            if(item.Available == false && item.IsSold == false)
+            if (item.Available == false && item.IsSold == false)
             {
                 var temp = new ItemResponseDTO
                 {
                     Id = item.Id,
                     Name = item.Name,
-                    Desc=item.Desc,
+                    Desc = item.Desc,
                     Price = item.Price,
-                    EndTime=item.EndTime,
+                    EndTime = item.EndTime,
                     postedTime = item.postedTime,
                     Gallery = item.Gallery.Select(i => i.Id).ToList()
                 };
@@ -188,7 +188,7 @@ public class ItemsServices
         }
 
         var response = new List<ItemResponseForAdminDTO>();
-  
+
         foreach (var item in items)
         {
             var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();
@@ -232,20 +232,20 @@ public class ItemsServices
 
                 response.Add(new ItemResponseForAdminDTO
                 {
-                        
-                        Id = item.Id,
-                        
-                        Name = item.Name,
 
-                        Desc = item.Desc,
+                    Id = item.Id,
 
-                        InitialPrice = item.Price,
+                    Name = item.Name,
 
-                        EndTime = item.EndTime,
+                    Desc = item.Desc,
 
-                        Gallery = listGalleryIds,
-                    
-                        BidsOnItem = bidDTO.FindAll(bid=>bid.ItemIdForBid==item.Id)
+                    InitialPrice = item.Price,
+
+                    EndTime = item.EndTime,
+
+                    Gallery = listGalleryIds,
+
+                    BidsOnItem = bidDTO.FindAll(bid => bid.ItemIdForBid == item.Id)
                 });
             }
             else
@@ -286,7 +286,7 @@ public class ItemsServices
     public async Task<IEnumerable<ItemResponseForClientDTO>> GetUserByPage(int nr)
     {
         var list = await GetUser();
-        var maxPage = list.ToList().Count /  5;
+        var maxPage = list.ToList().Count / 5;
         if (list.ToList().Count % 5 > 0)
         {
             maxPage++;
@@ -306,7 +306,7 @@ public class ItemsServices
     {
         var list = await GetAdmin();
         var maxPage = list.ToList().Count / 5;
-        if(list.ToList().Count % 5 > 0)
+        if (list.ToList().Count % 5 > 0)
         {
             maxPage++;
         }
@@ -319,7 +319,7 @@ public class ItemsServices
         {
             return null;
         }
-        
+
     }
 
     public async Task<IEnumerable<ItemResponseDTO>> GetAdminByPageUnapproved(int nr)
@@ -427,7 +427,7 @@ public class ItemsServices
         }
         return null;
     }
-    
+
     public async Task<ItemResponseDTO> GetById(int id)
     {
         return _mapper.Map<ItemResponseDTO>(await _repositoryItems.GetById(id));
@@ -474,7 +474,7 @@ public class ItemsServices
 
     public async Task<bool> PostAdmin(ItemRequestDTO item)
     {
-        var picList= new List<Picture>();
+        var picList = new List<Picture>();
         var getLoggedUser = _userService.GetMe();
 
         foreach (var gallryId in item.GalleryIds)
@@ -490,7 +490,7 @@ public class ItemsServices
             IsSold = false,
 
             OwnerUserId = getLoggedUser.Result.Id,
-            
+
             Available = true,
 
             Desc = item.Desc,
@@ -526,13 +526,13 @@ public class ItemsServices
             return true;
         return false;
     }
-    
+
     public async Task<Item> UpdateSold(int id)
     {
         var Sold = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
-        if (Sold!= null)
+        if (Sold != null)
         {
-            Sold.IsSold= true;
+            Sold.IsSold = true;
             await _context.SaveChangesAsync();
             return Sold;
         }

@@ -10,7 +10,7 @@ using AutoMapper;
 
 namespace Auction_Project.Services.BidService;
 
-public class BidServices
+public class BidServices : IBidServices
 {
     private readonly IRepository<Bid> _repository;
     private readonly IRepository<Item> _repositoryItem;
@@ -19,7 +19,7 @@ public class BidServices
     private readonly IRepositoryBids _repositoryBids;
     private readonly IUserService _userServices;
 
-    public BidServices(IUserService userServices, IRepository<Bid> repository, IRepository<Item> repositoryItem ,AppDbContext context, IMapper mapper, IRepositoryBids repositoryBids)
+    public BidServices(IUserService userServices, IRepository<Bid> repository, IRepository<Item> repositoryItem, AppDbContext context, IMapper mapper, IRepositoryBids repositoryBids)
     {
         _repository = repository;
         _context = context;
@@ -30,27 +30,27 @@ public class BidServices
     }
 
     public async Task<List<BidResponseDTO>> Get()
-      {
+    {
         var result = await _repositoryBids.Get();
 
-          var response=new List<BidResponseDTO>();
+        var response = new List<BidResponseDTO>();
 
-          foreach (var bid in result)
-          {
+        foreach (var bid in result)
+        {
             var itemResponse = _mapper.Map<ItemResponseDTO>(bid.Item);
             var userResponse = _mapper.Map<UserResponseDTO>(bid.User);
             var bidPrice = bid.BidPrice;
 
             response.Add(new BidResponseDTO
-             {
-                  ItemResponse = itemResponse,
-                  UserResponse = userResponse,
-                  BidPrice = bidPrice
-             });
-          }
-          return response;
-      }
-    
+            {
+                ItemResponse = itemResponse,
+                UserResponse = userResponse,
+                BidPrice = bidPrice
+            });
+        }
+        return response;
+    }
+
     public async Task<BidResponseDTO> GetById(int id)
     {
         var bid = await _repositoryBids.GetOne(id);
@@ -82,33 +82,33 @@ public class BidServices
         {
             if (item.Available == true)
             {
-            var bid = new Bid()
-            {
-                Item = item,
-                User = currentUser,
-                BidPrice = toPost.BidPrice,
-                bidTime = DateTime.UtcNow
-
-            }; 
-
-            var BidsOnItem = await _repositoryBids.GetForOneItem(toPost.ItemId);
-            if (BidsOnItem.Count != 0)
-            {
-                var x = BidsOnItem.OrderBy(b => b.BidPrice).Last().BidPrice;
-                if (x < bid.BidPrice)
+                var bid = new Bid()
                 {
-                    await _repository.Post(bid);
-                    return true;
-                }
-            }
-            else
-            {
-                if (item.Price <= bid.BidPrice)
+                    Item = item,
+                    User = currentUser,
+                    BidPrice = toPost.BidPrice,
+                    bidTime = DateTime.UtcNow
+
+                };
+
+                var BidsOnItem = await _repositoryBids.GetForOneItem(toPost.ItemId);
+                if (BidsOnItem.Count != 0)
                 {
-                    await _repository.Post(bid);
-                    return true;
+                    var x = BidsOnItem.OrderBy(b => b.BidPrice).Last().BidPrice;
+                    if (x < bid.BidPrice)
+                    {
+                        await _repository.Post(bid);
+                        return true;
+                    }
                 }
-            }
+                else
+                {
+                    if (item.Price <= bid.BidPrice)
+                    {
+                        await _repository.Post(bid);
+                        return true;
+                    }
+                }
             }
         }
         return false;
