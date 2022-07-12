@@ -56,6 +56,8 @@ namespace Auction_Project.Services.BidService
             {
                 var ownerEmailUser = _repositoryUser.GetById(itemSearched.OwnerUserId);
 
+                var itemSold = await _repositoryItem.UpdateToSold(itemSearched.Id);
+
                 _emailService.Send(ownerEmailUser.Email, "A EXPIRAT PERIOADA DE LICITATIE", $"Salut! A expirat perioada de licitatie pentru itemul {itemSearched.Name}, \n Nimeni nu a licitat pentru itemul tau. ");
 
             } else if(lastUserBidded != null)
