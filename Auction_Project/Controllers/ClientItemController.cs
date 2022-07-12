@@ -20,6 +20,18 @@ public class ClientItemController : ControllerBase
         _bidCloseServices = bidCloseServices;
     }
 
+
+    [HttpGet("my-items")]
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<ItemOwnItemDTO>>> GetOwnItems()
+    {
+        var ownItem = await _itemService.GetOwnItemsForUser();
+
+        if (ownItem != null)
+            return Ok(ownItem);
+        return NotFound("No items in list.");
+    }
+
     [HttpGet("get-all")]
     [Authorize]
     public async Task<ActionResult<IEnumerable<ItemResponseForClientDTO>>> Get()
@@ -51,7 +63,7 @@ public class ClientItemController : ControllerBase
         return NotFound("Item not found.");
     }
 
-    [HttpPost("post-item")]
+    [HttpPost("add-item")]
     [Authorize]
     public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
     {
