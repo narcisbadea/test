@@ -539,6 +539,43 @@ public class ItemsServices
         return null;
     }
 
+    public async Task<List<ItemOwnItemDTO>> GetOwnItemsForUser()
+    {
+        var userId = await _userService.GetMe();
+        var allitems = await _repositoryItemCustom.Get();
+        var ownedItems = allitems.Where(i => i.OwnerUserId == userId.Id).ToList();
+
+        var mappedItems = _mapper.Map<List<ItemOwnItemDTO>>(ownedItems);
+
+        return mappedItems;      
+    }
+
+    public async Task<List<ItemOwnItemDTO>> GetOwnItemsByPage(int nr)
+    {
+        var userId = await _userService.GetMe();
+        var allitems = await _repositoryItemCustom.Get();
+        var ownedItems = allitems.Where(i => i.OwnerUserId == userId.Id).ToList();
+
+        var maxPage = ownedItems.ToList().Count / 5;
+
+        if (ownedItems.ToList().Count % 5 > 0)
+        {
+            maxPage++;
+        }
+        if (nr <= maxPage)
+        {
+            var result = ownedItems.ToList().GetRange(5 * nr - 5, 5 - ((nr * 5) - ownedItems.ToList().Count));
+
+            var mappedItems = _mapper.Map<List<ItemOwnItemDTO>>(result);
+            return mappedItems;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
     public async Task<Item> Disable(int id)
     {
         return await _repositoryItemCustom.Disable(id);

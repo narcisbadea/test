@@ -12,6 +12,7 @@ public class MappingProfiles : Profile
     {
         CreateMap(typeof(Bid), typeof(BidRequestDTO)).ReverseMap();
         CreateMap(typeof(Bid), typeof(BidResponseDTO)).ReverseMap();
+        CreateMap(typeof(Item), typeof(ItemOwnItemDTO)).ReverseMap();
         CreateMap(typeof(Item), typeof(ItemRequestDTO)).ReverseMap();
         CreateMap(typeof(Item), typeof(ItemResponseDTO)).ReverseMap();
         CreateMap(typeof(Item), typeof(ItemRequestForUpdateDTO)).ReverseMap();

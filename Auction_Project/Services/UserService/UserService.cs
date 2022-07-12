@@ -162,6 +162,7 @@ namespace Auction_Project.Services.UserService
             return user.Id;
         }
 
+
         public string GetMyRole()
         {
             var result = string.Empty;
