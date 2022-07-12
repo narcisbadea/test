@@ -15,8 +15,9 @@ namespace Auction_Project.Services.BidService
         private readonly IEmailService _emailService;
         private readonly IRepositoryBids _repositoryBids;
         private readonly IRepositoryUser _repositoryUser;
+        private readonly IUserService _userService;
 
-        public BidCloseServices(IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IEmailService emailService, IRepositoryBids repositoryBids, IRepositoryUser repositoryUser)
+        public BidCloseServices(IRepositoryItem repositoryItem, IMapper mapper, IBackgroundJobClient backgroundJobClient, IEmailService emailService, IRepositoryBids repositoryBids, IRepositoryUser repositoryUser, IUserService userService)
         {
 
             _repositoryItem = repositoryItem;
@@ -25,6 +26,7 @@ namespace Auction_Project.Services.BidService
             _emailService = emailService;
             _repositoryBids = repositoryBids;
             _repositoryUser = repositoryUser;
+            _userService = userService;
         }
 
         public async Task<ItemRequestAvailableDTO?> SetApproved(int idItem)
@@ -77,19 +79,21 @@ namespace Auction_Project.Services.BidService
             }
             return null;
         }
+
         public async Task<Item> SetAsSoldByUser(int id)
         {
             var item = await _repositoryItem.GetById(id);
-
-            if (item != null)
+            if (item != null && !item.IsSold)
             {
-                await SetAsSold(item);
-                return item;
+                var usrId = _userService.GetMe().Result.Id;
 
+                if (item.OwnerUserId == usrId)
+                {
+                    await SetAsSold(item);
+                    return item;
+                }
             }
             return null;
         }
-
-
     }
 }
