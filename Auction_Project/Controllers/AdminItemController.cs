@@ -53,10 +53,13 @@ namespace Auction_Project.Models
         public async Task<ActionResult<BidResponseForAdminDTO>> GetById(int id)
         {
             //var got = await _itemService.GetByIdForUser(id);
-            var got = await _itemExportServices.GetListOfBidsForItem(id);
-            if (got != null)
-                return Ok(got);
-            return NotFound("Item not found.");
+            var got = await _itemExportServices.ExportToExcel(id);
+
+            var fullPath = got + ".xls";
+            var stream = System.IO.File.ReadAllBytes(fullPath);
+            var type = Path.GetExtension(fullPath);
+            //var type = "file/" + fullPath.Split('.').Last();
+            return File(stream, type);
         }
 
         [HttpPost]
