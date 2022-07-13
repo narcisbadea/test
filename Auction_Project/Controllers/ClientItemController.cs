@@ -23,7 +23,7 @@ public class ClientItemController : ControllerBase
 
     [HttpGet("my-items")]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<ItemOwnItemDTO>>> GetOwnItems()
+    public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetOwnItems()
     {
         var ownItem = await _itemService.GetOwnItemsForUser();
 
@@ -31,7 +31,18 @@ public class ClientItemController : ControllerBase
             return Ok(ownItem);
         return NotFound("No items in list.");
     }
+    [HttpGet("item-state")]
+    [Authorize]
+    public async Task<ActionResult<string>> GetItemState(int itemId)
+    {
+        var itemState = await _itemService.GetItemState(itemId);
+        if (itemState != null)
+        {
+            return Ok(itemState.ToString());
+        }
+        return NotFound();
 
+    }
     [HttpGet("get-all")]
     [Authorize]
     public async Task<ActionResult<IEnumerable<ItemResponseForClientDTO>>> Get()

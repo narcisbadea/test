@@ -450,6 +450,30 @@ public class ItemsServices
         return _mapper.Map<ItemResponseDTO>(await _repositoryItems.GetById(id));
     }
 
+    public async Task<string?> GetItemState(int itemId)
+    {
+        var item = await _repositoryItems.GetById(itemId);
+        if(item != null)
+        {
+            if (item.IsSold)
+            {
+                return "sold";
+            }
+            else
+            {
+                if (item.Available)
+                {
+                    return "listed";
+                }
+                else
+                {
+                    return "unlisted";
+                }
+            }
+        }
+        return null;
+    }
+
     public async Task<ItemResponseForClientDTO> PostClient(ItemRequestDTO item)
     {
         var picList = new List<Picture>();
@@ -554,15 +578,31 @@ public class ItemsServices
         return null;
     }
 
-    public async Task<List<ItemOwnItemDTO>> GetOwnItemsForUser()
+    public async Task<List<ItemResponseDTO>> GetOwnItemsForUser()
     {
         var userId = await _userService.GetMe();
         var allitems = await _repositoryItemCustom.Get();
         var ownedItems = allitems.Where(i => i.OwnerUserId == userId.Id).ToList();
+        var responseList = new List<ItemResponseDTO>();
+        foreach(var item in ownedItems)
+        {
+            var itemResponse = new ItemResponseDTO
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Desc = item.Desc,
 
-        var mappedItems = _mapper.Map<List<ItemOwnItemDTO>>(ownedItems);
+                Price = item.Price,
 
-        return mappedItems;      
+                EndTime = item.EndTime,
+
+                postedTime = item.postedTime,
+
+                Gallery = item.Gallery.Select(i => i.Id).ToList()
+            };
+            responseList.Add(itemResponse);
+        }
+        return responseList;      
     }
 
     public async Task<List<ItemOwnItemDTO>> GetOwnItemsByPage(int nr)
