@@ -31,7 +31,7 @@ namespace Auction_Project.Services.UserService
         public List<UserResponseDTO> GetAll()
         {
             List<UserResponseDTO> response = new List<UserResponseDTO>();
-            foreach (var user in _repositoryUser.GetUsers())
+            foreach (var user in _repositoryUser.GetUsers().Where(u => u.IsActive == true).ToList())
             {
                 var usr = _mapper.Map<UserResponseDTO>(user);
                 var userN = _repositoryUser.GetById(user.Id);
@@ -154,6 +154,25 @@ namespace Auction_Project.Services.UserService
         {
             var id =  GetMyId().Result;
             return _repositoryUser.GetById(id);
+        }
+
+        public async Task<UserResponseDTO> GetMeDTO()
+        {
+            var usr = await GetMe();
+            return _mapper.Map<UserResponseDTO>(usr);
+        }
+
+        public async Task<UserResponseDTO> GetUserById(string userName)
+        {
+            var user = await _repositoryUser.GetByName(userName);
+            return _mapper.Map<UserResponseDTO>(user);
+        }
+
+        public async Task<List<string>> GetUserRolesById(string username)
+        {
+            var user = _repositoryUser.GetByName(username).Result;
+            var roles = await _repositoryUser.GetRoles(user);
+            return roles.ToList();
         }
 
         public async Task<string> GetMyId()
