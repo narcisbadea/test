@@ -5,8 +5,10 @@ using Auction_Project.Models.Items;
 using Auction_Project.Models.Pictures;
 using Auction_Project.Models.Users;
 using Auction_Project.Services.BidService;
+using Auction_Project.Services.EmailService;
 using Auction_Project.Services.UserService;
 using AutoMapper;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -23,8 +25,9 @@ public class ItemsServices
     private readonly IMapper _mapper;
     private readonly IUserService _userService;
     private readonly IBidCloseServices _bidCloseServices;
+    private readonly IEmailService _emailService;
 
-    public ItemsServices(AppDbContext context, IRepository<Item> repository, IMapper mapper, IRepositoryBids repositoryBids, IRepositoryPictures repositoryPictures, IRepositoryItem repositoryItemCustom, IUserService userService, IBidCloseServices bidCloseServices)
+    public ItemsServices(AppDbContext context, IRepository<Item> repository, IMapper mapper, IRepositoryBids repositoryBids, IRepositoryPictures repositoryPictures, IRepositoryItem repositoryItemCustom, IUserService userService, IBidCloseServices bidCloseServices, IEmailService emailService)
     {
         _context = context;
         _repositoryItems = repository;
@@ -34,6 +37,7 @@ public class ItemsServices
         _repositoryItemCustom = repositoryItemCustom;
         _userService = userService;
         _bidCloseServices = bidCloseServices;
+        _emailService = emailService;
     }
 
     public async Task<IEnumerable<ItemResponseForClientDTO>> GetUser()
@@ -593,6 +597,8 @@ public class ItemsServices
 
     public async Task<Item> Disable(int id)
     {
+        await _bidCloseServices.SendEmailToUser(id); 
+
         return await _repositoryItemCustom.Disable(id);
     }
 
