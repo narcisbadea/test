@@ -23,7 +23,7 @@ public class ItemExportServices
         _mapper = mapper;
     }
 
-    public async Task<ItemResponseForAdminDTO> GetListOfBidsForItem(int id)
+    public async Task<IEnumerable<BidResponseForAdminDTO>> GetListOfBidsForItem(int id)
     {
         var item = await _repositoryItemCustom.GetById(id);
 
@@ -47,17 +47,7 @@ public class ItemExportServices
                 bidDTO.Add(bidtemp);
         }
 
-        var response = new ItemResponseForAdminDTO
-        {
-            Id = id,
-            Name = item.Name,
-            Desc = item.Desc,
-            InitialPrice = item.Price,
-            EndTime = item.EndTime,
-            BidsOnItem = bidDTO
-        };
-
-        return response;
+        return bidDTO;
     }
 }
 

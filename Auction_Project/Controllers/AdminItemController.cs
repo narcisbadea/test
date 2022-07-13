@@ -3,6 +3,7 @@ using Auction_Project.Services.ItemService;
 using Auction_Project.Models.Items;
 using Microsoft.AspNetCore.Authorization;
 using Auction_Project.Services.BidService;
+using Auction_Project.Models.Bids;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -49,7 +50,7 @@ namespace Auction_Project.Models
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemResponseForAdminDTO>> GetById(int id)
+        public async Task<ActionResult<BidResponseForAdminDTO>> GetById(int id)
         {
             //var got = await _itemService.GetByIdForUser(id);
             var got = await _itemExportServices.GetListOfBidsForItem(id);
