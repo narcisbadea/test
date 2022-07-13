@@ -148,14 +148,14 @@ namespace Auction_Project.Migrations
                         new
                         {
                             Id = "feadea3e-34b7-44a1-bafd-134749c706dc",
-                            ConcurrencyStamp = "8e13cf38-69b1-414d-b936-89d72de8480c",
+                            ConcurrencyStamp = "01bb9702-5ecc-4d1f-8ca5-1abb15354476",
                             Name = "root",
                             NormalizedName = "ROOT"
                         },
                         new
                         {
                             Id = "b1a678cf-d7a2-415a-9a8f-52d51e067e88",
-                            ConcurrencyStamp = "5a89dd7f-42e2-401d-8b14-c45dff6896aa",
+                            ConcurrencyStamp = "97698c1b-ae85-4964-a73f-c258ac646256",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -249,8 +249,8 @@ namespace Auction_Project.Migrations
                             Id = "b5d9114f-c911-49b4-af7c-137ce9488dd7",
                             AccessFailedCount = 0,
                             Cnp = "2881211259754",
-                            ConcurrencyStamp = "7c74f8b0-15be-45a0-a6fd-bf384911466f",
-                            Created = new DateTime(2022, 7, 13, 21, 2, 39, 586, DateTimeKind.Utc).AddTicks(2703),
+                            ConcurrencyStamp = "d315d074-d8e3-4aa2-a987-6dc8c5a9902a",
+                            Created = new DateTime(2022, 7, 13, 21, 53, 35, 419, DateTimeKind.Utc).AddTicks(1039),
                             Email = "root@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "root",
@@ -259,9 +259,9 @@ namespace Auction_Project.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ROOT@GMAIL.COM",
                             NormalizedUserName = "ROOT",
-                            PasswordHash = "AQAAAAEAACcQAAAAENSvey78/9l8dn4qxYB9CDpvIOkpwfSHDgtdjVHWdRiI0w1o+cBmI5TQf6npz8W0AA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJp6/k7lTfF0EnFDKHp8xVdnRfXLpP2onrbhuHpNq2XBiALD/D0K2/nRRRDd4/ikXA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "739d7960-9c87-4cee-bd3b-d80e9859d394",
+                            SecurityStamp = "52464bb9-f579-4b2a-8104-a30af55207c5",
                             TwoFactorEnabled = false,
                             UserName = "root"
                         });
