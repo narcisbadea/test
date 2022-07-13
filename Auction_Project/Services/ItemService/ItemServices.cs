@@ -391,7 +391,7 @@ public class ItemsServices
                 }
                 var response = new ItemResponseForClientDTO
                 {
-
+                    Id =item.Id,
                     Name = item.Name,
 
                     Desc = item.Desc,
@@ -424,6 +424,7 @@ public class ItemsServices
                 }
                 var response = new ItemResponseForClientDTO
                 {
+                    Id = item.Id,
 
                     Name = item.Name,
 
@@ -483,7 +484,11 @@ public class ItemsServices
 
             Gallery = picList
         };
+
         var response = await _repositoryItems.Post(toPost);
+
+       // var resp = _mapper.Map<ItemResponseForClientDTO>(response);
+
         return await GetByIdForUser(response.Id);
     }
 
