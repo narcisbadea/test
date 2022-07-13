@@ -1,4 +1,5 @@
 ﻿using Auction_Project.Models.Items;
+using Auction_Project.Services.BidService;
 using Auction_Project.Services.ItemService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,12 @@ namespace Auction_Project.Controllers;
 public class ClientItemController : ControllerBase
 {
     private readonly ItemsServices _itemService;
+    private readonly IBidCloseServices _bidCloseServices;
 
-    public ClientItemController(ItemsServices itemService)
+    public ClientItemController(ItemsServices itemService, IBidCloseServices bidCloseServices)
     {
         _itemService = itemService;
+        _bidCloseServices = bidCloseServices;
     }
 
     [HttpGet]
@@ -25,7 +28,6 @@ public class ClientItemController : ControllerBase
         if (got!=null)
             return Ok(got);
         return NotFound("No items in list.");
-        //trebuie sa vada pretul curent daca s-a biduit pe item
     }
 
     [HttpGet("/page/{nr}")]
@@ -54,20 +56,30 @@ public class ClientItemController : ControllerBase
     public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
     {
         var item = await _itemService.PostClient(toPost);
-        if (item != null)
+        if(item != null)
             return Ok(item);
-        return BadRequest();
+        return BadRequest("Can't add item!");
     }
 
-    [HttpPut]
-    [Authorize]
-    public async Task<ActionResult<ItemRequestDTO>> Update(ItemRequestForUpdateDTO toUpdate)
+   /* [HttpDelete("{id}")]
+    [Authorize] // mai trebuie vazut cine a postat itemul sa nu poata vinde itemul oricui
+    public async Task<ActionResult> Sell(int id)
     {
-        var item = await _itemService.Update(toUpdate);
-        if (item != null)
-            return Ok(item);
-        return BadRequest();
-    }
+        var item = await _bidCloseServices.SetAsSoldByUser(id);
 
+            return Ok("Item Sold");
+        return NotFound("Item not found");
+    }*/
+
+    /* [HttpPut]
+     [Authorize]
+     public async Task<ActionResult<ItemRequestDTO>> Update(ItemRequestForUpdateDTO toUpdate)
+     {
+         var item = await _itemService.Update(toUpdate);
+         if (item != null)
+             return Ok(item);
+         return BadRequest();
+     }
+ */
 
 }

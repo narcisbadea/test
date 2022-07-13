@@ -1,4 +1,5 @@
 ﻿using Auction_Project.Models.Users;
+using Microsoft.AspNetCore.Identity;
 
 namespace Auction_Project.DAL
 {
@@ -11,5 +12,7 @@ namespace Auction_Project.DAL
         Task<User> GetByName(string UserName);
 
         Task<IList<string>> GetRoles(User user);
+
+        Task<User> BanUser(User user);
     }
 }

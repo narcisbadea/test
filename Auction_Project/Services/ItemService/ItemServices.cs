@@ -4,6 +4,8 @@ using Auction_Project.Models.Bids;
 using Auction_Project.Models.Items;
 using Auction_Project.Models.Pictures;
 using Auction_Project.Models.Users;
+using Auction_Project.Services.BidService;
+using Auction_Project.Services.UserService;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,11 +17,14 @@ public class ItemsServices
     private readonly AppDbContext _context;
     private readonly IRepository<Item> _repositoryItems;
     private readonly IRepositoryItem _repositoryItemCustom;
+    private readonly IRepositoryUser _repositoryUser;
     private readonly IRepositoryBids _repositoryBids;
     private readonly IRepositoryPictures _repositoryPictures;
     private readonly IMapper _mapper;
+    private readonly IUserService _userService;
+    private readonly IBidCloseServices _bidCloseServices;
 
-    public ItemsServices(AppDbContext context, IRepository<Item> repository, IMapper mapper, IRepositoryBids repositoryBids, IRepositoryPictures repositoryPictures, IRepositoryItem repositoryItemCustom)
+    public ItemsServices(AppDbContext context, IRepository<Item> repository, IMapper mapper, IRepositoryBids repositoryBids, IRepositoryPictures repositoryPictures, IRepositoryItem repositoryItemCustom, IUserService userService, IBidCloseServices bidCloseServices)
     {
         _context = context;
         _repositoryItems = repository;
@@ -27,8 +32,9 @@ public class ItemsServices
         _repositoryBids = repositoryBids;
         _repositoryPictures = repositoryPictures;
         _repositoryItemCustom = repositoryItemCustom;
+        _userService = userService;
+        _bidCloseServices = bidCloseServices;
     }
-
 
     public async Task<IEnumerable<ItemResponseForClientDTO>> GetUser()
     {
@@ -40,25 +46,27 @@ public class ItemsServices
        
             foreach (var item in items)
             {
+            if (item.Available)
+            {
                 var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();
                 if (lastBid != null)
                 {
-                //var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
-                var itemResponse = new ItemResponseDTO
-                {
-                    Id = lastBid.Item.Id,
-                    Name = lastBid.Item.Name,
-                    Desc = lastBid.Item.Desc,
+                    //var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
+                    var itemResponse = new ItemResponseDTO
+                    {
+                        Id = lastBid.Item.Id,
+                        Name = lastBid.Item.Name,
+                        Desc = lastBid.Item.Desc,
 
-                    Price = lastBid.Item.Price,
+                        Price = lastBid.Item.Price,
 
-                    EndTime = lastBid.Item.EndTime,
+                        EndTime = lastBid.Item.EndTime,
 
-                    postedTime = lastBid.Item.postedTime,
+                        postedTime = lastBid.Item.postedTime,
 
-                    Gallery = lastBid.Item.Gallery.Select(i => i.Id).ToList()
-                };
-                var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
+                        Gallery = lastBid.Item.Gallery.Select(i => i.Id).ToList()
+                    };
+                    var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
                     var res = new BidResponseDTO
                     {
                         ItemResponse = itemResponse,
@@ -122,7 +130,7 @@ public class ItemsServices
 
                         InitialPrice = item.Price,
 
-                    EndTime = item.EndTime,
+                        EndTime = item.EndTime,
 
 
                         Gallery = listGalleryIds,
@@ -133,7 +141,32 @@ public class ItemsServices
                     });
                 }
             }
+            }
         return response;
+    }
+
+    public async Task<IEnumerable<ItemResponseDTO>> GetUnapprovedForAdmin()
+    {
+        var items = await _repositoryItemCustom.Get();
+        var result = new List<ItemResponseDTO>();
+        foreach(var item in items)
+        {
+            if(item.Available == false && item.IsSold == false)
+            {
+                var temp = new ItemResponseDTO
+                {
+                    Id = item.Id,
+                    Name = item.Name,
+                    Desc=item.Desc,
+                    Price = item.Price,
+                    EndTime=item.EndTime,
+                    postedTime = item.postedTime,
+                    Gallery = item.Gallery.Select(i => i.Id).ToList()
+                };
+                result.Add(temp);
+            }
+        }
+        return result;
     }
 
     public async Task<IEnumerable<ItemResponseForAdminDTO>> GetAdmin()
@@ -141,6 +174,22 @@ public class ItemsServices
         var items = await _repositoryItemCustom.Get();
         
         var bids = await _repositoryBids.Get();
+        var bidDTO = new List<BidResponseForAdminDTO>();
+
+        foreach (var bid in bids)
+        {
+            var bidtemp = new BidResponseForAdminDTO
+            {
+                UserNameForBid = bid.User.UserName,
+                UserEmailForBid = bid.User.Email,
+
+                ItemIdForBid = bid.Item.Id,
+                ItemIsSold = bid.Item.IsSold,
+
+                Price = bid.BidPrice
+            };
+            bidDTO.Add(bidtemp);
+        }
 
         var response = new List<ItemResponseForAdminDTO>();
   
@@ -152,6 +201,7 @@ public class ItemsServices
                 var itemResponse = new ItemResponseDTO
                 {
                     Id = lastBid.Item.Id,
+
                     Name = lastBid.Item.Name,
                     Desc = lastBid.Item.Desc,
 
@@ -186,7 +236,9 @@ public class ItemsServices
 
                 response.Add(new ItemResponseForAdminDTO
                 {
-
+                        
+                        Id = item.Id,
+                        
                         Name = item.Name,
 
                         Desc = item.Desc,
@@ -197,7 +249,7 @@ public class ItemsServices
 
                         Gallery = listGalleryIds,
                     
-                        BidsOnItem = bids.FindAll(bid=>bid.Item.Id==item.Id)
+                        BidsOnItem = bidDTO.FindAll(bid=>bid.ItemIdForBid==item.Id)
                 });
             }
             else
@@ -274,6 +326,26 @@ public class ItemsServices
         
     }
 
+    public async Task<IEnumerable<ItemResponseDTO>> GetAdminByPageUnapproved(int nr)
+    {
+        var list = await GetUnapprovedForAdmin();
+        var maxPage = list.ToList().Count / 5;
+        if (list.ToList().Count % 5 > 0)
+        {
+            maxPage++;
+        }
+        if (nr <= maxPage)
+        {
+            var result = list.ToList().GetRange(5 * nr - 5, 5 - ((nr * 5) - list.ToList().Count));
+            return result;
+        }
+        else
+        {
+            return null;
+        }
+
+    }
+
     public async Task<ItemResponseForClientDTO> GetByIdForUser(int id)
     {
         var item = await _repositoryItemCustom.GetById(id);
@@ -284,7 +356,20 @@ public class ItemsServices
             var lastBid = bids.Where(i => i.Item.Id == item.Id).OrderBy(b => b.bidTime).LastOrDefault();
             if (lastBid != null)
             {
-                var itemResponse = _mapper.Map<ItemResponseDTO>(lastBid.Item);
+                var itemResponse = new ItemResponseDTO
+                {
+                    Id = lastBid.Item.Id,
+                    Name = lastBid.Item.Name,
+                    Desc = lastBid.Item.Desc,
+
+                    Price = lastBid.Item.Price,
+
+                    EndTime = lastBid.Item.EndTime,
+
+                    postedTime = lastBid.Item.postedTime,
+
+                    Gallery = lastBid.Item.Gallery.Select(i => i.Id).ToList()
+                };
                 var userResponse = _mapper.Map<UserResponseDTO>(lastBid.User);
                 var res = new BidResponseDTO
                 {
@@ -368,6 +453,7 @@ public class ItemsServices
     public async Task<ItemResponseForClientDTO> PostClient(ItemRequestDTO item)
     {
         var picList = new List<Picture>();
+        var getLoggedUser = _userService.GetMe();
 
         foreach (var gallryId in item.GalleryIds)
         {
@@ -380,6 +466,8 @@ public class ItemsServices
             Name = item.Name,
 
             IsSold = false,
+
+            OwnerUserId = getLoggedUser.Result.Id,
 
             Available = false,
 
@@ -402,8 +490,9 @@ public class ItemsServices
     public async Task<bool> PostAdmin(ItemRequestDTO item)
     {
         var picList= new List<Picture>();
+        var getLoggedUser = _userService.GetMe();
 
-        foreach(var gallryId in item.GalleryIds)
+        foreach (var gallryId in item.GalleryIds)
         {
             picList.Add(await _repositoryPictures.GetById(gallryId));
         }
@@ -415,6 +504,8 @@ public class ItemsServices
 
             IsSold = false,
 
+            OwnerUserId = getLoggedUser.Result.Id,
+            
             Available = true,
 
             Desc = item.Desc,
@@ -430,8 +521,13 @@ public class ItemsServices
             Gallery = picList
         };
 
-        if (await _repositoryItems.Post(toPost) != null)
+        var temp = await _repositoryItems.Post(toPost);
+
+        if (temp != null)
+        {
+            await _bidCloseServices.SetApproved(temp.Id);
             return true;
+        }
         return false;
     }
 
@@ -439,7 +535,9 @@ public class ItemsServices
     {
         var itemMapped = _mapper.Map<Item>(item);
 
-        if(await _repositoryItems.Update(itemMapped)!=null)
+        var itemSearched = await _repositoryItems.GetById(item.Id);
+
+        if (await _repositoryItems.Update(itemMapped) != null)
             return true;
         return false;
     }
@@ -462,4 +560,3 @@ public class ItemsServices
     }
 
 }
-

@@ -19,15 +19,24 @@ namespace Auction_Project.Models
 
         public AdminItemsController(ItemsServices itemServices, IBidCloseServices bidCloseServices)
         {
-
             _itemService = itemServices;
             _bidCloseServices = bidCloseServices;
+        }
+
+        [HttpGet("/unlisteditems/{nr}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> Get(int nr)
+        {
+            var unlisted = await _itemService.GetAdminByPageUnapproved(nr);
+            if (unlisted != null)
+                return Ok(unlisted);
+            return NotFound("No items in list.");
         }
 
 
         [HttpGet("/pageadmin/{nr}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<ItemResponseForAdminDTO>>> Get(int nr)
+        public async Task<ActionResult<IEnumerable<ItemResponseForAdminDTO>>> GetUnlisted(int nr)
         {
             var got = await _itemService.GetAdminByPage(nr);
             if (got != null)
@@ -46,15 +55,15 @@ namespace Auction_Project.Models
             return NotFound("Item not found.");
         }
 
-        // POST >
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
+        public async Task<ActionResult<ItemResponseDTO>> Post(ItemRequestDTO toPost)
         {
             var item = await _itemService.PostAdmin(toPost);
+  
             if (item)
-                return Ok(item);
-            return BadRequest();
+                return Ok("Item sent to auction!");
+            return BadRequest("Error input data!");
         }
 
         [HttpPut("{id}")]
@@ -63,8 +72,8 @@ namespace Auction_Project.Models
         { 
            var updated = await _bidCloseServices.SetApproved(id);
            if(updated != null)
-               return Ok("Item was put up for Auction");
-            return BadRequest("Not Successful");
+               return Ok(updated);
+            return BadRequest("Not successful approved!");
         }
 
         // DELETE 
@@ -76,8 +85,18 @@ namespace Auction_Project.Models
             if (item != null)
             {
                 await _itemService.Disable(id);
-                return Ok("Item disabled");
+                return Ok("Item set as unavailable");
             }
+            return NotFound("Item not found");
+        }
+
+        [HttpDelete("/soldforadmin/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Sell(int id)
+        {
+            var item = await _bidCloseServices.SetAsSoldByAdmin(id);
+            if (item != null)
+                return Ok("Item sold");
             return NotFound("Item not found");
         }
     }

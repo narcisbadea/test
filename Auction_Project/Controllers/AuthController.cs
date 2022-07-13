@@ -23,14 +23,14 @@ namespace Auction_Project.Authenticate
 
         [HttpPut("change-password")]
         [Authorize]
-        public async Task<ActionResult<bool>> ChangePassword(UserChangePasswordDTO user)
+        public async Task<IActionResult> ChangePassword(UserChangePasswordDTO user)
         {
             var updated = await _userService.ChangePassword(user);
             if (updated)
             {
-                return Ok(updated);
+                return Ok("Password changed!");
             }
-            return BadRequest(updated);
+            return BadRequest("Bad request");
         }
 
         [HttpPost("register")]
@@ -43,23 +43,32 @@ namespace Auction_Project.Authenticate
                 return BadRequest(error);
             }
             var result = await _userService.AddUser(request);
-            await _userService.ChangeUserRole(new UserRoleDTO { Id = result.Id, RoleName = "User" });
-            await _dbContext.SaveChangesAsync();
+            var role = await _userService.ChangeUserRole(new UserRoleDTO { Id = result.Id, RoleName = "User" });
+            _dbContext.SaveChanges();
             return Ok(result);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(UserLoginDTO request)
+        public async Task<ActionResult<UserLoginResponseDTO>> Login(UserLoginDTO request)
         {
 
             if (!await _userService.CheckPassword(request))
             {
-                return BadRequest();
+                return BadRequest("Invalid Password!");
+            }
+
+            if(await _userService.isUserBanned(request.UserName))
+            {
+                return BadRequest("User banned!");
             }
 
             var token = await _userService.GenerateToken(request);
 
-            return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+            return Ok(new UserLoginResponseDTO{ 
+                token = new JwtSecurityTokenHandler().WriteToken(token),
+                userResponse = await _userService.GetUserById(request.UserName),
+                roles = await _userService.GetUserRolesById(request.UserName)
+            });
         }
     }
 }

@@ -7,11 +7,13 @@ namespace Auction_Project.DAL
     public class RepositoryUser : IRepositoryUser
     {
         private readonly UserManager<User> _userManager;
+        private readonly AppDbContext _dbContext;
 
 
-        public RepositoryUser( UserManager<User> userManager)
+        public RepositoryUser(UserManager<User> userManager, AppDbContext dbContext)
         {
             _userManager = userManager;
+            _dbContext = dbContext;
         }
 
         public User? GetById(string id)
@@ -33,5 +35,18 @@ namespace Auction_Project.DAL
         {
             return _userManager.Users.ToList();
         }
+
+        public async Task<User> BanUser(User user)
+        {
+            var temp = await _userManager.FindByIdAsync(user.Id);
+            if (temp != null)
+            {
+                var result = await _userManager.UpdateAsync(temp);
+                return temp;
+            }
+            return null;
+        }
+
     }
+
 }

@@ -10,6 +10,8 @@ namespace Auction_Project.Models.Items
     {
         public int Id { get; set; }
 
+        public string? OwnerUserId { get; set; }
+
         public string Name { get; set; }
 
         public bool IsSold { get; set; } = false;

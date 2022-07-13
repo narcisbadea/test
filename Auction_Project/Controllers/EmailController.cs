@@ -18,7 +18,7 @@ namespace Auction_Project.Controllers
         public async Task<IActionResult>postEmail(string to, string subject, string body)
         {
             _emailService.Send(to, subject, body);
-            return Ok();
+            return Ok("Email sent");
         } 
     }
 }

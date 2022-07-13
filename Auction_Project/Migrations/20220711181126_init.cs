@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Auction_Project.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -59,6 +59,7 @@ namespace Auction_Project.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    OwnerUserId = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsSold = table.Column<bool>(type: "bit", nullable: false),
                     Available = table.Column<bool>(type: "bit", nullable: false),
@@ -228,17 +229,17 @@ namespace Auction_Project.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "b1a678cf-d7a2-415a-9a8f-52d51e067e88", "ef4ba55d-ba61-4b95-a10d-0be0e18f0a41", "Admin", "ADMIN" });
+                values: new object[] { "b1a678cf-d7a2-415a-9a8f-52d51e067e88", "31f5e34d-63fb-4521-a8d2-849ac10e0e07", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "feadea3e-34b7-44a1-bafd-134749c706dc", "4fe108b7-52b2-48f9-912c-5a7ce1c13feb", "root", "ROOT" });
+                values: new object[] { "feadea3e-34b7-44a1-bafd-134749c706dc", "10b0144d-bcef-490b-a654-a2430f9ef940", "root", "ROOT" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Cnp", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "b5d9114f-c911-49b4-af7c-137ce9488dd7", 0, "2881211259754", "8ad7bcc2-d158-4708-9de9-ba694ef700ae", new DateTime(2022, 7, 8, 10, 54, 48, 604, DateTimeKind.Utc).AddTicks(118), "root@gmail.com", false, "root", true, "root", false, null, "ROOT@GMAIL.COM", "ROOT", "AQAAAAEAACcQAAAAEOQ+AEOBI1Ecu5YfMauxSO8MGCj2A4xXgc9H49vuznAJ8baMlvwYFZZC0Gt36vVO1w==", null, false, "920fe293-56c8-44a1-b0a1-793397df2d1a", false, "root" });
+                values: new object[] { "b5d9114f-c911-49b4-af7c-137ce9488dd7", 0, "2881211259754", "f30f7442-f0c3-4f8b-b88b-a51561726511", new DateTime(2022, 7, 11, 18, 11, 26, 35, DateTimeKind.Utc).AddTicks(9327), "root@gmail.com", false, "root", true, "root", false, null, "ROOT@GMAIL.COM", "ROOT", "AQAAAAEAACcQAAAAEC7Mfcqx/WoW4X3fRvlCDg6iIW3XTyapjHmyR2LNB2eFHssUTeG1RJPyVUj07pMWgA==", null, false, "3ec44691-39d1-4228-b1e2-5f69a26e268c", false, "root" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
