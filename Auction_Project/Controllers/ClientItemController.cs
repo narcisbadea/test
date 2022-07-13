@@ -31,6 +31,15 @@ public class ClientItemController : ControllerBase
             return Ok(ownItem);
         return NotFound("No items in list.");
     }
+
+    [HttpGet("my-itema/number")]
+    [Authorize]
+    public async Task<ActionResult<int>> GetNrOfMyItems()
+    {
+        var count = await _itemService.GetNumberOfMyItems();
+        return Ok(count);
+    }
+
     [HttpGet("item-state")]
     [Authorize]
     public async Task<ActionResult<string>> GetItemState(int itemId)
@@ -60,8 +69,20 @@ public class ClientItemController : ControllerBase
         var got = await _itemService.GetUserByPage(nr);
         if (got != null)
             return Ok(got);
-        return NotFound("There is no items.");
+        return Ok(new List<ItemResponseForClientDTO>());
         //trebuie sa vada pretul curent daca s-a biduit pe item
+    }
+
+    [HttpGet("number-of-items")]
+    [Authorize]
+    public async Task<ActionResult<int>> GetNumberOfItems()
+    {
+        var items = await _itemService.GetUser();
+        if (items != null)
+        {
+            return Ok(items.Count());
+        }
+        return Ok(0);
     }
 
     [HttpGet("get-item-by-id/{id}")]
@@ -79,7 +100,7 @@ public class ClientItemController : ControllerBase
     public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
     {
         var item = await _itemService.PostClient(toPost);
-        if(item)
+        if(item != null)
             return Ok(item);
         return BadRequest("Can't add item!");
     }

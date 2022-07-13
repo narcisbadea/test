@@ -60,7 +60,7 @@ public class ItemsServices
 
                         Price = lastBid.Item.Price,
 
-                        EndTime = lastBid.Item.EndTime,
+                        EndTime = lastBid.Item.postedTime.Value.AddMinutes(Convert.ToInt32(lastBid.Item.EndTime)).ToString(),
 
                         postedTime = lastBid.Item.postedTime,
 
@@ -97,7 +97,7 @@ public class ItemsServices
 
                         InitialPrice = item.Price,
 
-                        EndTime = item.EndTime,
+                        EndTime = lastBid.Item.postedTime.Value.AddMinutes(Convert.ToInt32(lastBid.Item.EndTime)).ToString(),
 
                         Gallery = listGalleryIds,
 
@@ -130,7 +130,7 @@ public class ItemsServices
 
                         InitialPrice = item.Price,
 
-                        EndTime = item.EndTime,
+                        EndTime = item.postedTime.Value.AddMinutes(Convert.ToInt32(item.EndTime)).ToString(),
 
 
                         Gallery = listGalleryIds,
@@ -159,7 +159,7 @@ public class ItemsServices
                     Name = item.Name,
                     Desc=item.Desc,
                     Price = item.Price,
-                    EndTime=item.EndTime,
+                    EndTime=item.EndTime.ToString(),
                     postedTime = item.postedTime,
                     Gallery = item.Gallery.Select(i => i.Id).ToList()
                 };
@@ -167,6 +167,12 @@ public class ItemsServices
             }
         }
         return result;
+    }
+
+    public async Task<int> GetNumberOfPagesForApprove()
+    {
+        var items = await GetUnapprovedForAdmin();
+        return items.Count();
     }
 
     public async Task<IEnumerable<ItemResponseForAdminDTO>> GetAdmin()
@@ -207,7 +213,7 @@ public class ItemsServices
 
                     Price = lastBid.Item.Price,
 
-                    EndTime = lastBid.Item.EndTime,
+                    EndTime = lastBid.Item.EndTime.ToString(),
 
                     postedTime = lastBid.Item.postedTime,
 
@@ -364,7 +370,7 @@ public class ItemsServices
 
                     Price = lastBid.Item.Price,
 
-                    EndTime = lastBid.Item.EndTime,
+                    EndTime = lastBid.Item.EndTime.ToString(),
 
                     postedTime = lastBid.Item.postedTime,
 
@@ -398,7 +404,7 @@ public class ItemsServices
 
                     InitialPrice = item.Price,
 
-                    EndTime = item.EndTime,
+                    EndTime = item.EndTime.ToString(),
 
                     Gallery = listGalleryIds,
 
@@ -431,7 +437,7 @@ public class ItemsServices
 
                     InitialPrice = item.Price,
 
-                    EndTime = item.EndTime,
+                    EndTime = item.EndTime.ToString(),
 
                     Gallery = listGalleryIds,
 
@@ -578,6 +584,19 @@ public class ItemsServices
         return null;
     }
 
+    public async Task<int> GetNumberOfMyItems()
+    {
+        var count = await GetOwnItemsForUser();
+        if (count != null)
+        {
+            return count.Count();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
     public async Task<List<ItemResponseDTO>> GetOwnItemsForUser()
     {
         var userId = await _userService.GetMe();
@@ -594,7 +613,7 @@ public class ItemsServices
 
                 Price = item.Price,
 
-                EndTime = item.EndTime,
+                EndTime = item.EndTime.ToString(),
 
                 postedTime = item.postedTime,
 
