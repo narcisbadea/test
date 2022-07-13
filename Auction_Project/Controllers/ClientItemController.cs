@@ -79,13 +79,13 @@ public class ClientItemController : ControllerBase
     public async Task<ActionResult<ItemRequestDTO>> Post(ItemRequestDTO toPost)
     {
         var item = await _itemService.PostClient(toPost);
-        if(item != null)
+        if(item)
             return Ok(item);
         return BadRequest("Can't add item!");
     }
 
     [HttpDelete("{id}")]
-    [Authorize] 
+    [Authorize]
     public async Task<ActionResult> Sell(int id)
     {
         var item = await _bidCloseServices.SetAsSoldByUser(id);
@@ -94,15 +94,5 @@ public class ClientItemController : ControllerBase
         return NotFound("Item not found");
     }
 
-    /* [HttpPut]
-     [Authorize]
-     public async Task<ActionResult<ItemRequestDTO>> Update(ItemRequestForUpdateDTO toUpdate)
-     {
-         var item = await _itemService.Update(toUpdate);
-         if (item != null)
-             return Ok(item);
-         return BadRequest();
-     }
- */
 
 }
