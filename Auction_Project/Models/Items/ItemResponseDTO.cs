@@ -15,5 +15,6 @@ public class ItemResponseDTO
     public DateTime? postedTime { get; set; }
 
     public List<int>? Gallery { get; set; }
+    
 
 }

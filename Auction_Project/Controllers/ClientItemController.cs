@@ -32,6 +32,17 @@ public class ClientItemController : ControllerBase
         return NotFound("No items in list.");
     }
 
+    [HttpGet("my-items/page")]
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetOwnItemsPage(int nr)
+    {
+        var ownItem = await _itemService.GetOwnItemsByPage(nr);
+
+        if (ownItem != null)
+            return Ok(ownItem);
+        return NotFound("No items in list.");
+    }
+
     [HttpGet("my-itema/number")]
     [Authorize]
     public async Task<ActionResult<int>> GetNrOfMyItems()
