@@ -3,6 +3,7 @@ using Auction_Project.Services.ItemService;
 using Auction_Project.Models.Items;
 using Microsoft.AspNetCore.Authorization;
 using Auction_Project.Services.BidService;
+using Auction_Project.Models.Bids;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,13 +15,15 @@ namespace Auction_Project.Models
     {
 
         private readonly ItemsServices _itemService;
+        private readonly ItemExportServices _itemExportServices;
         private readonly IBidCloseServices _bidCloseServices;
 
 
-        public AdminItemsController(ItemsServices itemServices, IBidCloseServices bidCloseServices)
+        public AdminItemsController(ItemsServices itemServices, IBidCloseServices bidCloseServices, ItemExportServices itemExportServices)
         {
             _itemService = itemServices;
             _bidCloseServices = bidCloseServices;
+            _itemExportServices = itemExportServices;
         }
 
         [HttpGet("unlisteditems/{nr}")]
@@ -47,9 +50,10 @@ namespace Auction_Project.Models
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ItemResponseForAdminDTO>> GetById(int id)
+        public async Task<ActionResult<BidResponseForAdminDTO>> GetById(int id)
         {
-            var got = await _itemService.GetByIdForUser(id);
+            //var got = await _itemService.GetByIdForUser(id);
+            var got = await _itemExportServices.GetListOfBidsForItem(id);
             if (got != null)
                 return Ok(got);
             return NotFound("Item not found.");
@@ -91,7 +95,7 @@ namespace Auction_Project.Models
         {
             var item = await _itemService.GetById(id);
             if (item != null)
-            {
+            { 
                 await _itemService.Disable(id);
                 return Ok("Item set as unavailable");
             }

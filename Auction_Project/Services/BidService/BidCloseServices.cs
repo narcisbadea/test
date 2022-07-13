@@ -97,5 +97,16 @@ namespace Auction_Project.Services.BidService
             }
             return null;
         }
+
+        public async Task SendEmailToUser(int idItem)
+        {
+            var itemSearched = await _repositoryItem.GetById(idItem);
+            if (itemSearched != null)
+            {
+                var ownerEmailUser = _repositoryUser.GetById(itemSearched.OwnerUserId);
+                _emailService.Send(ownerEmailUser.Email, "ITEM NEAPROBAT", $"Itemul cu numele {itemSearched.Name} nu a putut fi aprobat! Nu corespunde termenelor si conditilor site-ului nostru.  \n Va multumim pentru intelegere");
+            }
+
+        }
     }
 }
