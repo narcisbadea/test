@@ -50,7 +50,7 @@ namespace Auction_Project.Models
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> GetById(int id)
+        public async Task<ActionResult<IFormFile>> GetById(int id)
         {
             //var got = await _itemService.GetByIdForUser(id);
             var got = await _itemExportServices.ExportToExcel(id);
