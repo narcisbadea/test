@@ -69,9 +69,9 @@ namespace Auction_Project.DAL
         public async Task<Item?> Disable(int id)
         {
             var toDisable = await _context.Items.Include(i => i.Gallery).FirstOrDefaultAsync(item => item.Id == id);
-            if (toDisable != null)
+            if (toDisable != null && toDisable.Available == false)
             {
-                toDisable.Available = false;
+                toDisable.IsSold = true;
 
                 _context.Items.Update(toDisable);
                 await _context.SaveChangesAsync();

@@ -83,7 +83,7 @@ namespace Auction_Project.Models
         {
             var item = await _itemService.GetById(id);
             if (item != null)
-            {
+            { 
                 await _itemService.Disable(id);
                 return Ok("Item set as unavailable");
             }
