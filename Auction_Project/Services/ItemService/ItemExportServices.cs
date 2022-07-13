@@ -65,7 +65,7 @@ public class ItemExportServices
             var hostItem = bids.OrderBy(b => b.Price).First().ItemIdForBid.ToString();
             string filePath = Path.Combine(uploads, hostItem);
 
-            new ExcelMapper().Save(filePath + ".xls", bids, hostItem);
+            new ExcelMapper().Save(filePath + ".xlsx", bids, hostItem);
 
             return filePath;
         }
