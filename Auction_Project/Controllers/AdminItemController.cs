@@ -14,13 +14,15 @@ namespace Auction_Project.Models
     {
 
         private readonly ItemsServices _itemService;
+        private readonly ItemExportServices _itemExportServices;
         private readonly IBidCloseServices _bidCloseServices;
 
 
-        public AdminItemsController(ItemsServices itemServices, IBidCloseServices bidCloseServices)
+        public AdminItemsController(ItemsServices itemServices, IBidCloseServices bidCloseServices, ItemExportServices itemExportServices)
         {
             _itemService = itemServices;
             _bidCloseServices = bidCloseServices;
+            _itemExportServices = itemExportServices;
         }
 
         [HttpGet("unlisteditems/{nr}")]
@@ -49,7 +51,8 @@ namespace Auction_Project.Models
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ItemResponseForAdminDTO>> GetById(int id)
         {
-            var got = await _itemService.GetByIdForUser(id);
+            //var got = await _itemService.GetByIdForUser(id);
+            var got = await _itemExportServices.GetListOfBidsForItem(id);
             if (got != null)
                 return Ok(got);
             return NotFound("Item not found.");
