@@ -23,7 +23,7 @@ namespace Auction_Project.Models
             _bidCloseServices = bidCloseServices;
         }
 
-        [HttpGet("/unlisteditems/{nr}")]
+        [HttpGet("unlisteditems/{nr}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> Get(int nr)
         {
@@ -34,7 +34,7 @@ namespace Auction_Project.Models
         }
 
 
-        [HttpGet("/pageadmin/{nr}")]
+        [HttpGet("listeditems/{nr}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<ItemResponseForAdminDTO>>> GetUnlisted(int nr)
         {
@@ -90,7 +90,7 @@ namespace Auction_Project.Models
             return NotFound("Item not found");
         }
 
-        [HttpDelete("/soldforadmin/{id}")]
+        [HttpDelete("soldbyadmin/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Sell(int id)
         {

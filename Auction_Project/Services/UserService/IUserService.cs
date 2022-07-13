@@ -31,6 +31,7 @@ public interface IUserService
     List<UserResponseDTO> GetAllClientsByPage(int nr);
     List<UserResponseDTO> GetAllClients();
     Task<UserResponseDTO> BanUser(string id);
+    Task<string> GetMyId();
     Task<UserResponseDTO> GetMeDTO();
     Task<UserResponseDTO> GetUserById(string userName);
     Task<List<string>> GetUserRolesById(string userName);

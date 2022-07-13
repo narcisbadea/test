@@ -22,7 +22,7 @@ namespace Auction_Project.Models
             _userServices = userServices;
         }
 
-        [HttpGet]
+        [HttpGet("get-all")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<BidResponseDTO>>> Get()
         {
@@ -33,7 +33,7 @@ namespace Auction_Project.Models
         }
          
 
-        [HttpGet("{id}")]
+        [HttpGet("get-by-id/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<BidResponseDTO>> GetById(int id)
         {
@@ -45,7 +45,7 @@ namespace Auction_Project.Models
         }
 
         
-        [HttpPost]
+        [HttpPost("post")]
         [Authorize]
         public async Task<ActionResult<BidRequestDTO>> Post(BidRequestDTO bid)
         {
