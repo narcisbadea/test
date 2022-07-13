@@ -10,7 +10,7 @@ namespace Auction_Project.Models.Items
 
         public decimal? InitialPrice { get; set; }
 
-        public double? EndTime { get; set; }
+        public string? EndTime { get; set; }
 
         public List<int>? Gallery { get; set; }
 

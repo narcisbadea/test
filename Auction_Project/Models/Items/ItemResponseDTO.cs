@@ -10,10 +10,11 @@ public class ItemResponseDTO
 
     public decimal? Price { get; set; }
 
-    public double? EndTime { get; set; }
+    public string? EndTime { get; set; }
 
     public DateTime? postedTime { get; set; }
 
     public List<int>? Gallery { get; set; }
+    
 
 }
