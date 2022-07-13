@@ -77,7 +77,7 @@ namespace Auction_Project.Services.UserService
         {
             var user = _repositoryUser.GetById(id);
             var roles = _userManager.GetRolesAsync(user);
-            if (user.IsActive && !roles.Result.Contains("Admin"))
+            if (user.IsActive && (!roles.Result.Contains("Admin") || !roles.Result.Contains("Root")))
             {
                 user.IsActive = false;
                 await _repositoryUser.BanUser(user);
