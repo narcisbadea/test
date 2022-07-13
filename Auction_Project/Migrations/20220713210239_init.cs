@@ -229,17 +229,17 @@ namespace Auction_Project.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "b1a678cf-d7a2-415a-9a8f-52d51e067e88", "31f5e34d-63fb-4521-a8d2-849ac10e0e07", "Admin", "ADMIN" });
+                values: new object[] { "b1a678cf-d7a2-415a-9a8f-52d51e067e88", "5a89dd7f-42e2-401d-8b14-c45dff6896aa", "Admin", "ADMIN" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "feadea3e-34b7-44a1-bafd-134749c706dc", "10b0144d-bcef-490b-a654-a2430f9ef940", "root", "ROOT" });
+                values: new object[] { "feadea3e-34b7-44a1-bafd-134749c706dc", "8e13cf38-69b1-414d-b936-89d72de8480c", "root", "ROOT" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Cnp", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "FirstName", "IsActive", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "b5d9114f-c911-49b4-af7c-137ce9488dd7", 0, "2881211259754", "f30f7442-f0c3-4f8b-b88b-a51561726511", new DateTime(2022, 7, 11, 18, 11, 26, 35, DateTimeKind.Utc).AddTicks(9327), "root@gmail.com", false, "root", true, "root", false, null, "ROOT@GMAIL.COM", "ROOT", "AQAAAAEAACcQAAAAEC7Mfcqx/WoW4X3fRvlCDg6iIW3XTyapjHmyR2LNB2eFHssUTeG1RJPyVUj07pMWgA==", null, false, "3ec44691-39d1-4228-b1e2-5f69a26e268c", false, "root" });
+                values: new object[] { "b5d9114f-c911-49b4-af7c-137ce9488dd7", 0, "2881211259754", "7c74f8b0-15be-45a0-a6fd-bf384911466f", new DateTime(2022, 7, 13, 21, 2, 39, 586, DateTimeKind.Utc).AddTicks(2703), "root@gmail.com", false, "root", true, "root", false, null, "ROOT@GMAIL.COM", "ROOT", "AQAAAAEAACcQAAAAENSvey78/9l8dn4qxYB9CDpvIOkpwfSHDgtdjVHWdRiI0w1o+cBmI5TQf6npz8W0AA==", null, false, "739d7960-9c87-4cee-bd3b-d80e9859d394", false, "root" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
