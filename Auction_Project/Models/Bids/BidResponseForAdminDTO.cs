@@ -8,11 +8,11 @@ public class BidResponseForAdminDTO
     public string? UserNameForBid { get; set; }
     [Column(Letter = "B")]
     public string? UserEmailForBid { get; set; }
-    [Column(Letter = "C")]
+    [Ignore]
     public int ItemIdForBid { get; set; }
-    [Column(Letter = "D")]
+    [Column(Letter = "C")]
     public bool ItemIsSold { get; set; }
-    [Column(Letter = "E")]
+    [Column(Letter = "D")]
     public decimal? Price { get; set; }
 
 }

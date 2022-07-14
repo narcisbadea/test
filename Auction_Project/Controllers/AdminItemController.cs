@@ -59,7 +59,7 @@ namespace Auction_Project.Models
             var stream = System.IO.File.ReadAllBytes(fullPath);
             
             var fileName = Path.GetFileName(fullPath);
-            return File(stream, "application/octet-stream", "Item_"+fileName);
+            return File(stream, "application/octet-stream", "Item_" + fileName);
 
         }
 
