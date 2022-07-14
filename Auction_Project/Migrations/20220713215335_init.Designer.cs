@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Auction_Project.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220711181126_init")]
+    [Migration("20220713215335_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -150,14 +150,14 @@ namespace Auction_Project.Migrations
                         new
                         {
                             Id = "feadea3e-34b7-44a1-bafd-134749c706dc",
-                            ConcurrencyStamp = "10b0144d-bcef-490b-a654-a2430f9ef940",
+                            ConcurrencyStamp = "01bb9702-5ecc-4d1f-8ca5-1abb15354476",
                             Name = "root",
                             NormalizedName = "ROOT"
                         },
                         new
                         {
                             Id = "b1a678cf-d7a2-415a-9a8f-52d51e067e88",
-                            ConcurrencyStamp = "31f5e34d-63fb-4521-a8d2-849ac10e0e07",
+                            ConcurrencyStamp = "97698c1b-ae85-4964-a73f-c258ac646256",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         });
@@ -251,8 +251,8 @@ namespace Auction_Project.Migrations
                             Id = "b5d9114f-c911-49b4-af7c-137ce9488dd7",
                             AccessFailedCount = 0,
                             Cnp = "2881211259754",
-                            ConcurrencyStamp = "f30f7442-f0c3-4f8b-b88b-a51561726511",
-                            Created = new DateTime(2022, 7, 11, 18, 11, 26, 35, DateTimeKind.Utc).AddTicks(9327),
+                            ConcurrencyStamp = "d315d074-d8e3-4aa2-a987-6dc8c5a9902a",
+                            Created = new DateTime(2022, 7, 13, 21, 53, 35, 419, DateTimeKind.Utc).AddTicks(1039),
                             Email = "root@gmail.com",
                             EmailConfirmed = false,
                             FirstName = "root",
@@ -261,9 +261,9 @@ namespace Auction_Project.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ROOT@GMAIL.COM",
                             NormalizedUserName = "ROOT",
-                            PasswordHash = "AQAAAAEAACcQAAAAEC7Mfcqx/WoW4X3fRvlCDg6iIW3XTyapjHmyR2LNB2eFHssUTeG1RJPyVUj07pMWgA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJp6/k7lTfF0EnFDKHp8xVdnRfXLpP2onrbhuHpNq2XBiALD/D0K2/nRRRDd4/ikXA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3ec44691-39d1-4228-b1e2-5f69a26e268c",
+                            SecurityStamp = "52464bb9-f579-4b2a-8104-a30af55207c5",
                             TwoFactorEnabled = false,
                             UserName = "root"
                         });

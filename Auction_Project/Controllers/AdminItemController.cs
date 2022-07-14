@@ -63,6 +63,14 @@ namespace Auction_Project.Models
 
         }
 
+        [HttpGet("numbers-of-items")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<int>> GetNumberOfItems()
+        {
+            var items = await _itemService.GetNumberOfPagesForApprove();
+            return items;
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ItemResponseDTO>> Post(ItemRequestDTO toPost)

@@ -23,7 +23,7 @@ public class ClientItemController : ControllerBase
 
     [HttpGet("my-items")]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<ItemOwnItemDTO>>> GetOwnItems()
+    public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetOwnItems()
     {
         var ownItem = await _itemService.GetOwnItemsForUser();
 
@@ -32,6 +32,37 @@ public class ClientItemController : ControllerBase
         return NotFound("No items in list.");
     }
 
+    [HttpGet("my-items/page")]
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<ItemResponseDTO>>> GetOwnItemsPage(int nr)
+    {
+        var ownItem = await _itemService.GetOwnItemsByPage(nr);
+
+        if (ownItem != null)
+            return Ok(ownItem);
+        return NotFound("No items in list.");
+    }
+
+    [HttpGet("my-itema/number")]
+    [Authorize]
+    public async Task<ActionResult<int>> GetNrOfMyItems()
+    {
+        var count = await _itemService.GetNumberOfMyItems();
+        return Ok(count);
+    }
+
+    [HttpGet("item-state")]
+    [Authorize]
+    public async Task<ActionResult<string>> GetItemState(int itemId)
+    {
+        var itemState = await _itemService.GetItemState(itemId);
+        if (itemState != null)
+        {
+            return Ok(itemState.ToString());
+        }
+        return NotFound();
+
+    }
     [HttpGet("get-all")]
     [Authorize]
     public async Task<ActionResult<IEnumerable<ItemResponseForClientDTO>>> Get()
@@ -49,8 +80,20 @@ public class ClientItemController : ControllerBase
         var got = await _itemService.GetUserByPage(nr);
         if (got != null)
             return Ok(got);
-        return NotFound("There is no items.");
+        return Ok(new List<ItemResponseForClientDTO>());
         //trebuie sa vada pretul curent daca s-a biduit pe item
+    }
+
+    [HttpGet("number-of-items")]
+    [Authorize]
+    public async Task<ActionResult<int>> GetNumberOfItems()
+    {
+        var items = await _itemService.GetUser();
+        if (items != null)
+        {
+            return Ok(items.Count());
+        }
+        return Ok(0);
     }
 
     [HttpGet("get-item-by-id/{id}")]

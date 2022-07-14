@@ -64,7 +64,7 @@ public class ItemsServices
 
                         Price = lastBid.Item.Price,
 
-                        EndTime = lastBid.Item.EndTime,
+                        EndTime = lastBid.Item.postedTime.Value.AddMinutes(Convert.ToInt32(lastBid.Item.EndTime)).ToString(),
 
                         postedTime = lastBid.Item.postedTime,
 
@@ -101,7 +101,7 @@ public class ItemsServices
 
                         InitialPrice = item.Price,
 
-                        EndTime = item.EndTime,
+                        EndTime = lastBid.Item.postedTime.Value.AddMinutes(Convert.ToInt32(lastBid.Item.EndTime)).ToString(),
 
                         Gallery = listGalleryIds,
 
@@ -134,7 +134,7 @@ public class ItemsServices
 
                         InitialPrice = item.Price,
 
-                        EndTime = item.EndTime,
+                        EndTime = item.postedTime.Value.AddMinutes(Convert.ToInt32(item.EndTime)).ToString(),
 
 
                         Gallery = listGalleryIds,
@@ -163,7 +163,7 @@ public class ItemsServices
                     Name = item.Name,
                     Desc=item.Desc,
                     Price = item.Price,
-                    EndTime=item.EndTime,
+                    EndTime=item.EndTime.ToString(),
                     postedTime = item.postedTime,
                     Gallery = item.Gallery.Select(i => i.Id).ToList()
                 };
@@ -171,6 +171,12 @@ public class ItemsServices
             }
         }
         return result;
+    }
+
+    public async Task<int> GetNumberOfPagesForApprove()
+    {
+        var items = await GetUnapprovedForAdmin();
+        return items.Count();
     }
 
     public async Task<IEnumerable<ItemResponseForAdminDTO>> GetAdmin()
@@ -211,7 +217,7 @@ public class ItemsServices
 
                     Price = lastBid.Item.Price,
 
-                    EndTime = lastBid.Item.EndTime,
+                    EndTime = lastBid.Item.EndTime.ToString(),
 
                     postedTime = lastBid.Item.postedTime,
 
@@ -368,7 +374,7 @@ public class ItemsServices
 
                     Price = lastBid.Item.Price,
 
-                    EndTime = lastBid.Item.EndTime,
+                    EndTime = lastBid.Item.EndTime.ToString(),
 
                     postedTime = lastBid.Item.postedTime,
 
@@ -402,7 +408,7 @@ public class ItemsServices
 
                     InitialPrice = item.Price,
 
-                    EndTime = item.EndTime,
+                    EndTime = item.EndTime.ToString(),
 
                     Gallery = listGalleryIds,
 
@@ -436,7 +442,7 @@ public class ItemsServices
 
                     InitialPrice = item.Price,
 
-                    EndTime = item.EndTime,
+                    EndTime = item.EndTime.ToString(),
 
                     Gallery = listGalleryIds,
 
@@ -453,6 +459,30 @@ public class ItemsServices
     public async Task<ItemResponseDTO> GetById(int id)
     {
         return _mapper.Map<ItemResponseDTO>(await _repositoryItems.GetById(id));
+    }
+
+    public async Task<string?> GetItemState(int itemId)
+    {
+        var item = await _repositoryItems.GetById(itemId);
+        if(item != null)
+        {
+            if (item.IsSold)
+            {
+                return "sold";
+            }
+            else
+            {
+                if (item.Available)
+                {
+                    return "listed";
+                }
+                else
+                {
+                    return "unlisted";
+                }
+            }
+        }
+        return null;
     }
 
     public async Task<ItemResponseForClientDTO> PostClient(ItemRequestDTO item)
@@ -563,15 +593,44 @@ public class ItemsServices
         return null;
     }
 
-    public async Task<List<ItemOwnItemDTO>> GetOwnItemsForUser()
+    public async Task<int> GetNumberOfMyItems()
+    {
+        var count = await GetOwnItemsForUser();
+        if (count != null)
+        {
+            return count.Count();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public async Task<List<ItemResponseDTO>> GetOwnItemsForUser()
     {
         var userId = await _userService.GetMe();
         var allitems = await _repositoryItemCustom.Get();
         var ownedItems = allitems.Where(i => i.OwnerUserId == userId.Id).ToList();
+        var responseList = new List<ItemResponseDTO>();
+        foreach(var item in ownedItems)
+        {
+            var itemResponse = new ItemResponseDTO
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Desc = item.Desc,
 
-        var mappedItems = _mapper.Map<List<ItemOwnItemDTO>>(ownedItems);
+                Price = item.Price,
 
-        return mappedItems;      
+                EndTime = item.EndTime.ToString(),
+
+                postedTime = item.postedTime,
+
+                Gallery = item.Gallery.Select(i => i.Id).ToList()
+            };
+            responseList.Add(itemResponse);
+        }
+        return responseList;      
     }
 
     public async Task<List<ItemOwnItemDTO>> GetOwnItemsByPage(int nr)

@@ -26,9 +26,16 @@ namespace Auction_Project.Controllers
         public async Task<ActionResult<IFormFile>> GetImageById(int id)
         {
             var response = await _pictureService.GetById(id);
-            var stream = System.IO.File.ReadAllBytes(response.ImageAddress);
-            var type = "image/" + response.ImageAddress.Split('.').Last();
-            return File(stream, type);
+            if (response != null)
+            {
+                var stream = System.IO.File.ReadAllBytes(response.ImageAddress);
+                var type = "image/" + response.ImageAddress.Split('.').Last();
+                return File(stream, type);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]

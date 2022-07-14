@@ -43,7 +43,7 @@ namespace Auction_Project.Services.BidService
                 return null;
 
             if (itemSearched.EndTime > 1)
-                _backgroundJobClient.Schedule(() => SetAsSold(updatedItem), TimeSpan.FromSeconds((double)itemSearched.EndTime));
+                _backgroundJobClient.Schedule(() => SetAsSold(updatedItem), TimeSpan.FromMinutes((double)itemSearched.EndTime));
 
             return _mapper.Map<ItemRequestAvailableDTO>(updatedItem);
         }
