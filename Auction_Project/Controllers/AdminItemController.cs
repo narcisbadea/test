@@ -50,13 +50,17 @@ namespace Auction_Project.Models
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<BidResponseForAdminDTO>> GetById(int id)
+        public async Task<ActionResult<IFormFile>> GetById(int id)
         {
             //var got = await _itemService.GetByIdForUser(id);
-            var got = await _itemExportServices.GetListOfBidsForItem(id);
-            if (got != null)
-                return Ok(got);
-            return NotFound("Item not found.");
+            var got = await _itemExportServices.ExportToExcel(id);
+         
+            var fullPath = got + ".xlsx";
+            var stream = System.IO.File.ReadAllBytes(fullPath);
+            
+            var fileName = Path.GetFileName(fullPath);
+            return File(stream, "application/octet-stream", "Item_" + fileName);
+
         }
 
         [HttpGet("numbers-of-items")]
