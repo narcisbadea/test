@@ -15,6 +15,7 @@ using Microsoft.OpenApi.Models;
 using Hangfire;
 using Hangfire.SqlServer;
 using Auction_Project.Services.EmailService;
+using Hangfire.PostgreSql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,20 +51,12 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 var connectionString = builder.Configuration.GetSection("AppSettings:connectionString").Value;
 
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
 builder.Services.AddHangfire(configuration => configuration.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                             .UseSimpleAssemblyNameTypeSerializer()
                             .UseRecommendedSerializerSettings()
-                            .UseSqlServerStorage(connectionString, new SqlServerStorageOptions
-                            {
-                                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
-                                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
-                                QueuePollInterval = TimeSpan.Zero,
-                                UseRecommendedIsolationLevel = true,
-                                DisableGlobalLocks = true, // Migration to Schema 7 is required
-
-                            }));
+                            .UsePostgreSqlStorage(connectionString));
 
 builder.Services.AddHangfireServer();
 
