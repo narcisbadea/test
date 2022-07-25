@@ -41,7 +41,7 @@ export class NewBidComponent implements OnInit {
     {
       this.imageIds = res.gallery!;
       this.imageIds.forEach((value) => {
-        this.imagesLinks.push('http://20.218.86.203:8000/api/Pictures/show/' + value);  
+        this.imagesLinks.push('https://api.vhealth.me/api/Pictures/show/' + value);  
       })
       this.imagesLinks.forEach((imageLink) =>{
         this.imageObject.push({
