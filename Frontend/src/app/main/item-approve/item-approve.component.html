@@ -1,0 +1,70 @@
+<div class="row">
+    <div class="col">
+      <mat-card class="shadow-lg">
+        <div class="row">
+          <div class="col">
+            <!-- TODO: Change headline -->
+            <h2>Listed Items</h2>
+          </div>
+          <div class="col text-right">
+            <!-- TODO: Change button text -->
+            <button mat-raised-button color="primary" (click)="create()">New item</button>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+        <br>
+        <mat-card-content>
+          <div class="row  align-items-center">
+            <div class="col text-right">
+              <mat-form-field>
+                <mat-label>Search</mat-label>
+                <input matInput (keyup)="applyFilter($event)" #input>
+              </mat-form-field>
+            </div>
+          </div>
+          <table mat-table [dataSource]="items" matSort>
+  
+            <!-- TODO: Change matColumnDef and element.X -->
+            <ng-container matColumnDef="name" sticky>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+              <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+            </ng-container>
+  
+            <ng-container matColumnDef="desc">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+              <td mat-cell *matCellDef="let element">{{ element.desc }}</td>
+            </ng-container>
+  
+            <ng-container matColumnDef="endTime">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>End time(h)</th>
+              <td mat-cell *matCellDef="let element">{{ element.endTime }}</td>
+            </ng-container>
+  
+            <ng-container matColumnDef="price">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+              <td mat-cell *matCellDef="let element">{{ element.price }}</td>
+            </ng-container>
+  
+            <ng-container matColumnDef="action" stickyEnd>
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+              <td mat-cell *matCellDef="let element">
+                <button mat-icon-button (click)="approve(element.id)">
+                  <mat-icon>check_circle_outline</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+  
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="6">No entries</td>
+            </tr>
+          </table>
+  
+          <mat-paginator [pageSize]="5"  [length]="length" (page) = "nextpage()"></mat-paginator>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  
