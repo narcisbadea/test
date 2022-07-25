@@ -395,4 +395,6 @@ testem.log
 .DS_Store
 Thumbs.db
 
-/node_modules
+/Frontend/node_modules
+
+Frontend/node_modules
